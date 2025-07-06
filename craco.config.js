@@ -13,6 +13,7 @@ module.exports = {
       '@ui': resolvePath('./src/components/ui'),
       '@custom-types': resolvePath('./src/custom-types'),
       '@constants': resolvePath('./src/constants'),
+      '@types': resolvePath('./types'),
     },
   },
 };
