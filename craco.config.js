@@ -11,9 +11,9 @@ module.exports = {
       '@pages': resolvePath('./src/pages'),
       '@services': resolvePath('./src/services'),
       '@ui': resolvePath('./src/components/ui'),
-      '@custom-types': resolvePath('./src/custom-types'),
+      '@custom-types': resolvePath('./src/types'),
       '@constants': resolvePath('./src/constants'),
-      '@types': resolvePath('./types'),
+      '@types': resolvePath('./src/types'),
     },
   },
 };

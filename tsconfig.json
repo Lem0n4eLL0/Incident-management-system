@@ -24,9 +24,8 @@
       "@pages/*": ["pages/*"],
       "@services/*": ["services/*"],
       "@ui/*": ["components/ui/*"],
-      "@custom-types/*": ["custom-types/*"],
+      "@custom-types/*": ["types/*"],
       "@constants/*": ["constants/*"],
-      "@types/*": ["types/*"],
     }
   },
   "include": ["src"]
