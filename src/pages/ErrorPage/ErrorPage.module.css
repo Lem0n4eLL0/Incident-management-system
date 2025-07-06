@@ -1,0 +1,23 @@
+.page {
+  background-color: var(--error-bg-color);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.error_code {
+  font-size: 12rem;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--error-text-color-v2);
+  text-align: center;
+}
+
+.error_text {
+  font-size: 3rem;
+  text-align: center;
+  color: var(--error-text-color);
+}
