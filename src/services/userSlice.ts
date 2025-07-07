@@ -21,10 +21,10 @@ const userSlice = createSlice({
     },
   },
   selectors: {
-    getUser: (state) => state.user,
+    selectUser: (state) => state.user,
   },
 });
 
 export const { changeUser } = userSlice.actions;
-export const { getUser } = userSlice.selectors;
+export const { selectUser } = userSlice.selectors;
 export const userReducer = userSlice.reducer;

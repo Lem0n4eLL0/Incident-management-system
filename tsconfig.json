@@ -26,6 +26,7 @@
       "@ui/*": ["components/ui/*"],
       "@custom-types/*": ["types/*"],
       "@constants/*": ["constants/*"],
+      "@api/*": ["api/*"],
     }
   },
   "include": ["src"]

@@ -1,12 +1,15 @@
-import { combineReducers, configureStore, createStore } from '@reduxjs/toolkit';
+import { combineReducers, combineSlices, configureStore, createStore } from '@reduxjs/toolkit';
 import {
   createStoreHook,
   useDispatch as dispatchHook,
   useSelector as selectorHook,
 } from 'react-redux';
-import { userReducer } from '@services/userSlice';
-const rootRedusers = combineReducers({
+import { userReducer } from './userSlice';
+import { incidentsReducer } from './incidentSlice';
+
+const rootRedusers = combineSlices({
   userReducer,
+  incidentsReducer,
 });
 
 const store = configureStore({

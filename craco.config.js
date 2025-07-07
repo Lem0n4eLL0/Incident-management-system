@@ -14,6 +14,7 @@ module.exports = {
       '@custom-types': resolvePath('./src/types'),
       '@constants': resolvePath('./src/constants'),
       '@types': resolvePath('./src/types'),
+      '@api': resolvePath('./src/api'),
     },
   },
 };
