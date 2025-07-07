@@ -1,0 +1,7 @@
+.statistic_exceeds {
+  color: var(--statistic-exceeds-color);
+}
+
+.statistic_worse {
+  color: var(--statistic-worse-color);
+}

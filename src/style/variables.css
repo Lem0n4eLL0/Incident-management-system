@@ -16,6 +16,7 @@
   --bg-100:#fff;
   --bg-200:#f5f5f5;
   --bg-300:#ccc;
+  --additional-100:#3f9c3f;
 
   /* Рабочие перемееные палитры */
   --main-bg-color: var(--bg-100);
@@ -25,6 +26,9 @@
   --header-text-color-v2: var(--primary-100);
   --header-text-color-hover: var(--primary-250);
   --header-separator-color: var(--bg-300);
+  --home-bg-color: var(--bg-200);
+  --statistic-exceeds-color: var(--additional-100);
+  --statistic-worse-color: var(--primary-100);
   --error-bg-color: var(--bg-200);
   --error-text-color: var(--text-100);
   --error-text-color-v2: var(--primary-100);

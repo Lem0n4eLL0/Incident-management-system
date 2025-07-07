@@ -1,0 +1,53 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.description {
+  font-weight: 400;
+  font-size: 18px;
+  color: var(--text-200);
+  text-wrap: nowrap;
+}
+
+.summary {
+  position: relative;
+}
+
+.value {
+  font-size: 100px;
+  line-height: 1;
+  justify-self: center;
+  text-align: center;
+}
+
+.difference {
+  position: absolute;
+  font-size: 18px;
+  top: 0;
+  right: -15px;
+}
+
+.exceeds {
+  color: var(--statistic-exceeds-color);
+}
+
+.worse {
+  color: var(--statistic-worse-color);
+}
+
+.statistic_exceeds {
+  color: var(--statistic-exceeds-color); /* например, зелёный */
+}
+
+.statistic_worse {
+  color: var(--statistic-worse-color); /* например, красный */
+}
+
+.statistic_neutral {
+  color: var(--text-100);
+}

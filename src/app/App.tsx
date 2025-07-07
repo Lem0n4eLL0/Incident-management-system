@@ -4,8 +4,17 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
 import { HomePage } from '@pages/HomePage';
 import { ErrorPage } from '@pages/ErrorPage';
+import { useDispatch } from '@services/store';
+import { getIncidents } from '@services/incidentSlice';
+import { useEffect } from 'react';
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getIncidents());
+  }, [dispatch]);
+
   return (
     <div className={style.app}>
       <BrowserRouter>

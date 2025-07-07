@@ -1,0 +1,36 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  flex-grow: 1;
+  padding: 30px;
+}
+
+.introduction {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.statistic {
+  display: flex;
+  align-items: center;
+  justify-content:space-around;
+  background-color: var(--home-bg-color);
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.greetings {
+  display: block;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 400;
+}
+
+.incidents {
+  background-color: var(--home-bg-color);
+  flex-grow: 1;
+  border-radius: 20px;
+  padding: 20px;
+}
