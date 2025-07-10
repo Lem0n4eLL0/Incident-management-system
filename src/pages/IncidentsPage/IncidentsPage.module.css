@@ -1,0 +1,84 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 30px; 
+}
+
+.incidents {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding: 20px;
+  border-radius: 20px;
+  background-color: var(--incident-bg-color);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 20% 1fr;
+  padding: 10px 0;
+}
+
+.search {
+  background-color: inherit;
+  border: 1px solid var(--bg-400);
+  border-radius: 10px;
+  min-width: 300px;
+  min-height: 100%;
+  padding: 2px 10px;
+}
+
+.search:focus-visible {
+  outline: 2px solid currentcolor;
+}
+
+.search::placeholder {
+  color: var(--bg-400);
+}
+
+
+
+.add_incident_button {
+  cursor: pointer;
+  padding: 3px 5px;
+  font-size: 18px;
+  place-self: start end;
+  min-width: 120px;
+  min-height: 40px;
+  border-radius: 10px;
+  box-shadow: inset 30px 20px 40px var(--accent-100),
+    inset -50px -30px 40px var(--accent-200),
+    0 0 2px var(--accent-100)
+    ;
+  border:none;
+  background-color: inherit;
+  transition: box-shadow 0.5s;
+
+  /* border: 2px solid var(--primary-100); */
+
+}
+
+.add_incident_button:focus-visible {
+  outline: 2px solid currentcolor;
+}
+
+.add_incident_button:hover,
+.add_incident_button:focus,
+.add_incident_button:focus-visible  {
+  box-shadow:
+    inset 30px 10px 40px var(--accent-200),
+    inset -50px -50px 20px var(--accent-100),
+    0 0 2px var(--accent-200)
+    
+}
+
+.modal {
+  font-size: 20px;
+  display: flex;
+  justify-content: end;
+  background-color: var(--bg-100);
+  padding: 45px 20px 20px;
+  min-width: 400px;
+  min-height: 500px;
+}
+

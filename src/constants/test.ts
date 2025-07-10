@@ -21,6 +21,7 @@ export const INCEDENTS: { incident: Incident[] } = {
       date: new Date(),
       description: 'Тестовый инцедент',
       author: DEFAULT_USER.user,
+      unit: '1 подразделение',
     },
     {
       id: '456',
@@ -29,14 +30,18 @@ export const INCEDENTS: { incident: Incident[] } = {
       date: new Date(),
       description: 'Тестовый инцедент 2',
       author: DEFAULT_USER.user,
+      unit: '2 подразделение',
+      status: 'завершено',
     },
     {
       id: '456756',
-      incidentNumber: '2',
-      type: 'другое',
+      incidentNumber: '3',
+      type: 'авария',
       date: new Date(),
       description: 'Тестовый инцедент 3',
       author: DEFAULT_USER.user,
+      unit: '3 подразделение',
+      status: 'завершено',
     },
   ],
 };

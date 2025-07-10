@@ -5,3 +5,7 @@
 .statistic_worse {
   color: var(--statistic-worse-color);
 }
+
+.statistic_neutral {
+  color: var(--text-100);
+}

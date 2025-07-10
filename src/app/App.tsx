@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
 import { HomePage } from '@pages/HomePage';
 import { ErrorPage } from '@pages/ErrorPage';
+import { IncidentsPage } from '@pages/IncidentsPage';
 import { useDispatch } from '@services/store';
 import { getIncidents } from '@services/incidentSlice';
 import { useEffect } from 'react';
@@ -21,10 +22,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />}></Route>
-            <Route path="incidents" element={<HomePage />}></Route>
-            <Route path="profile" element={<HomePage />}></Route>
-            <Route path="administration" element={<HomePage />}></Route>
-            <Route path="analytics" element={<HomePage />}></Route>
+            <Route path="incidents" element={<IncidentsPage />}></Route>
+            <Route path="profile" element={<ErrorPage />}></Route>
+            <Route path="administration" element={<ErrorPage />}></Route>
+            <Route path="analytics" element={<ErrorPage />}></Route>
           </Route>
           <Route path="*" element={<ErrorPage />}></Route>
         </Routes>

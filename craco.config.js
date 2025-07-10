@@ -15,6 +15,8 @@ module.exports = {
       '@constants': resolvePath('./src/constants'),
       '@types': resolvePath('./src/types'),
       '@api': resolvePath('./src/api'),
+      '@style': resolvePath('./src/style'),
+      '@hooks': resolvePath('./src/hooks'),
     },
   },
 };

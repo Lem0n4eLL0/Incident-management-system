@@ -5,11 +5,17 @@ import style from './HomePage.module.css';
 import { selectUser } from '@services/userSlice';
 import { DEFAULT_USER } from '@constants/test';
 import { IncidentValue } from '@components/IncidentValue';
+import { Table } from '@ui/Table';
+import { TABLE_PLACEHOLDER, TABLE_COLUMNS } from '@constants/constants';
+import { Incident } from '@custom-types/types';
+import { Modal } from '@ui/Modal';
+import { useState } from 'react';
 
-const HomePage = () => {
+export const HomePage = () => {
   const dispatch = useDispatch();
   const incidents = useSelector((state) => selectIncidents.unwrapped(state.incidentsReducer));
   const user = useSelector((state) => selectUser.unwrapped(state.userReducer));
+
   return (
     <div className={style.content}>
       <section className={style.introduction}>
@@ -18,7 +24,17 @@ const HomePage = () => {
         <div className={style.statistic}>
           <IncidentValue value={322} description={'всего инцедентов'} />{' '}
           {/* Используя фильтры считать */}
+          <div className={style.separator_wrapper}>
+            {' '}
+            {/* может потом переделать под элемент Separator */}
+            <div className={style.separator}></div>
+          </div>
           <IncidentValue value={32} description={'с нач. года'} difference={-3} />
+          <div className={style.separator_wrapper}>
+            {' '}
+            {/* может потом переделать под элемент Separator */}
+            <div className={style.separator}></div>
+          </div>
           <IncidentValue value={3} description={'с нач. мес.'} difference={2} />
         </div>
       </section>
@@ -26,5 +42,3 @@ const HomePage = () => {
     </div>
   );
 };
-
-export { HomePage };

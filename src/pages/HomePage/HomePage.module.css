@@ -16,6 +16,7 @@
   display: flex;
   align-items: center;
   justify-content:space-around;
+  gap: 15px;
   background-color: var(--home-bg-color);
   padding: 20px;
   border-radius: 20px;
@@ -32,5 +33,19 @@
   background-color: var(--home-bg-color);
   flex-grow: 1;
   border-radius: 20px;
-  padding: 20px;
+  padding: 40px;
+}
+
+.separator_wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+}
+
+.separator {
+  position: absolute;
+  height: 80%;
+  width: 1px;
+  background-color: var(--bg-300);
 }

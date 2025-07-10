@@ -24,7 +24,7 @@ export type UserDTO = {
 };
 
 export type IncidentType = 'авария' | 'инцидент' | 'травма' | 'пожар' | 'другое';
-export type IncidentStatus = 'в работе' | 'завершено' | 'на рассмотрении';
+export type IncidentStatus = 'в работе' | 'завершено' | 'на рассмотрении' | '-';
 
 export type Incident = {
   id: string;
@@ -32,11 +32,14 @@ export type Incident = {
   type: IncidentType;
   date: Date;
   description: string;
+  unit: string;
   author: User;
   status?: IncidentStatus;
   measuresTaken?: string;
   responsible?: string;
 };
+
+export type TableIncident = Pick<Incident, 'incidentNumber' | 'type' | 'unit' | 'date' | 'status'>; // Убрать если не пределаю в строгую типизацию
 
 export type IncidentDTO = {
   id: string;
@@ -44,6 +47,7 @@ export type IncidentDTO = {
   type: string;
   date: string;
   description: string;
+  unit: string;
   author: UserDTO;
   status?: string;
   measures_taken?: string;

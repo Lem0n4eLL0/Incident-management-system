@@ -32,22 +32,4 @@
   right: -15px;
 }
 
-.exceeds {
-  color: var(--statistic-exceeds-color);
-}
 
-.worse {
-  color: var(--statistic-worse-color);
-}
-
-.statistic_exceeds {
-  color: var(--statistic-exceeds-color); /* например, зелёный */
-}
-
-.statistic_worse {
-  color: var(--statistic-worse-color); /* например, красный */
-}
-
-.statistic_neutral {
-  color: var(--text-100);
-}

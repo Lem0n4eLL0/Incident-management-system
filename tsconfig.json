@@ -27,6 +27,8 @@
       "@custom-types/*": ["types/*"],
       "@constants/*": ["constants/*"],
       "@api/*": ["api/*"],
+      "@style/*": ["style/*"],
+      "@hooks/*": ["hooks/*"],
     }
   },
   "include": ["src"]

@@ -1,0 +1,44 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 20px;
+  background-color: var(--table-bg-color);
+}
+
+.caption {
+  font-size: 20px;
+  text-align: left;
+  padding: 3px;
+}
+
+.column, th {
+  border: 1px solid var(--table-bg-color-v3);
+  padding: 16px;
+  font-size: 18px;
+  text-align: left;
+}
+
+.row:hover .column {
+  cursor: pointer;
+  background-color: var(--table-row-color-hover);
+}
+
+.empty_cell {
+  background-color: var(--table-emty-color);
+  text-align: center;
+}
+
+th {
+  font-weight: 600;
+  background-color: var(--table-bg-color-v2);
+}
+
+.modal { /* В отдельный фалй потом */
+  font-size: 20px;
+  display: flex;
+  justify-content: end;
+  background-color: var(--bg-100);
+  padding: 45px 20px 20px;
+  min-width: 400px;
+  min-height: 500px;
+}

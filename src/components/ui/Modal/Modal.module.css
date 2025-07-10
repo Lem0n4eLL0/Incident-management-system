@@ -1,0 +1,46 @@
+.modal {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--main-font);
+}
+
+.modal_content {
+  position: relative;
+  z-index: 1;
+  min-height: 200px;
+  min-width: 300px;
+  border-radius: 20px;
+}
+
+.close_button {
+  position: absolute;
+  z-index: 10;
+  width: 35px;
+  height: 35px;
+  padding: 4px;
+  border-radius: 50%;
+  border: 2px solid var(--modal-button-color);
+  background-color: inherit;
+  transition: background-color 0.1s;
+  right: 8px;
+  top: 8px;
+  cursor: pointer;
+}
+
+.close_button:hover {
+  background-color: var(--modal-bg-button-color-hover);
+}
+
+.modal_overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--overlay-bg-color);
+  opacity: 0.4;
+}
+

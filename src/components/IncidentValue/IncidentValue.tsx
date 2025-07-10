@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import style from './IncidentValue.module.css';
+import saticStyle from '@style/common.module.css';
 type IncidentValueProps = {
   value: number;
   description: string;
@@ -8,8 +9,8 @@ type IncidentValueProps = {
 
 export const IncidentValue = ({ value, description, difference }: IncidentValueProps) => {
   const getDifferenceClass = () => {
-    if (!difference) return style.statistic_neutral;
-    return difference < 0 ? style.statistic_exceeds : style.statistic_worse;
+    if (!difference) return saticStyle.statistic_neutral;
+    return difference < 0 ? saticStyle.statistic_exceeds : saticStyle.statistic_worse;
   };
 
   const formattedDifference = difference ? (difference < 0 ? difference : `+${difference}`) : null;
