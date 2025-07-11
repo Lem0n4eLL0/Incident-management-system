@@ -66,7 +66,7 @@ export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
         {({ value, onChange }) => (
           <Select
             value={value}
-            options={['в работе', 'завершено', 'на рассмотрении', '-']}
+            options={['в работе', 'завершено', 'на рассмотрении']}
             onChange={onChange}
             placeholder={'- Любой -'}
           />

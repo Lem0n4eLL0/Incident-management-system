@@ -23,6 +23,10 @@
   background-color: var(--table-row-color-hover);
 }
 
+.selected_line {
+  background-color: var(--table-row-color-hover);
+}
+
 .empty_cell {
   background-color: var(--table-emty-color);
   text-align: center;
@@ -31,14 +35,4 @@
 th {
   font-weight: 600;
   background-color: var(--table-bg-color-v2);
-}
-
-.modal { /* В отдельный фалй потом */
-  font-size: 20px;
-  display: flex;
-  justify-content: end;
-  background-color: var(--bg-100);
-  padding: 45px 20px 20px;
-  min-width: 400px;
-  min-height: 500px;
 }

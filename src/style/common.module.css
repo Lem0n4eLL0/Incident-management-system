@@ -9,3 +9,35 @@
 .statistic_neutral {
   color: var(--text-100);
 }
+
+.modal {
+  font-size: 20px;
+  display: flex;
+  justify-content: end;
+  background-color: var(--bg-100);
+  min-width: 400px;
+  min-height: 500px;
+}
+
+.status_completed {
+  background-color: var(--status-completed-color);
+}
+
+.status_underway {
+  background-color: var(--status-underway-color);
+}
+
+.status_consideration {
+  background-color: var(--status-consideration-color);
+}
+
+.status_none {
+  background-color: var(--status-none-color);
+}
+
+.conterol_button {
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+}

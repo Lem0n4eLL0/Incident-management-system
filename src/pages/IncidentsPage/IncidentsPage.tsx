@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from '@services/store';
 import style from './IncidentsPage.module.css';
+import staticStyle from '@style/common.module.css';
 import { selectIncidents } from '@services/incidentSlice';
 import { Incident } from '@custom-types/types';
 import { Table } from '@ui/Table';
@@ -10,6 +11,7 @@ import { FilteredTable } from '@components/ui/FilteredTable';
 import { Modal } from '@ui/Modal';
 import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
+import { ModalIncident } from '@components/ModalIncident';
 
 export const IncidentsPage = () => {
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ export const IncidentsPage = () => {
           <input type="search" className={style.search} name="поиск" placeholder="Поиск..."></input>
           <button
             type="button"
-            className={style.add_incident_button}
+            className={clsx(staticStyle.conterol_button, style.add_incident_button)}
             onClick={() => setIsOpenAddInciden(true)}
           >
             Добавить
@@ -37,11 +39,12 @@ export const IncidentsPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
+          renderModal={(item) => <ModalIncident incident={item}></ModalIncident>}
         ></FilteredTable>
       </section>
       {isOpenAddInciden && (
         <Modal
-          contentClass={style.modal}
+          contentClass={staticStyle.modal}
           onClose={() => {
             setIsOpenAddInciden(false);
           }}

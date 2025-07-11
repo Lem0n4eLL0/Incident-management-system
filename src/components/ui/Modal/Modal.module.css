@@ -7,13 +7,12 @@
   align-items: center;
   justify-content: center;
   font-family: var(--main-font);
+  padding: 0 10px;
 }
 
 .modal_content {
   position: relative;
   z-index: 1;
-  min-height: 200px;
-  min-width: 300px;
   border-radius: 20px;
 }
 

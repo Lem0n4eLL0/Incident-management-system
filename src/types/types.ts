@@ -24,7 +24,7 @@ export type UserDTO = {
 };
 
 export type IncidentType = 'авария' | 'инцидент' | 'травма' | 'пожар' | 'другое';
-export type IncidentStatus = 'в работе' | 'завершено' | 'на рассмотрении' | '-';
+export type IncidentStatus = 'в работе' | 'завершено' | 'на рассмотрении';
 
 export type Incident = {
   id: string;
