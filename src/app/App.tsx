@@ -8,12 +8,14 @@ import { IncidentsPage } from '@pages/IncidentsPage';
 import { useDispatch } from '@services/store';
 import { getIncidents } from '@services/incidentSlice';
 import { useEffect } from 'react';
+import { getUser } from '@services/userSlice';
 
 const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getIncidents());
+    dispatch(getUser());
   }, [dispatch]);
 
   return (

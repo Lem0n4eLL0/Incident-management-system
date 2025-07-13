@@ -7,11 +7,12 @@ import { Table } from '@ui/Table';
 import { TABLE_COLUMNS, TABLE_PLACEHOLDER } from '@constants/constants';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useFilter } from '@hooks/useFilter';
-import { FilteredTable } from '@components/ui/FilteredTable';
+import { FilteredTable } from '@ui/FilteredTable';
 import { Modal } from '@ui/Modal';
 import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
 import { ModalIncident } from '@components/ModalIncident';
+import { AddIncidentForm } from '@components/forms/AddIncidentForm';
 
 export const IncidentsPage = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export const IncidentsPage = () => {
           <input type="search" className={style.search} name="поиск" placeholder="Поиск..."></input>
           <button
             type="button"
-            className={clsx(staticStyle.conterol_button, style.add_incident_button)}
+            className={clsx(staticStyle.control_button, style.add_incident_button)}
             onClick={() => setIsOpenAddInciden(true)}
           >
             Добавить
@@ -49,7 +50,7 @@ export const IncidentsPage = () => {
             setIsOpenAddInciden(false);
           }}
         >
-          <div>modal</div>
+          <AddIncidentForm></AddIncidentForm>
         </Modal>
       )}
     </div>

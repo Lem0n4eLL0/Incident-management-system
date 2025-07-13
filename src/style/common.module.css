@@ -35,9 +35,14 @@
   background-color: var(--status-none-color);
 }
 
-.conterol_button {
+.control_button {
   padding: 8px 10px;
   cursor: pointer;
   font-size: 18px;
   border-radius: 5px;
+}
+
+.modal_title {
+  font-size: 26px;
+  font-weight: 700;
 }

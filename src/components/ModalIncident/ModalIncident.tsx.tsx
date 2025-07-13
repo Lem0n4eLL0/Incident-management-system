@@ -22,7 +22,7 @@ export function ModalIncident({ incident }: ModalIncidentProps) {
       <span className={clsx(style.status, incident.status && getStatusClass())}>
         {incident.status}
       </span>
-      <h2 className={style.title}>Происшествие №{incident.incidentNumber}</h2>
+      <h2 className={staticStyle.modal_title}>Происшествие №{incident.incidentNumber}</h2>
       <div className={style.info}>
         <div className={style.parameters}>
           <div>
@@ -64,13 +64,13 @@ export function ModalIncident({ incident }: ModalIncidentProps) {
           <div className={style.controls}>
             <button
               type="button"
-              className={clsx(staticStyle.conterol_button, style.controls_button_update)}
+              className={clsx(staticStyle.control_button, style.controls_button_update)}
             >
               Изменить
             </button>
             <button
               type="button"
-              className={clsx(staticStyle.conterol_button, style.controls_button_delete)}
+              className={clsx(staticStyle.control_button, style.controls_button_delete)}
             >
               Удалить
             </button>

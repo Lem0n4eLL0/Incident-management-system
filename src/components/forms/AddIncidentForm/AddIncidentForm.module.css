@@ -1,0 +1,48 @@
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 20px;
+  color: var(--modal-text-color);
+  align-items: center;
+  padding: 50px 40px 40px;
+  min-width: clamp(350px, 50vw, 500px);
+}
+
+.form {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-grow: 1;
+}
+
+/* .lable_title {
+
+}
+
+.errors_wrapper {
+    
+}
+
+.errors {
+
+} */
+
+.controls {
+  place-self: flex-end flex-end;
+}
+
+/* .close_button {
+
+}
+
+.confirm_button {
+    
+} */

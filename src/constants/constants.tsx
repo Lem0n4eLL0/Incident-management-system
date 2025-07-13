@@ -1,5 +1,5 @@
 import { Column } from '@components/ui/Table';
-import { Incident, IncidentType, TableIncident } from '@custom-types/types';
+import { Incident, IncidentType, TableIncident, User } from '@custom-types/types';
 import { FilterDefinition, FilteredColumn } from '@components/ui/FilteredTable/FilteredTable';
 import { FilterFunc } from '@utils/Filter';
 import { ModalFilter } from '@components/ModalFilter';
@@ -13,6 +13,29 @@ const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
 
 const statusFilter: FilterFunc<Incident, 'status'> = (incident, value) => {
   return value ? incident.status === value : true;
+};
+
+export const EMPTY_USER: User = {
+  id: '',
+  role: 'сотрудник',
+  fullName: '',
+  unit: '',
+  position: '',
+  telephone: '',
+  email: '',
+};
+
+export const EMPTY_INCIDENT: Incident = {
+  id: '',
+  incidentNumber: '',
+  type: 'авария',
+  date: new Date(),
+  description: '',
+  unit: '',
+  author: EMPTY_USER,
+  status: 'в работе',
+  measuresTaken: '',
+  responsible: '',
 };
 
 const INCIDENT_TYPE_OPTIONS: readonly IncidentType[] = [
