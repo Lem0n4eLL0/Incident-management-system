@@ -4,45 +4,169 @@
   flex-direction: column;
   flex-grow: 1;
   gap: 20px;
-  color: var(--modal-text-color);
+  color: var(--text-100);
   align-items: center;
-  padding: 50px 40px 40px;
-  min-width: clamp(350px, 50vw, 500px);
+  padding: 50px 40px 30px;
+  background-color: var(--bg-100);
+  border-radius: 12px;
+  min-width: clamp(360px, 50vw, 600px);
+  max-height: clamp(500px, 60vh, 600px);
 }
 
 .form {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
+  flex-grow: 1;
+  gap: 20px;
+  width: 100%;
+  overflow: hidden;
 }
 
 .options {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
   flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
 }
 
-/* .lable_title {
-
+.label_textarea,
+.label_select, 
+.lable_input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
 }
 
-.errors_wrapper {
-    
+.input {
+  padding: 10px 14px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid var(--border-300, #ccc);
+  transition: border-color 0.2s;
 }
 
-.errors {
+.input:focus {
+  outline: none;
+  border-color: var(--accent-100);
+}
 
-} */
+.input_not_valid,
+.input_not_valid.input:focus{
+  border-color: var(--primary-100);
+  background-color: var(--primary-300);
+}
+
+.input_error {
+  color: var(--primary-100);
+  font-size: 14px;
+}
+
+.input_disable {
+  background-color: var(--bg-250);
+}
 
 .controls {
-  place-self: flex-end flex-end;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
 }
 
-/* .close_button {
-
+.controls_button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .confirm_button {
-    
-} */
+  background-color: var(--accent-250);
+  color: var(--text-400);
+  border-color: var(--accent-250);
+}
+
+.confirm_button:not(.form_not_valid) {
+  text-shadow: 0 0 6px rgb(0 0 0 / 20%);
+}
+
+.confirm_button:hover:not(.form_not_valid) {
+  background-color: var(--accent-100);
+  border-color: var(--accent-100);
+}
+
+.confirm_button.form_not_valid {
+  background-color: var(--bg-300);
+  color: var(--text-300);
+  border-color: var(--bg-300);
+  cursor: not-allowed;
+}
+
+.close_button {
+  background-color: var(--bg-250);
+  color: var(--text-100);
+}
+
+.close_button:hover {
+  background-color: var(--bg-300);
+}
+
+.field_title {
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-100);
+}
+
+.textarea {
+  padding: 10px 14px;
+  min-height: 100px;
+  resize: none;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 2px solid var(--border-300, #ccc);
+  color: var(--text-100);
+  font-family: inherit;
+  transition: border-color 0.1s;
+}
+
+.textarea::placeholder {
+  color: var(--text-300);
+}
+
+.textarea:focus {
+  border-color: var(--accent-100);
+}
+
+.input_not_valid.textarea:focus,
+.textarea.input_not_valid {
+  border-color: var(--primary-100);
+  background-color: var(--primary-300);
+}
+
+.select {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: inherit;
+  border: 2px solid var(--border-300, #ccc);
+  color: var(--text-100);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--accent-100);
+}
+
+.select.input_not_valid {
+  border-color: var(--primary-100);
+  background-color: var(--primary-300);
+}

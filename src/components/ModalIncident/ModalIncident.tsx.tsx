@@ -19,9 +19,11 @@ export function ModalIncident({ incident }: ModalIncidentProps) {
   };
   return (
     <div className={style.content}>
-      <span className={clsx(style.status, incident.status && getStatusClass())}>
-        {incident.status}
-      </span>
+      {incident.status && (
+        <span className={clsx(style.status, incident.status && getStatusClass())}>
+          {incident.status}
+        </span>
+      )}
       <h2 className={staticStyle.modal_title}>Происшествие №{incident.incidentNumber}</h2>
       <div className={style.info}>
         <div className={style.parameters}>
@@ -57,20 +59,20 @@ export function ModalIncident({ incident }: ModalIncidentProps) {
         <div className={style.footer}>
           <div className={style.date_wrapper}>
             <span className={style.date}>
-              {new Date(incident.date).toLocaleDateString('ru-RU')}
+              {incident.date ? incident.date.toLocaleDateString('ru-RU') : ''}
             </span>
           </div>
 
           <div className={style.controls}>
             <button
               type="button"
-              className={clsx(staticStyle.control_button, style.controls_button_update)}
+              className={clsx(style.controls_button, style.controls_button_update)}
             >
               Изменить
             </button>
             <button
               type="button"
-              className={clsx(staticStyle.control_button, style.controls_button_delete)}
+              className={clsx(style.controls_button, style.controls_button_delete)}
             >
               Удалить
             </button>

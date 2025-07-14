@@ -22,4 +22,5 @@ type RootState = ReturnType<typeof rootRedusers>;
 const useDispatch = dispatchHook.withTypes<AppDispatch>();
 const useSelector = selectorHook.withTypes<RootState>();
 
+export type { RootState, AppDispatch };
 export { store, useDispatch, useSelector };

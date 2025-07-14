@@ -1,4 +1,5 @@
-export type Role = 'сотрудник' | 'руководитель' | 'администратор';
+export const USER_ROLES = ['сотрудник', 'руководитель', 'администратор'] as const;
+export type Role = (typeof USER_ROLES)[number];
 
 export type Phone = string;
 export type Email = string;
@@ -23,8 +24,10 @@ export type UserDTO = {
   email: string;
 };
 
-export type IncidentType = 'авария' | 'инцидент' | 'травма' | 'пожар' | 'другое';
-export type IncidentStatus = 'в работе' | 'завершено' | 'на рассмотрении';
+export const INCIDENT_TYPES = ['авария', 'инцидент', 'травма', 'пожар', 'другое'] as const;
+export type IncidentType = (typeof INCIDENT_TYPES)[number];
+export const INCIDENT_STATUSES = ['в работе', 'завершено', 'на рассмотрении'] as const;
+export type IncidentStatus = (typeof INCIDENT_STATUSES)[number];
 
 export type Incident = {
   id: string;

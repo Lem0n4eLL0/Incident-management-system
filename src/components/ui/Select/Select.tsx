@@ -1,5 +1,6 @@
-type SelectProps<T> = {
-  onChange: (value: T | undefined) => void;
+import clsx from 'clsx';
+import style from './Select.module.css';
+type SelectProps<T extends string> = React.SelectHTMLAttributes<HTMLSelectElement> & {
   options: readonly T[];
   value?: T;
   placeholder?: string;
@@ -7,21 +8,16 @@ type SelectProps<T> = {
 
 export function Select<T extends string>({
   value,
-  onChange,
   options,
   placeholder,
+  className,
+  ...rest
 }: SelectProps<T>) {
   return (
-    <select
-      value={value ?? ''}
-      onChange={(e) => {
-        const v = e.target.value;
-        onChange(v === '' ? undefined : (v as T));
-      }}
-    >
+    <select value={value ?? ''} className={clsx(className, style.select)} {...rest}>
       {placeholder && <option value="">{placeholder}</option>}
       {options.map((option) => (
-        <option key={option} value={option}>
+        <option key={option} value={option} className={style.option}>
           {option}
         </option>
       ))}

@@ -50,7 +50,7 @@ export const IncidentsPage = () => {
             setIsOpenAddInciden(false);
           }}
         >
-          <AddIncidentForm></AddIncidentForm>
+          <AddIncidentForm onClose={() => setIsOpenAddInciden(false)}></AddIncidentForm>
         </Modal>
       )}
     </div>

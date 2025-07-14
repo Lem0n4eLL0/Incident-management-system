@@ -8,16 +8,22 @@
   align-items: center;
   padding: 50px 40px 40px;
   min-width: clamp(350px, 50vw, 500px);
+  font-family: Inter, sans-serif;
 }
 
 .status {
   position: absolute;
   display: block;
-  padding: 5px 10px;
+  padding: 6px 12px;
   left: 50%;
   top: 9px;
   border-radius: 15px;
+  text-shadow: 0 0 8px rgb(0 0 0 / 20%);
+  color: var(--text-400);
+  font-weight: 600;
+  font-size: 15px;
   transform: translate(-50%);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 
 .info {
@@ -26,48 +32,58 @@
   gap: 40px;
   flex-grow: 1;
   width: 100%;
-  font-size: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-200);
 }
 
 .type {
   display: block;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 .parameters {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  font-size: 22px;
+  gap: 6px;
+  font-size: 20px;
   overflow: hidden;
   flex-grow: 1;
+  color: var(--text-100);
 }
 
-.field { 
+.field {
   font-weight: 700;
   margin-right: 10px;
+  color: var(--text-100);
 }
 
 .value {
-  font-size: 20px;
+  font-size: 19px;
+  color: var(--text-300);
 }
 
 .text_block {
   border: 1px solid var(--modal-border-color);
   border-radius: 10px;
-  margin-top: 3px;
-  padding: 6px 8px;
-  font-size: 20px;
+  margin-top: 4px;
+  padding: 10px 12px;
+  font-size: 17px;
   width: 100%;
   max-width: 500px;
-  line-height: 1.5rem;
-  height: calc(1.5rem * 3 + 14px);
+  line-height: 1.6;
+  height: calc(1.6rem * 3 + 14px);
+  background-color: var(--bg-200);
+  color: var(--text-100);
   overflow: hidden auto;
 }
 
 .footer {
   display: flex;
   align-items: end;
+  margin-top: 20px;
 }
 
 .date_wrapper {
@@ -78,6 +94,8 @@
   position: relative;
   font-weight: 700;
   font-style: italic;
+  color: var(--text-300);
+  font-size: 15px;
 }
 
 .date::before {
@@ -88,43 +106,45 @@
   height: 2px;
   bottom: -1px;
   background-color: var(--modal-text-color);
+  opacity: 0.3;
 }
 
 .controls {
   display: flex;
-  gap: 10px;
+  gap: 14px;
 }
 
 .controls_button {
-  padding: 8px 10px;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
-  font-size: 18px;
-  border-radius: 5px;
+  transition-duration: 0.2s;
+  border: 2px solid;
+  transition-property: background-color, color, border-color;
+  
 }
 
 .controls_button_update {
-  border: 1px solid var(--accent-100);
-  color: var(--text-100);
-  background-color: var(--accent-100);
-  transition-duration: 0.1s;
-  transition-property: border, background-color;
+  background-color: var(--accent-250);
+  color: var(--text-400);
+  border-color: var(--accent-250);
 }
 
 .controls_button_update:hover {
-  border: 1px solid var(--accent-250);
-  background-color: var(--accent-250);
+  background-color: var(--accent-100);
+  border-color: var(--accent-100);
 }
 
 .controls_button_delete {
-  border: 1px solid var(--modal-border-color);
+  background-color: var(--bg-100);
   color: var(--primary-100);
-  background-color: var(--modal-bg-color-v2);
-  transition-duration: 0.1s;
-  transition-property: border, color, background-color;
+  border-color: var(--primary-100);
 }
 
 .controls_button_delete:hover {
-  color: var(--text-400);
   background-color: var(--primary-100);
-  border: 1px solid var(--primary-100);
+  color: var(--text-400);
+  border-color: var(--primary-100);
 }

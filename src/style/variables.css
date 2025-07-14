@@ -21,12 +21,13 @@
   --bg-200:#f5f5f5;
   --bg-250: #e2e2e2;
   --bg-300:#ccc;
+  --bg-350:#bebebe;
   --bg-400:#8f8f8f;
   --border-100: #000;
   --border-200: #1a1a1a;
   --additional-100:#3f9c3f;
   --additional-150:#56c056;
-  --additional-200:#f1f368;
+  --additional-200:#ebc82e;
 
   /* Рабочие перемееные палитры */
   --main-bg-color: var(--bg-100);
@@ -60,4 +61,6 @@
   --status-underway-color: var(--primary-200);
   --status-consideration-color: var(--additional-200);
   --status-none-color: var(--bg-250);
+  --form-bg-color: var(--bg-200);
+  --form-bg-color-v2: var(--bg-300);
 }

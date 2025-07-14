@@ -46,3 +46,30 @@
   font-size: 26px;
   font-weight: 700;
 }
+
+.error {
+  font-size: 16px;
+  color: var(--error-text-color-v2);
+}
+
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--bg-200);
+  border-radius: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bg-300);
+  border-radius: 8px;
+  border: 2px solid var(--bg-200); /* внутренняя обводка трека */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--bg-350);
+}
+

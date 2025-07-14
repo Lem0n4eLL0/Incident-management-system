@@ -1,9 +1,19 @@
 import { Column } from '@components/ui/Table';
-import { Incident, IncidentType, TableIncident, User } from '@custom-types/types';
+import {
+  Incident,
+  INCIDENT_STATUSES,
+  INCIDENT_TYPES,
+  IncidentDTO,
+  IncidentStatus,
+  IncidentType,
+  TableIncident,
+  User,
+} from '@custom-types/types';
 import { FilterDefinition, FilteredColumn } from '@components/ui/FilteredTable/FilteredTable';
 import { FilterFunc } from '@utils/Filter';
 import { ModalFilter } from '@components/ModalFilter';
 import { Select } from '@components/ui/Select';
+import { mapIncidentToDto } from '@custom-types/mapperDTO';
 
 export const TABLE_PLACEHOLDER = '—';
 
@@ -38,13 +48,26 @@ export const EMPTY_INCIDENT: Incident = {
   responsible: '',
 };
 
-const INCIDENT_TYPE_OPTIONS: readonly IncidentType[] = [
-  'авария',
-  'инцидент',
-  'травма',
-  'пожар',
-  'другое',
-] as const;
+export const EMPTY_INCIDENTDTO: IncidentDTO = {
+  id: '',
+  incident_number: '',
+  type: '',
+  date: '',
+  description: '',
+  unit: '',
+  author: {
+    id: '',
+    role: '',
+    full_name: '',
+    unit: '',
+    position: '',
+    telephone: '',
+    email: '',
+  },
+  status: '',
+  measures_taken: '',
+  responsible: '',
+};
 
 export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
   {
@@ -63,7 +86,7 @@ export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
         {({ value, onChange }) => (
           <Select
             value={value}
-            options={INCIDENT_TYPE_OPTIONS}
+            options={INCIDENT_TYPES}
             onChange={onChange}
             placeholder={'- Любой -'}
           />
@@ -75,7 +98,8 @@ export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
   {
     key: 'date',
     title: 'Дата',
-    render: (incident) => new Date(incident.date).toLocaleDateString('ru-RU'),
+    render: (incident) =>
+      incident.date ? new Date(incident.date).toLocaleDateString('ru-RU') : '',
   },
   {
     key: 'status',
@@ -87,9 +111,9 @@ export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
         filterFunc={statusFilter}
       >
         {({ value, onChange }) => (
-          <Select
+          <Select<IncidentStatus>
             value={value}
-            options={['в работе', 'завершено', 'на рассмотрении']}
+            options={INCIDENT_STATUSES}
             onChange={onChange}
             placeholder={'- Любой -'}
           />

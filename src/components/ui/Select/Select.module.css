@@ -1,0 +1,35 @@
+.select {
+  padding: 8px 12px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--text-100);
+  background-color: var(--bg-100);
+  border: 2px solid var(--border-200);
+  border-radius: 8px;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.1s;
+}
+
+/* .select:focus {
+  border-color: var(--primary-200);
+  outline: none;
+} */
+
+.select.error {
+  border-color: var(--primary-100);
+  background-color: var(--primary-300);
+}
+
+.option {
+  font-size: 16px;
+  padding: 8px;
+  color: var(--text-100);
+  background-color: var(--bg-100);
+}
+
+.select option:hover,
+.select option:checked {
+  background-color: var(--accent-100);
+  color: var(--text-400);
+}

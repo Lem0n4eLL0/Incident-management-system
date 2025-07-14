@@ -12,7 +12,7 @@ type ModalFilterProps<T, K extends keyof T> = {
   filterFunc: FilterFunc<T, K>;
   children: (props: {
     value?: T[K] | undefined;
-    onChange: (value: T[K] | undefined) => void;
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   }) => React.ReactNode;
 };
 
@@ -24,9 +24,13 @@ export function ModalFilter<T, K extends keyof T>({
 }: ModalFilterProps<T, K>) {
   const [value, setValue] = useState<T[K] | undefined>();
 
+  const changeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setValue(e.target.value ? (e.target.value as T[K]) : undefined);
+  };
+
   useEffect(() => {
     controller.setFilter(column, (item) => filterFunc(item, value));
   }, [value]);
 
-  return <div className={style.content}>{children({ value, onChange: setValue })}</div>;
+  return <div className={style.content}>{children({ value, onChange: changeHandler })}</div>;
 }
