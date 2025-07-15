@@ -5,11 +5,6 @@ import style from './HomePage.module.css';
 import { selectUser } from '@services/userSlice';
 import { DEFAULT_USER } from '@constants/test';
 import { IncidentValue } from '@components/IncidentValue';
-import { Table } from '@ui/Table';
-import { TABLE_PLACEHOLDER, TABLE_COLUMNS } from '@constants/constants';
-import { Incident } from '@custom-types/types';
-import { Modal } from '@ui/Modal';
-import { useState } from 'react';
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -19,10 +14,10 @@ export const HomePage = () => {
   return (
     <div className={style.content}>
       <section className={style.introduction}>
-        <h1 className={style.greetings}>Здравствуйте, {DEFAULT_USER.user.fullName}!</h1>{' '}
+        <h1 className={style.greetings}>Здравствуйте, {user!.fullName}!</h1>{' '}
         {/* Было бы круто сделать модальным окном сбоку, с одним приветствием за сессию*/}
         <div className={style.statistic}>
-          <IncidentValue value={322} description={'всего инцедентов'} />{' '}
+          <IncidentValue value={incidents.length} description={'всего инцедентов'} />{' '}
           {/* Используя фильтры считать */}
           <div className={style.separator_wrapper}>
             {' '}

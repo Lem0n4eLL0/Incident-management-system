@@ -11,7 +11,7 @@ import staticStyle from '@style/common.module.css';
 import clsx from 'clsx';
 import { selectUser } from '@services/userSlice';
 import { useSelector } from '@services/store';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { EMPTY_INCIDENTDTO } from '@constants/constants';
 import { TFormValidators, useFormValidation } from '@hooks/useFormValidation';
 import { Input } from '@components/ui/Input';
@@ -52,9 +52,17 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
   const { errors, isAllValid, validateField, validateAll } =
     useFormValidation<IncidentDTO>(ADD_INCIDENT_VALIDATORS);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const isFormValid = useMemo(() => {
     return isAllValid(getValidatableFields(formData));
   }, [formData]);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -87,6 +95,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
         <div className={style.options}>
           <Input
             className={clsx(errors.incident_number && style.input_not_valid, style.input)}
+            inputRef={inputRef}
             lableClassName={style.lable_input}
             type="text"
             name="number"
