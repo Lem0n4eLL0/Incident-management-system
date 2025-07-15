@@ -1,21 +1,19 @@
-import { Column } from '@components/ui/Table';
 import {
   Incident,
   INCIDENT_STATUSES,
   INCIDENT_TYPES,
   IncidentDTO,
   IncidentStatus,
-  IncidentType,
-  TableIncident,
   User,
 } from '@custom-types/types';
-import { FilterDefinition, FilteredColumn } from '@components/ui/FilteredTable/FilteredTable';
+import { FilteredColumn } from '@components/ui/FilteredTable/FilteredTable';
 import { FilterFunc } from '@utils/Filter';
 import { ModalFilter } from '@components/ModalFilter';
 import { Select } from '@components/ui/Select';
-import { mapIncidentToDto } from '@custom-types/mapperDTO';
 
 export const TABLE_PLACEHOLDER = '—';
+export const LOCAL_STORAGE_REFRESH_TOKEN_ALIAS = 'refreshToken';
+export const COOKIE_ACCESS_TOKEN_ALIAS = 'accessToken';
 
 const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
   return value ? incident.type === value : true;

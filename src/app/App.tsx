@@ -1,39 +1,21 @@
-import { TestComponent } from '@components/TestCompopnent';
-import style from './App.module.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { MainLayout } from '@layout/MainLayout';
-import { HomePage } from '@pages/HomePage';
-import { ErrorPage } from '@pages/ErrorPage';
-import { IncidentsPage } from '@pages/IncidentsPage';
-import { useDispatch } from '@services/store';
-import { getIncidents } from '@services/incidentSlice';
+import { useDispatch, useSelector } from '@services/store';
 import { useEffect } from 'react';
-import { getUser } from '@services/userSlice';
+import { getUser, selectAll } from '@services/userSlice';
+import { MainApp } from './MainApp';
 
-const App = () => {
+export const App = () => {
   const dispatch = useDispatch();
+  const { isAuthenticated, isAuthChecked } = useSelector((state) =>
+    selectAll.unwrapped(state.userReducer)
+  );
 
   useEffect(() => {
-    dispatch(getIncidents());
     dispatch(getUser());
   }, [dispatch]);
 
-  return (
-    <div className={style.app}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<HomePage />}></Route>
-            <Route path="incidents" element={<IncidentsPage />}></Route>
-            <Route path="profile" element={<ErrorPage />}></Route>
-            <Route path="administration" element={<ErrorPage />}></Route>
-            <Route path="analytics" element={<ErrorPage />}></Route>
-          </Route>
-          <Route path="*" element={<ErrorPage />}></Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
-  );
-};
+  if (!isAuthChecked) {
+    return <div>Loading...</div>;
+  }
 
-export { App };
+  return <MainApp />;
+};
