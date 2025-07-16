@@ -1,6 +1,5 @@
 import { COOKIE_ACCESS_TOKEN_ALIAS, LOCAL_STORAGE_REFRESH_TOKEN_ALIAS } from '@constants/constants';
-import { User, UserDTO } from '@custom-types/types';
-import { TLoginUser } from '@services/userSlice';
+import { ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import Cookies from 'js-cookie';
 
 const URL_API = process.env.REACT_APP_API_URL;
@@ -18,11 +17,11 @@ const TEST_USER_DTO: UserDTO = {
 const checkResponse = <T>(res: Response): Promise<T> =>
   res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 
-type TServerResponse<T> = T & {
+type TServerResponse<T = object> = T & {
   success: boolean;
 };
 
-type TRefreshResponse = TServerResponse<{
+export type TRefreshResponse = TServerResponse<{
   refreshToken: string;
   accessToken: string;
 }>;
@@ -61,10 +60,15 @@ export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Pro
     });
 };
 
-export const loginUserApi = (loginData: TLoginUser) => {
-  return new Promise<UserDTO>((res) => {
-    setTimeout(() => res(TEST_USER_DTO), 300);
+export const loginUserApi = (loginData: ApiLoginRequest) => {
+  return new Promise<TServerResponse>((res, rej) => {
+    if (loginData.login === 'err') rej('Неверные данные');
+    setTimeout(() => res({ success: true }), 300);
   });
+};
+
+export const logoutUserApi = () => {
+  return new Promise((res) => res);
 };
 
 export const getUserApi = () => {

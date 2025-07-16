@@ -60,5 +60,6 @@ export function useFormValidation<T>(validators: Partial<TFormValidators<T>>) {
     isAllValid,
     validateField,
     validateAll,
+    setErrors,
   };
 }

@@ -1,0 +1,108 @@
+import { useFormValidation } from '@hooks/useFormValidation';
+import style from './AuthForm.module.css';
+import { ApiLoginRequest } from '@custom-types/types';
+import { LOGIN_REQUEST_VALIDATORS } from '@constants/validators';
+import { Input } from '@ui/Input';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+
+import staticStyle from '@style/common.module.css';
+import clsx from 'clsx';
+import { useDispatch, useSelector } from '@services/store';
+import { Navigate } from 'react-router-dom';
+import { loginUser, selectErrorsAuth, selectFlagsAuth } from '@services/authSlice';
+const EMPTY_LOGIN_REQUEST: ApiLoginRequest = {
+  login: '',
+  password: '',
+};
+
+export const AuthForm = () => {
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => selectFlagsAuth.unwrapped(state.authReducer));
+  const { authUserError } = useSelector((state) => selectErrorsAuth.unwrapped(state.authReducer));
+
+  const [authData, setAuthData] = useState<ApiLoginRequest>(EMPTY_LOGIN_REQUEST);
+  const { errors, isAllValid, validateField, validateAll, setErrors } =
+    useFormValidation<ApiLoginRequest>(LOGIN_REQUEST_VALIDATORS);
+
+  const [serverError, setServerError] = useState<string | null>(null);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const isFormValid = useMemo(() => {
+    return isAllValid(authData);
+  }, [authData]);
+
+  useEffect(() => {
+    if (inputRef.current) inputRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    if (authUserError?.message) {
+      setServerError(authUserError.message);
+      setErrors({
+        login: ' ',
+        password: ' ',
+      });
+      if (inputRef.current) inputRef.current.focus();
+    } else {
+      setServerError(null);
+      setErrors({});
+    }
+  }, [authUserError, setErrors]);
+
+  const inputHandler = (field: keyof ApiLoginRequest) => (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setServerError('');
+    setErrors({});
+    setAuthData((prev) => ({ ...prev, [field]: value }));
+    validateField({ field, value });
+  };
+
+  const submitHandler = (e: FormEvent) => {
+    e.preventDefault();
+    if (!validateAll(authData)) return;
+    dispatch(loginUser(authData));
+  };
+
+  if (isAuthenticated) {
+    return <Navigate to={'/'} />;
+  }
+
+  return (
+    <form className={style.form} ref={formRef} onSubmit={submitHandler}>
+      <div className={style.options}>
+        <Input
+          type="text"
+          inputRef={inputRef}
+          error={<span className={staticStyle.error}>{errors.login}</span>}
+          inputTitle={<span className={style.field_title}>Логин</span>}
+          value={authData.login}
+          className={clsx(style.input, errors.login && style.input_not_valid)}
+          lableClassName={style.lable}
+          onChange={inputHandler('login')}
+        />
+        <Input
+          type="password"
+          inputRef={inputRef}
+          error={<span className={staticStyle.error}>{errors.password}</span>}
+          inputTitle={<span className={style.field_title}>Пароль</span>}
+          value={authData.password}
+          className={clsx(style.input, errors.password && style.input_not_valid)}
+          lableClassName={style.lable}
+          onChange={inputHandler('password')}
+        />
+      </div>
+      <div className={style.controls}>
+        <span className={clsx(staticStyle.error, style.form_response_error)}>{serverError}</span>
+        <button
+          type="submit"
+          className={clsx(style.auth_button, (!isFormValid || serverError) && style.form_not_valid)}
+          disabled={!isFormValid || serverError === null}
+        >
+          Вход
+        </button>
+      </div>
+    </form>
+  );
+};

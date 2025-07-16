@@ -6,8 +6,10 @@ import {
 } from 'react-redux';
 import { userReducer } from './userSlice';
 import { incidentsReducer } from './incidentSlice';
+import { authReducer } from './authSlice';
 
 const rootRedusers = combineSlices({
+  authReducer,
   userReducer,
   incidentsReducer,
 });

@@ -9,7 +9,7 @@
   padding: 50px 40px 30px;
   background-color: var(--bg-100);
   border-radius: 12px;
-  min-width: clamp(360px, 50vw, 600px);
+  min-width: clamp(360px, 50vw, 460px);
   max-height: clamp(500px, 60vh, 600px);
 }
 
@@ -25,7 +25,6 @@
 .options {
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   gap: 16px;
   width: 100%;
   flex-grow: 1;
@@ -86,26 +85,30 @@
   transition: background-color 0.2s;
 }
 
+.disabled {
+  cursor: default;
+}
+
 .confirm_button {
   background-color: var(--accent-250);
   color: var(--text-400);
   border-color: var(--accent-250);
 }
 
-.confirm_button:not(.form_not_valid) {
-  text-shadow: 0 0 6px rgb(0 0 0 / 20%);
+.confirm_button:not(.disabled) {
+  text-shadow: 0 0 6px rgba(0 0 0 / 20%);
 }
 
-.confirm_button:hover:not(.form_not_valid) {
+.confirm_button:hover:not(.disabled) {
   background-color: var(--accent-100);
   border-color: var(--accent-100);
 }
 
-.confirm_button.form_not_valid {
+.confirm_button.disabled {
   background-color: var(--bg-300);
   color: var(--text-300);
   border-color: var(--bg-300);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .close_button {
@@ -115,6 +118,12 @@
 
 .close_button:hover {
   background-color: var(--bg-300);
+}
+
+.close_button.disabled {
+  background-color: var(--bg-300);
+  color: var(--text-300);
+  border-color: var(--bg-300);
 }
 
 .field_title {

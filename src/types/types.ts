@@ -58,6 +58,11 @@ export type IncidentDTO = {
 };
 
 export type ApiError = {
-  code: string | number;
-  message: string;
+  code: string | number | undefined;
+  message: string | undefined;
+};
+
+export type ApiLoginRequest = {
+  login: string;
+  password: string;
 };

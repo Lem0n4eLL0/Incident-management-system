@@ -4,7 +4,7 @@ import {
   PayloadAction,
   SerializedError,
 } from '@reduxjs/toolkit';
-import { ApiError, User, UserDTO } from '@custom-types/types';
+import { ApiError, ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
 import { getUserApi, loginUserApi } from '@api/userApi';
 import { mapUserFromDto } from '@custom-types/mapperDTO';
@@ -14,80 +14,60 @@ const createSlice = buildCreateSlice({
 });
 
 type TUserState = {
-  isAuthChecked: boolean;
-  isAuthenticated: boolean;
   user: User | null;
-  loginUserError: ApiError | undefined;
-  loginUserRequest: boolean;
+  status: {
+    isGetUserPending: boolean;
+    isUpdateUserPending: boolean;
+  };
+  errors: {
+    getUserError?: ApiError;
+    updateUserError?: ApiError;
+  };
 };
 
 const initialState: TUserState = {
   user: EMPTY_USER,
-  isAuthenticated: false,
-  isAuthChecked: false,
-  loginUserError: undefined,
-  loginUserRequest: false,
-};
-
-export type TLoginUser = {
-  login: string;
-  password: string;
+  status: {
+    isGetUserPending: false,
+    isUpdateUserPending: false,
+  },
+  errors: {},
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: (create) => ({
-    loginUser: create.asyncThunk(async (loginData: TLoginUser) => await loginUserApi(loginData), {
-      pending: (state) => {
-        state.loginUserRequest = true;
-        state.isAuthenticated = false;
-        state.loginUserError = undefined;
-      },
-      rejected: (state, action) => {
-        state.loginUserRequest = false;
-        state.loginUserError = {
-          code: action.error.code ?? -1,
-          message: action.error.message ?? 'Неизвестная ошибка',
-        };
-        state.isAuthChecked = true;
-      },
-      fulfilled: (state, action) => {
-        state.user = mapUserFromDto(action.payload);
-        state.loginUserRequest = false;
-        state.isAuthenticated = true;
-        state.isAuthChecked = true;
-      },
-    }),
-
     getUser: create.asyncThunk(async () => await getUserApi(), {
       pending: (state) => {
-        state.loginUserRequest = true;
-        state.isAuthenticated = false;
-        state.loginUserError = undefined;
+        state.status.isGetUserPending = true;
+        state.errors.getUserError = undefined;
       },
       rejected: (state, action) => {
-        state.loginUserRequest = false;
-        state.loginUserError = {
-          code: action.error.code ?? -1,
-          message: action.error.message ?? 'Неизвестная ошибка',
+        state.errors.getUserError = {
+          code: action.error.code,
+          message: action.error.message,
         };
-        state.isAuthChecked = true;
+        state.status.isGetUserPending = false;
       },
       fulfilled: (state, action) => {
         state.user = mapUserFromDto(action.payload);
-        state.loginUserRequest = false;
-        state.isAuthenticated = true;
-        state.isAuthChecked = true;
+        state.status.isGetUserPending = false;
       },
     }),
   }),
   selectors: {
     selectUser: (state) => state.user,
-    selectAll: (state) => state,
+    selectStatus: (state) => state.status,
+    selectErrors: (state) => state.errors,
   },
 });
 
-export const { loginUser, getUser } = userSlice.actions;
-export const { selectUser, selectAll } = userSlice.selectors;
+export const { getUser } = userSlice.actions;
+export const {
+  selectUser,
+  selectStatus: selectStatusUser,
+  selectErrors: selectErrorsUser,
+} = userSlice.selectors;
+
 export const userReducer = userSlice.reducer;

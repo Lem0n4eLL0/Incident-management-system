@@ -10,32 +10,14 @@ import style from './AddIncidentForm.module.css';
 import staticStyle from '@style/common.module.css';
 import clsx from 'clsx';
 import { selectUser } from '@services/userSlice';
-import { useSelector } from '@services/store';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from '@services/store';
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import { EMPTY_INCIDENTDTO } from '@constants/constants';
-import { TFormValidators, useFormValidation } from '@hooks/useFormValidation';
+import { useFormValidation } from '@hooks/useFormValidation';
 import { Input } from '@components/ui/Input';
 import { mapUserToDto } from '@custom-types/mapperDTO';
-
-export const ADD_INCIDENT_VALIDATORS: Partial<TFormValidators<IncidentDTO>> = {
-  incident_number: {
-    validator: (value) => value.trim().length > 0,
-    message: 'Обязательно для заполнения',
-  },
-  type: {
-    validator: (value) => value.trim().length > 0,
-    message: 'Обязательно для заполнения',
-  },
-  date: {
-    validator: (value) =>
-      value.trim().length > 0 && new Date(value).getTime() < new Date().getTime(),
-    message: 'Неверный формат даты',
-  },
-  description: {
-    validator: (value) => value.trim().length > 0,
-    message: 'Описание обязательно',
-  },
-};
+import { ADD_INCIDENT_VALIDATORS } from '@constants/validators';
+import { addIncident, selectErrorsIncidents, selectErrorsStatus } from '@services/incidentSlice';
 
 const getValidatableFields = (data: IncidentDTO) => {
   const { incident_number, type, date, description } = data;
@@ -47,15 +29,23 @@ type AddIncidentFormProps = {
 };
 
 export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
+  const dispatch = useDispatch();
   const user = useSelector((state) => selectUser.unwrapped(state.userReducer));
+  const { addIncidentError } = useSelector((state) =>
+    selectErrorsIncidents.unwrapped(state.incidentsReducer)
+  );
+  const { isAddIncidentPending } = useSelector((state) =>
+    selectErrorsStatus.unwrapped(state.incidentsReducer)
+  );
+
+  const [serverError, setServerError] = useState<string | null>(null);
   const [formData, setFormData] = useState<IncidentDTO>(EMPTY_INCIDENTDTO);
-  const { errors, isAllValid, validateField, validateAll } =
-    useFormValidation<IncidentDTO>(ADD_INCIDENT_VALIDATORS);
+  const validator = useFormValidation<IncidentDTO>(ADD_INCIDENT_VALIDATORS);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const isFormValid = useMemo(() => {
-    return isAllValid(getValidatableFields(formData));
+    return validator.isAllValid(getValidatableFields(formData));
   }, [formData]);
 
   useEffect(() => {
@@ -73,20 +63,35 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
     }
   }, [user]);
 
-  const changeHandler =
-    (field: keyof IncidentDTO) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-      const value = e.target.value;
-      setFormData((prev) => ({ ...prev, [field]: value }));
-      validateField({ field, value });
-    };
-
-  const submitHandler = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (validateAll(getValidatableFields(formData))) {
-      // Отправка запроса
+  useEffect(() => {
+    if (isAddIncidentPending) {
+      return;
+    } else if (addIncidentError?.message) {
+      setServerError(addIncidentError.message);
     }
-  };
+  }, [isAddIncidentPending]);
+
+  const changeHandler = useCallback(
+    (field: keyof IncidentDTO) =>
+      (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const value = e.target.value;
+        setFormData((prev) => ({ ...prev, [field]: value }));
+        validator.validateField({ field, value });
+        setServerError('');
+      },
+    [validator.validateField, setServerError]
+  );
+
+  const submitHandler = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!validator.validateAll(getValidatableFields(formData))) {
+        return;
+      }
+      dispatch(addIncident(formData));
+    },
+    [formData, validator.validateAll, dispatch]
+  );
 
   return (
     <div className={style.content}>
@@ -94,7 +99,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
       <form id="add_incident" className={style.form} onSubmit={submitHandler}>
         <div className={style.options}>
           <Input
-            className={clsx(errors.incident_number && style.input_not_valid, style.input)}
+            className={clsx(validator.errors.incident_number && style.input_not_valid, style.input)}
             inputRef={inputRef}
             lableClassName={style.lable_input}
             type="text"
@@ -103,7 +108,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
             onChange={changeHandler('incident_number')}
             error={
               <span className={clsx(staticStyle.error, style.input_error)}>
-                {errors.incident_number}
+                {validator.errors.incident_number}
               </span>
             }
             inputTitle={<span className={style.field_title}>Номер</span>}
@@ -116,33 +121,38 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
               options={INCIDENT_TYPES}
               value={formData.type as IncidentType}
               placeholder="- Выберете -"
-              className={clsx(style.select, errors.type && style.input_not_valid)}
+              className={clsx(style.select, validator.errors.type && style.input_not_valid)}
             />
-            <span className={staticStyle.error}>{errors.type}</span>
+            <span className={staticStyle.error}>{validator.errors.type}</span>
             {/* переделать с сервера */}
           </label>
           <Input
-            className={clsx(errors.date && style.input_not_valid, style.input)}
+            className={clsx(validator.errors.date && style.input_not_valid, style.input)}
             lableClassName={style.lable_input}
             type="date"
             name="date"
             value={formData.date}
             onChange={changeHandler('date')}
             error={
-              <span className={clsx(staticStyle.error, style.input_error)}>{errors.date}</span>
+              <span className={clsx(staticStyle.error, style.input_error)}>
+                {validator.errors.date}
+              </span>
             }
             inputTitle={<span className={style.field_title}>Дата</span>}
           ></Input>
           <label className={style.label_textarea}>
             <span className={style.field_title}>Описание</span>
             <textarea
-              className={clsx(errors.description && style.input_not_valid, style.textarea)}
+              className={clsx(
+                validator.errors.description && style.input_not_valid,
+                style.textarea
+              )}
               name="description"
               placeholder="Введите описание..."
               value={formData.description}
               onChange={changeHandler('description')}
             ></textarea>
-            <span className={staticStyle.error}>{errors.description}</span>
+            <span className={staticStyle.error}>{validator.errors.description}</span>
           </label>
           <Input
             className={clsx(style.input_disable, style.input)}
@@ -195,22 +205,28 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
             inputTitle={<span className={style.field_title}>Ответственный</span>}
           ></Input>
         </div>
+        <span className={staticStyle.error}>{serverError}</span>
         <div className={style.controls}>
           <button
             type="submit"
             className={clsx(
               style.controls_button,
               style.confirm_button,
-              !isFormValid && style.form_not_valid
+              (!isFormValid || isAddIncidentPending) && style.disabled
             )}
             disabled={!isFormValid}
           >
-            Сохранить
+            {isAddIncidentPending ? 'Сохранение...' : 'Сохранить'}
           </button>
           <button
             type="button"
-            className={clsx(style.controls_button, style.close_button)}
+            className={clsx(
+              style.controls_button,
+              style.close_button,
+              isAddIncidentPending && style.disabled
+            )}
             onClick={onClose}
+            disabled={isAddIncidentPending}
           >
             Отмена
           </button>

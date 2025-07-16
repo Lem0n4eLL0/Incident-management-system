@@ -1,0 +1,31 @@
+.content_wrapper {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-200);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: clamp(320px, 50vw, 400px);
+  min-height: 300px;
+  padding: 30px;
+  align-items: center;
+  background-color: var(--bg-100);
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgb(0 0 0 / 20%);
+  border: 2px solid var(--bg-250);
+}
+
+.title {
+  align-self: center;
+  font-weight: 700;
+}
+
+.form_wrapper {
+  display: flex;
+  width: 100%;
+}

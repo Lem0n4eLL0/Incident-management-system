@@ -1,4 +1,5 @@
-import { Incident, User } from '@custom-types/types';
+import { mapUserToDto } from '@custom-types/mapperDTO';
+import { Incident, IncidentDTO, User } from '@custom-types/types';
 
 export const DEFAULT_USER: { user: User } = {
   user: {
@@ -12,54 +13,54 @@ export const DEFAULT_USER: { user: User } = {
   },
 };
 
-export const INCEDENTS: { incident: Incident[] } = {
+export const INCEDENTS: { incident: IncidentDTO[] } = {
   incident: [
     {
       id: '123',
-      incidentNumber: '1',
+      incident_number: '1',
       type: 'авария',
-      date: new Date(),
+      date: '',
       description: 'Тестовый инцедент',
-      author: DEFAULT_USER.user,
+      author: mapUserToDto(DEFAULT_USER.user),
       unit: '1 подразделение',
     },
     {
       id: '456',
-      incidentNumber: '2',
+      incident_number: '2',
       type: 'другое',
-      date: new Date(),
+      date: '',
       description: 'Тестовый инцедент 2',
-      author: DEFAULT_USER.user,
+      author: mapUserToDto(DEFAULT_USER.user),
       unit: '2 подразделение',
       status: 'завершено',
     },
     {
       id: '456756',
-      incidentNumber: '3',
+      incident_number: '3',
       type: 'авария',
-      date: new Date(),
+      date: '',
       description: 'Тестовый инцедент 3',
-      author: DEFAULT_USER.user,
+      author: mapUserToDto(DEFAULT_USER.user),
       unit: '3 подразделение',
       status: 'завершено',
     },
     {
       id: '456756',
-      incidentNumber: '4',
+      incident_number: '4',
       type: 'авария',
-      date: new Date(),
+      date: '',
       description: 'Тестовый инцедент 4',
-      author: DEFAULT_USER.user,
+      author: mapUserToDto(DEFAULT_USER.user),
       unit: '3 подразделение',
       status: 'в работе',
     },
     {
       id: '456756',
-      incidentNumber: '5',
+      incident_number: '5',
       type: 'авария',
-      date: new Date(),
+      date: '',
       description: 'Тестовый инцедент 5',
-      author: DEFAULT_USER.user,
+      author: mapUserToDto(DEFAULT_USER.user),
       unit: '3 подразделение',
       status: 'на рассмотрении',
     },

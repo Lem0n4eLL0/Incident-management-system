@@ -1,24 +1,24 @@
 import { INCEDENTS } from '@constants/test';
-import { Incident } from '@custom-types/types';
+import { Incident, IncidentDTO } from '@custom-types/types';
 
-export const getIncidentsApi = (): Promise<Incident[]> => {
-  return new Promise<Incident[]>((resolve) => {
+export const getIncidentsApi = (): Promise<IncidentDTO[]> => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve(INCEDENTS.incident);
     }, 1000);
   });
 };
 
-export const addIncidentApi = (incident: Incident): Promise<Incident> => {
+export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       INCEDENTS.incident.push(incident);
       resolve(incident);
-    }, 500);
+    }, 10000);
   });
 };
 
-export const updateIncidentApi = (incident: Incident): Promise<Incident> => {
+export const updateIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const index = INCEDENTS.incident.findIndex((i) => i.id === incident.id);
@@ -33,7 +33,7 @@ export const updateIncidentApi = (incident: Incident): Promise<Incident> => {
 };
 
 export const deleteIncidentApi = (id: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     setTimeout(() => {
       const index = INCEDENTS.incident.findIndex((i) => i.id === id);
       if (index !== -1) {
