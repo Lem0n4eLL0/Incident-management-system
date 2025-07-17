@@ -1,11 +1,12 @@
 import { useFormValidation } from '@hooks/useFormValidation';
 import style from './AuthForm.module.css';
+import formStyle from '@style/form.module.css';
+import staticStyle from '@style/common.module.css';
+
 import { ApiLoginRequest } from '@custom-types/types';
 import { LOGIN_REQUEST_VALIDATORS } from '@constants/validators';
 import { Input } from '@ui/Input';
-import { ChangeEvent, FormEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-
-import staticStyle from '@style/common.module.css';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { useDispatch, useSelector } from '@services/store';
 import { Navigate } from 'react-router-dom';
@@ -76,9 +77,9 @@ export const AuthForm = () => {
           type="text"
           inputRef={inputRef}
           error={<span className={staticStyle.error}>{errors.login}</span>}
-          inputTitle={<span className={style.field_title}>Логин</span>}
+          inputTitle={<span className={formStyle.field_title}>Логин</span>}
           value={authData.login}
-          className={clsx(style.input, errors.login && style.input_not_valid)}
+          className={clsx(formStyle.input, errors.login && formStyle.input_not_valid)}
           lableClassName={style.lable}
           onChange={inputHandler('login')}
         />
@@ -86,9 +87,9 @@ export const AuthForm = () => {
           type="password"
           inputRef={inputRef}
           error={<span className={staticStyle.error}>{errors.password}</span>}
-          inputTitle={<span className={style.field_title}>Пароль</span>}
+          inputTitle={<span className={formStyle.field_title}>Пароль</span>}
           value={authData.password}
-          className={clsx(style.input, errors.password && style.input_not_valid)}
+          className={clsx(formStyle.input, errors.password && formStyle.input_not_valid)}
           lableClassName={style.lable}
           onChange={inputHandler('password')}
         />
@@ -97,7 +98,11 @@ export const AuthForm = () => {
         <span className={clsx(staticStyle.error, style.form_response_error)}>{serverError}</span>
         <button
           type="submit"
-          className={clsx(style.auth_button, (!isFormValid || serverError) && style.form_not_valid)}
+          className={clsx(
+            style.auth_button,
+            formStyle.confirm_button,
+            (!isFormValid || serverError) && formStyle.disabled
+          )}
           disabled={!isFormValid || serverError === null}
         >
           Вход

@@ -1,7 +1,7 @@
 .content {
   display: flex;
   flex-direction: column;
-  padding: 30px; 
+  padding: 30px;
   flex-grow: 1;
 }
 
@@ -51,7 +51,3 @@
 .add_incident_button:hover {
   background-color: var(--accent-250);
 }
-
-
-
-

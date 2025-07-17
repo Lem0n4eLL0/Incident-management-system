@@ -15,7 +15,7 @@
 .statistic {
   display: flex;
   align-items: center;
-  justify-content:space-around;
+  justify-content: space-around;
   gap: 15px;
   background-color: var(--home-bg-color);
   padding: 20px;

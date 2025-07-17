@@ -1,25 +1,25 @@
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useCallback, useState } from 'react';
 import style from './Table.module.css';
 import clsx from 'clsx';
 import { Modal } from '../Modal';
 import { Incident } from '@custom-types/types';
 import staticStyle from '@style/common.module.css';
 
-export type Column<T> = {
+export type Column<T extends { id: string }> = {
   key: keyof T | string;
   title: React.ReactNode;
   render?: (item: T) => React.ReactNode;
 };
 
-export type TableProps<T> = React.TableHTMLAttributes<HTMLTableElement> & {
+export type TableProps<T extends { id: string }> = React.TableHTMLAttributes<HTMLTableElement> & {
   columns: Array<Column<T>>;
   data: Array<T>;
   placeholder?: string;
   caption?: string;
-  renderModal?: (item: T, onClose: () => void) => React.ReactNode;
+  renderModal?: (item: string, onClose: () => void) => React.ReactNode;
 };
 
-export function Table<T>({
+export function Table<T extends { id: string }>({
   data,
   columns,
   caption,
@@ -29,18 +29,21 @@ export function Table<T>({
   ...rest
 }: TableProps<T>) {
   const [isOpenInciden, setIsOpenInciden] = useState(false);
-  const [currentModalIncident, setCurrentModalIncident] = useState<T>();
+  const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
 
-  const modalOpenHandler = (e: SyntheticEvent, item: T, index: number) => {
-    setCurrentModalIncident(item);
-    setIsOpenInciden(true);
-    setSelectedRowIndex(index);
-  };
+  const modalOpenHandler = useCallback(
+    (e: SyntheticEvent, item: T, index: number) => {
+      setSelectedIncidentId(item.id);
+      setIsOpenInciden(true);
+      setSelectedRowIndex(index);
+    },
+    [setSelectedIncidentId, setIsOpenInciden, setSelectedRowIndex]
+  );
 
   const modalCloseHandler = () => {
     setIsOpenInciden(false);
-    setCurrentModalIncident(undefined);
+    setSelectedIncidentId(null);
     setSelectedRowIndex(null);
   };
 
@@ -84,9 +87,9 @@ export function Table<T>({
           )}
         </tbody>
       </table>
-      {isOpenInciden && currentModalIncident && (
+      {isOpenInciden && selectedIncidentId && (
         <Modal contentClass={staticStyle.modal} onClose={modalCloseHandler}>
-          {renderModal?.(currentModalIncident, modalCloseHandler)}
+          {renderModal?.(selectedIncidentId, modalCloseHandler)}
         </Modal>
       )}
     </>

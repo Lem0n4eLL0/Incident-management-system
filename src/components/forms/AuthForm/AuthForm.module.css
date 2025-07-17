@@ -11,26 +11,7 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.input {
-  padding: 10px 14px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: 2px solid var(--border-300, #ccc);
-  transition: border-color 0.2s;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--accent-100);
-}
-
-.input_not_valid,
-.input_not_valid.input:focus{
-  border-color: var(--primary-100);
-  background-color: var(--primary-300);
+  gap: 12px;
 }
 
 .lable {
@@ -43,12 +24,6 @@
 .input_error {
   color: var(--primary-100);
   font-size: 14px;
-}
-
-.field_title {
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--text-100);
 }
 
 .form_response_error {
@@ -65,137 +40,6 @@
 }
 
 .auth_button {
-  padding: 10px 16px;
+  align-self: center;
   min-width: 110px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  background-color: var(--accent-250);
-  color: var(--text-400);
-  border-color: var(--accent-250);
-  align-self: center;
 }
-
-.auth_button:not(.form_not_valid) {
-  text-shadow: 0 0 6px rgba(0 0 0 / 20%);
-}
-
-.auth_button:hover:not(.form_not_valid) {
-  background-color: var(--accent-100);
-  border-color: var(--accent-100);
-}
-
-.auth_button.form_not_valid {
-  background-color: var(--bg-300);
-  color: var(--text-300);
-  border-color: var(--bg-300);
-  cursor: default;
-}
-
-/* -------------------------- */
-
-/* .form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  flex-grow: 1;
-  gap: 24px;
-  padding: 24px;
-  max-width: 420px;
-  background-color: var(--bg-100, #fff);
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-  margin: auto;
-}
-
-.options {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.input {
-  padding: 12px 16px;
-  font-size: 16px;
-  border-radius: 12px;
-  border: 2px solid var(--border-300, #ccc);
-  background-color: #fff;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--accent-100);
-  box-shadow: 0 0 0 4px rgba(100, 150, 255, 0.15);
-}
-
-.input_not_valid,
-.input_not_valid.input:focus {
-  border-color: var(--primary-100);
-  background-color: var(--primary-300);
-  box-shadow: 0 0 0 4px rgba(255, 100, 100, 0.15);
-}
-
-.lable {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.input_error {
-  color: var(--primary-100);
-  font-size: 14px;
-}
-
-.field_title {
-  font-weight: 600;
-  font-size: 16px;
-  color: var(--text-100);
-}
-
-.form_response_error {
-  display: block;
-  color: var(--primary-100);
-  font-size: 15px;
-  margin-top: 4px;
-  text-align: center;
-  line-height: 1.4;
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: stretch;
-}
-
-.auth_button {
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s, box-shadow 0.2s;
-  background-color: var(--accent-250);
-  color: var(--text-400);
-  align-self: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.auth_button:not(.form_not_valid):hover {
-  background-color: var(--accent-100);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.auth_button.form_not_valid {
-  background-color: var(--bg-300);
-  color: var(--text-300);
-  cursor: not-allowed;
-  box-shadow: none;
-} */

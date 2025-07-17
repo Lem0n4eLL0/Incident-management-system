@@ -1,6 +1,7 @@
 import { ApiError, Incident } from '@custom-types/types';
 import style from './DeleteIncidentForm.module.css';
 import staticStyle from '@style/common.module.css';
+import fromStyle from '@style/form.module.css';
 import { useDispatch, useSelector } from '@services/store';
 import { FormEvent, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
@@ -14,9 +15,10 @@ import clsx from 'clsx';
 type DeleteIncidentFormProps = {
   incident: Incident;
   onClose: () => void;
+  onCloseAll: () => void;
 };
 
-export const DeleteIncidentForm = ({ incident, onClose }: DeleteIncidentFormProps) => {
+export const DeleteIncidentForm = ({ incident, onClose, onCloseAll }: DeleteIncidentFormProps) => {
   const dispatch = useDispatch();
   const { deleteIncidentError } = useSelector((state) =>
     selectErrorsIncidents.unwrapped(state.incidentsReducer)
@@ -25,6 +27,7 @@ export const DeleteIncidentForm = ({ incident, onClose }: DeleteIncidentFormProp
     selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
   const [serverError, setServerError] = useState<ApiError | undefined>(undefined);
+
   const submitHandler = (e: FormEvent) => {
     e.preventDefault();
     dispatch(deleteIncident(incident.id));
@@ -43,10 +46,10 @@ export const DeleteIncidentForm = ({ incident, onClose }: DeleteIncidentFormProp
     }
 
     if (wasPending.current && !isDeleteIncidentPending && !deleteIncidentError) {
-      onClose();
+      onCloseAll();
       wasPending.current = false;
     }
-  }, [isDeleteIncidentPending, deleteIncidentError, onClose]);
+  }, [isDeleteIncidentPending, deleteIncidentError, onCloseAll]);
 
   useEffect(() => {
     setServerError(deleteIncidentError);
@@ -57,13 +60,29 @@ export const DeleteIncidentForm = ({ incident, onClose }: DeleteIncidentFormProp
       <h1 className={style.title}>Вы уверены?</h1>
       <form className={style.form} onSubmit={submitHandler}>
         <div className={staticStyle.error}>{serverError?.message}</div>
-        <button
-          type="submit"
-          className={clsx(style.submit_button, isDeleteIncidentPending && style.disabled)}
-          disabled={isDeleteIncidentPending}
-        >
-          {isDeleteIncidentPending ? 'Удаление...' : 'Удалить'}
-        </button>
+        <div className={style.controls}>
+          <button
+            type="submit"
+            className={clsx(
+              fromStyle.attention_button,
+              isDeleteIncidentPending && fromStyle.disabled
+            )}
+            disabled={isDeleteIncidentPending}
+          >
+            {isDeleteIncidentPending ? 'Удаление...' : 'Удалить'}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className={clsx(
+              fromStyle.confirm_button,
+              isDeleteIncidentPending && fromStyle.disabled
+            )}
+            disabled={isDeleteIncidentPending}
+          >
+            Отмена
+          </button>
+        </div>
       </form>
     </div>
   );

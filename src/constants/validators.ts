@@ -5,7 +5,12 @@ function notEmptyField(value: string): boolean {
   return value.trim().length > 0;
 }
 
-export const ADD_INCIDENT_VALIDATORS: Partial<TFormValidators<IncidentDTO>> = {
+export const getValidatableIncidentFields = (data: IncidentDTO) => {
+  const { incident_number, type, date, description } = data;
+  return { incident_number, type, date, description };
+};
+
+export const INCIDENT_VALIDATORS: Partial<TFormValidators<IncidentDTO>> = {
   incident_number: {
     validator: notEmptyField,
     message: 'Обязательно для заполнения',

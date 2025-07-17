@@ -2,8 +2,8 @@
   "extends": "stylelint-config-standard",
   "plugins": [],
   "rules": {
-    "indentation": 2,
-    "string-quotes": "single",
+    "value-list-comma-newline-after": "always-multi-line",
+    "value-list-comma-space-after": "always-single-line",
     "no-empty-source": null,
     "selector-class-pattern": null
   }

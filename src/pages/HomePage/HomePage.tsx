@@ -2,7 +2,6 @@ import { selectIncidents } from '@services/incidentSlice';
 import { useDispatch, useSelector } from '@services/store';
 import style from './HomePage.module.css';
 import { selectUser } from '@services/userSlice';
-import { DEFAULT_USER } from '@constants/test';
 import { IncidentValue } from '@components/IncidentValue';
 
 export const HomePage = () => {

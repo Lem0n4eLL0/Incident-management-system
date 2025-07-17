@@ -1,16 +1,13 @@
 .content {
   position: relative;
   display: flex;
-  flex-direction: column;
   flex-grow: 1;
-  gap: 30px;
   color: var(--text-100);
-  align-items: center;
-  padding: 30px 40px;
   background-color: var(--bg-100);
-  border-radius: 12px;
-  min-width: clamp(360px, 50vw, 460px);
-  max-height: 600px;
+  max-height: auto;
+  max-height: 494px;
+  padding: 0;
+  width: 100%;
 }
 
 .form {

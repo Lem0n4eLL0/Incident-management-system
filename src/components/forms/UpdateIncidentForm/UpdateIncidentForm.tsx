@@ -1,4 +1,4 @@
-import style from './AddIncidentForm.module.css';
+import style from './UpdateIncidentForm.module.css';
 import staticStyle from '@style/common.module.css';
 import formStyle from '@style/form.module.css';
 
@@ -13,30 +13,34 @@ import { Select } from '@ui/Select';
 import clsx from 'clsx';
 import { selectUser } from '@services/userSlice';
 import { useDispatch, useSelector } from '@services/store';
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
-import { EMPTY_INCIDENTDTO } from '@constants/constants';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useFormValidation } from '@hooks/useFormValidation';
 import { Input } from '@components/ui/Input';
 import { mapUserToDto } from '@custom-types/mapperDTO';
 import { getValidatableIncidentFields, INCIDENT_VALIDATORS } from '@constants/validators';
-import { addIncident, selectErrorsIncidents, selectStatusIncidents } from '@services/incidentSlice';
+import {
+  selectErrorsIncidents,
+  selectStatusIncidents,
+  updateIncident,
+} from '@services/incidentSlice';
 
-type AddIncidentFormProps = {
+type UpdateIncidentFormProps = {
   onClose: () => void;
+  incident: IncidentDTO;
 };
 
-export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
+export const UpdateIncidentForm = ({ onClose, incident }: UpdateIncidentFormProps) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => selectUser.unwrapped(state.userReducer));
-  const { addIncidentError } = useSelector((state) =>
+  const { updateIncidentError } = useSelector((state) =>
     selectErrorsIncidents.unwrapped(state.incidentsReducer)
   );
-  const { isAddIncidentPending } = useSelector((state) =>
+  const { isUpdateIncidentPending } = useSelector((state) =>
     selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
 
   const [serverError, setServerError] = useState<string | null>(null);
-  const [formData, setFormData] = useState<IncidentDTO>(EMPTY_INCIDENTDTO);
+  const [formData, setFormData] = useState<IncidentDTO>(incident);
   const validator = useFormValidation<IncidentDTO>(INCIDENT_VALIDATORS);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -56,18 +60,17 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
       setFormData((prev) => ({
         ...prev,
         author: mapUserToDto(user),
-        unit: user.unit,
       }));
     }
   }, [user]);
 
   useEffect(() => {
-    if (isAddIncidentPending) {
+    if (isUpdateIncidentPending) {
       return;
-    } else if (addIncidentError?.message) {
-      setServerError(addIncidentError.message);
+    } else if (updateIncidentError?.message) {
+      setServerError(updateIncidentError.message);
     }
-  }, [isAddIncidentPending]);
+  }, [isUpdateIncidentPending]);
 
   const changeHandler = useCallback(
     (field: keyof IncidentDTO) =>
@@ -86,14 +89,13 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
       if (!validator.validateAll(getValidatableIncidentFields(formData))) {
         return;
       }
-      dispatch(addIncident(formData));
+      dispatch(updateIncident(formData));
     },
     [formData, validator.validateAll, dispatch]
   );
 
   return (
     <div className={style.content}>
-      <h2 className={staticStyle.modal_title}>Создание инцедента</h2>
       <form className={style.form} onSubmit={submitHandler}>
         <div className={style.options}>
           <Input
@@ -170,7 +172,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
             lableClassName={style.lable_input}
             type="text"
             name="unit"
-            value={formData.unit}
+            value={formData.author.unit}
             inputTitle={<span className={formStyle.field_title}>Подразделение</span>}
             disabled
           ></Input>
@@ -212,17 +214,17 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
             type="submit"
             className={clsx(
               formStyle.confirm_button,
-              (!isFormValid || isAddIncidentPending) && formStyle.disabled
+              (!isFormValid || isUpdateIncidentPending) && formStyle.disabled
             )}
             disabled={!isFormValid}
           >
-            {isAddIncidentPending ? 'Сохранение...' : 'Сохранить'}
+            {isUpdateIncidentPending ? 'Сохранение...' : 'Сохранить'}
           </button>
           <button
             type="button"
-            className={clsx(formStyle.close_button, isAddIncidentPending && formStyle.disabled)}
+            className={clsx(formStyle.close_button, isUpdateIncidentPending && formStyle.disabled)}
             onClick={onClose}
-            disabled={isAddIncidentPending}
+            disabled={isUpdateIncidentPending}
           >
             Отмена
           </button>

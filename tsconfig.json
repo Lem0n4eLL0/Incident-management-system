@@ -28,7 +28,7 @@
       "@constants/*": ["constants/*"],
       "@api/*": ["api/*"],
       "@style/*": ["style/*"],
-      "@hooks/*": ["hooks/*"],
+      "@hooks/*": ["hooks/*"]
     }
   },
   "include": ["src"]

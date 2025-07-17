@@ -4,12 +4,12 @@ import style from './FilteredTable.module.css';
 import { useLayoutEffect } from 'react';
 import { FilterFunc } from '@utils/Filter';
 
-export type FilterDefinition<T, K extends keyof T> = {
+export type FilterDefinition<T extends { id: string }, K extends keyof T> = {
   filter: FilterFunc<T, K>;
   filterPopup: (setFilter: (fn: FilterFunc<T, K>) => void) => React.ReactNode;
 };
 
-export type FilteredColumn<T> = Column<T> &
+export type FilteredColumn<T extends { id: string }> = Column<T> &
   {
     [K in keyof T]: {
       key: K;
@@ -17,12 +17,12 @@ export type FilteredColumn<T> = Column<T> &
     };
   }[keyof T];
 
-type FilteredTable<T> = TableProps<T> & {
+type FilteredTable<T extends { id: string }> = TableProps<T> & {
   filter: ReturnType<typeof useFilter<T>>;
   columns: FilteredColumn<T>[];
 };
 
-export function FilteredTable<T>(props: FilteredTable<T>) {
+export function FilteredTable<T extends { id: string }>(props: FilteredTable<T>) {
   const { filter, data, columns, ...rest } = props;
 
   const headerColumn = columns.map((col: FilteredColumn<T>) => {

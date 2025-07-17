@@ -1,4 +1,3 @@
-
 *,
 *::before,
 *::after {
@@ -7,11 +6,10 @@
 
 html {
   line-height: 1.15;
-  text-size-adjust: 100%; 
+  text-size-adjust: 100%;
   height: 100%;
   margin: 0;
 }
-
 
 *:focus-visible {
   outline: none;
@@ -46,14 +44,14 @@ blockquote {
 }
 
 hr {
-  box-sizing: content-box; 
-  height: 0; 
-  overflow: visible; 
+  box-sizing: content-box;
+  height: 0;
+  overflow: visible;
 }
 
 pre {
-  font-family: monospace; 
-  font-size: 1em; 
+  font-family: monospace;
+  font-size: 1em;
 }
 
 a {
@@ -62,9 +60,9 @@ a {
 }
 
 abbr[title] {
-  border-bottom: none; 
-  text-decoration: underline; 
-  text-decoration: underline dotted; 
+  border-bottom: none;
+  text-decoration: underline;
+  text-decoration: underline dotted;
 }
 
 b,
@@ -75,7 +73,7 @@ strong {
 code,
 kbd,
 samp {
-  font-family: monospace; 
+  font-family: monospace;
   font-size: 1em;
 }
 
@@ -108,7 +106,7 @@ input,
 optgroup,
 select,
 textarea {
-  font-family: inherit; 
+  font-family: inherit;
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
@@ -164,9 +162,9 @@ fieldset {
 }
 
 legend {
-  box-sizing: border-box; 
-  color: inherit; 
-  display: table; 
+  box-sizing: border-box;
+  color: inherit;
+  display: table;
   max-width: 100%;
   padding: 0;
   white-space: normal;
@@ -182,7 +180,7 @@ textarea {
 
 [type='checkbox'],
 [type='radio'] {
-  box-sizing: border-box; 
+  box-sizing: border-box;
   padding: 0;
 }
 
@@ -192,8 +190,8 @@ textarea {
 }
 
 [type='search'] {
-  appearance: textfield; 
-  outline-offset: -2px; 
+  appearance: textfield;
+  outline-offset: -2px;
 }
 
 [type='search']::-webkit-search-decoration {
@@ -233,9 +231,9 @@ dl {
 }
 
 dt {
-  font-weight: normal; 
+  font-weight: normal;
 }
 
 dd {
-  margin-left: 0; 
+  margin-left: 0;
 }

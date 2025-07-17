@@ -6,13 +6,14 @@ import clsx from 'clsx';
 type ModalProps = {
   children: React.ReactNode;
   onClose: () => void;
+  isCloseButton?: boolean;
   contentClass?: string;
 };
 
 const modalRoot = document.getElementById('react-modals');
 
 export const Modal = (props: ModalProps) => {
-  const { children, contentClass, onClose } = props;
+  const { children, contentClass, onClose, isCloseButton = true } = props;
 
   useEffect(() => {
     const originalStyle = window.getComputedStyle(document.body).overflow;
@@ -40,7 +41,7 @@ export const Modal = (props: ModalProps) => {
   return ReactDOM.createPortal(
     <div className={style.modal}>
       <div className={clsx(style.modal_content, contentClass)}>
-        {onClose && (
+        {isCloseButton && (
           <button className={style.close_button} onClick={onClose}>
             <CrossIcon />
           </button>

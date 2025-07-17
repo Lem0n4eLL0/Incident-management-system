@@ -11,7 +11,8 @@
   padding: 3px;
 }
 
-.column, th {
+.column,
+th {
   border: 1px solid var(--table-bg-color-v3);
   padding: 16px;
   font-size: 18px;

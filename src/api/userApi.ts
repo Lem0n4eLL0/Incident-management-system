@@ -1,18 +1,9 @@
 import { COOKIE_ACCESS_TOKEN_ALIAS, LOCAL_STORAGE_REFRESH_TOKEN_ALIAS } from '@constants/constants';
+import { TEST_USER_DTO } from '@constants/test';
 import { ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import Cookies from 'js-cookie';
 
 const URL_API = process.env.REACT_APP_API_URL;
-
-const TEST_USER_DTO: UserDTO = {
-  id: '1',
-  role: 'сотрудник',
-  full_name: 'Владислав Черванев',
-  unit: 'Красный крест',
-  position: 'превышает',
-  telephone: '89456762343',
-  email: 'zacrivgre@bk.ru',
-};
 
 const checkResponse = <T>(res: Response): Promise<T> =>
   res.ok ? res.json() : res.json().then((err) => Promise.reject(err));

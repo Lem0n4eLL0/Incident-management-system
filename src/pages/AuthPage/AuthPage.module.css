@@ -9,7 +9,7 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   min-width: clamp(320px, 50vw, 400px);
   min-height: 300px;
   padding: 30px;

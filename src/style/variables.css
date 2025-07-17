@@ -4,30 +4,30 @@
   --title-font: 'Times New Roman', times, serif;
 
   /* Палитра */
-  --primary-100:#de283b;
-  --primary-200:#ff6366;
-  --primary-250:#e77887;
-  --primary-300:#ffccc4;
-  --accent-100:#25b1bf;
-  --accent-200:#005461;
-  --accent-250:#53c5cf;
-  --accent-300:#92c9d1;
-  --accent-400:#b7d4d8;
-  --text-100:#1a1a1a;
-  --text-200:#404040;
-  --text-300:#585858;
-  --text-400:#fff;
-  --bg-100:#fff;
-  --bg-200:#f5f5f5;
+  --primary-100: #de283b;
+  --primary-200: #ff6366;
+  --primary-250: #e77887;
+  --primary-300: #ffccc4;
+  --accent-100: #25b1bf;
+  --accent-200: #005461;
+  --accent-250: #53c5cf;
+  --accent-300: #92c9d1;
+  --accent-400: #b7d4d8;
+  --text-100: #1a1a1a;
+  --text-200: #404040;
+  --text-300: #585858;
+  --text-400: #fff;
+  --bg-100: #fff;
+  --bg-200: #f5f5f5;
   --bg-250: #e2e2e2;
-  --bg-300:#ccc;
-  --bg-350:#bebebe;
-  --bg-400:#8f8f8f;
+  --bg-300: #ccc;
+  --bg-350: #bebebe;
+  --bg-400: #8f8f8f;
   --border-100: #000;
   --border-200: #1a1a1a;
-  --additional-100:#3f9c3f;
-  --additional-150:#56c056;
-  --additional-200:#ebc82e;
+  --additional-100: #3f9c3f;
+  --additional-150: #56c056;
+  --additional-200: #ebc82e;
 
   /* Рабочие перемееные палитры */
   --main-bg-color: var(--bg-100);

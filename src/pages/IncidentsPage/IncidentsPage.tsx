@@ -18,8 +18,8 @@ export const IncidentsPage = () => {
   const dispatch = useDispatch();
   const incidents = useSelector((state) => selectIncidents.unwrapped(state.incidentsReducer));
   const filter = useFilter<Incident>({ data: incidents });
-  const { isAddIncidentPending } = useSelector((state) =>
-    selectStatusIncidents.unwrapped(state.incidentsReducer)
+  const { isAddIncidentPending, isUpdateIncidentPending, isDeleteIncidentPending } = useSelector(
+    (state) => selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
   const [isOpenAddInciden, setIsOpenAddInciden] = useState(false);
 
@@ -48,13 +48,13 @@ export const IncidentsPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
-          renderModal={(item, onClose) => (
-            <ModalIncident incident={item} onClose={onClose}></ModalIncident>
+          renderModal={(id, onClose) => (
+            <ModalIncident incident={incidents.find((el) => el.id === id)!} onClose={onClose} />
           )}
         ></FilteredTable>
       </section>
       {isOpenAddInciden && (
-        <Modal contentClass={staticStyle.modal} onClose={closeModalHandler}>
+        <Modal contentClass={staticStyle.modal} onClose={closeModalHandler} isCloseButton={false}>
           <AddIncidentForm onClose={() => setIsOpenAddInciden(false)}></AddIncidentForm>
         </Modal>
       )}
