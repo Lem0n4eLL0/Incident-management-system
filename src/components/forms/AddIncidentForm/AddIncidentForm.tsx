@@ -17,7 +17,7 @@ import { useFormValidation } from '@hooks/useFormValidation';
 import { Input } from '@components/ui/Input';
 import { mapUserToDto } from '@custom-types/mapperDTO';
 import { ADD_INCIDENT_VALIDATORS } from '@constants/validators';
-import { addIncident, selectErrorsIncidents, selectErrorsStatus } from '@services/incidentSlice';
+import { addIncident, selectErrorsIncidents, selectStatusIncidents } from '@services/incidentSlice';
 
 const getValidatableFields = (data: IncidentDTO) => {
   const { incident_number, type, date, description } = data;
@@ -35,7 +35,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
     selectErrorsIncidents.unwrapped(state.incidentsReducer)
   );
   const { isAddIncidentPending } = useSelector((state) =>
-    selectErrorsStatus.unwrapped(state.incidentsReducer)
+    selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
 
   const [serverError, setServerError] = useState<string | null>(null);

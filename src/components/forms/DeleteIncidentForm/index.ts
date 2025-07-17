@@ -1,0 +1,1 @@
+export { DeleteIncidentForm } from './DeleteIncidentForm';

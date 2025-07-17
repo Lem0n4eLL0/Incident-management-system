@@ -148,3 +148,9 @@
   color: var(--text-400);
   border-color: var(--primary-100);
 }
+
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

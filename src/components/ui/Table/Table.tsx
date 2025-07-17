@@ -16,7 +16,7 @@ export type TableProps<T> = React.TableHTMLAttributes<HTMLTableElement> & {
   data: Array<T>;
   placeholder?: string;
   caption?: string;
-  renderModal?: (item: T) => React.ReactNode;
+  renderModal?: (item: T, onClose: () => void) => React.ReactNode;
 };
 
 export function Table<T>({
@@ -86,7 +86,7 @@ export function Table<T>({
       </table>
       {isOpenInciden && currentModalIncident && (
         <Modal contentClass={staticStyle.modal} onClose={modalCloseHandler}>
-          {renderModal?.(currentModalIncident)}
+          {renderModal?.(currentModalIncident, modalCloseHandler)}
         </Modal>
       )}
     </>

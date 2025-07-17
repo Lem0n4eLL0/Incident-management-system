@@ -1,4 +1,3 @@
-import { TestComponent } from '@components/TestCompopnent';
 import { selectIncidents } from '@services/incidentSlice';
 import { useDispatch, useSelector } from '@services/store';
 import style from './HomePage.module.css';

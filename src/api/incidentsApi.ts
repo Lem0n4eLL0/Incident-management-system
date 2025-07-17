@@ -14,7 +14,7 @@ export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
     setTimeout(() => {
       INCEDENTS.incident.push(incident);
       resolve(incident);
-    }, 10000);
+    }, 1000);
   });
 };
 

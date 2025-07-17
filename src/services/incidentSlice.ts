@@ -13,7 +13,7 @@ const createSlice = buildCreateSlice({
 });
 
 type IncidentsState = {
-  incidents: Array<Incident>;
+  incidents: Array<Incident>; // Нужно возможно добавить для статистики объект для главной страницы работяги
   status: {
     isGetIncidentsPending: boolean;
     isAddIncidentPending: boolean;
@@ -112,6 +112,7 @@ const incidentsSlice = createSlice({
         state.errors.deleteIncidentError = undefined;
       },
       rejected: (state, action) => {
+        console.log(action.error);
         state.errors.deleteIncidentError = {
           code: action.error.code,
           message: action.error.message,
@@ -120,8 +121,12 @@ const incidentsSlice = createSlice({
       },
       fulfilled: (state, action) => {
         state.status.isDeleteIncidentPending = false;
-        state.incidents = state.incidents.filter((i) => i.id !== action.payload);
+        const index = state.incidents.findIndex((i) => i.id === action.payload);
+        if (index != -1) state.incidents.splice(index, 1);
       },
+    }),
+    clearDeleteIncidentError: create.reducer((state) => {
+      state.errors.deleteIncidentError = undefined;
     }),
   }),
 
@@ -132,10 +137,16 @@ const incidentsSlice = createSlice({
   },
 });
 
-export const { getIncidents, addIncident, deleteIncident, updateIncident } = incidentsSlice.actions;
+export const {
+  getIncidents,
+  addIncident,
+  deleteIncident,
+  updateIncident,
+  clearDeleteIncidentError,
+} = incidentsSlice.actions;
 export const {
   selectIncidents,
   selectErrors: selectErrorsIncidents,
-  selectStatus: selectErrorsStatus,
+  selectStatus: selectStatusIncidents,
 } = incidentsSlice.selectors;
 export const incidentsReducer = incidentsSlice.reducer;

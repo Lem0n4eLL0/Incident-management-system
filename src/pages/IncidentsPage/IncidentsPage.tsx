@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from '@services/store';
 import style from './IncidentsPage.module.css';
 import staticStyle from '@style/common.module.css';
-import { selectErrorsStatus, selectIncidents } from '@services/incidentSlice';
+import { selectStatusIncidents, selectIncidents } from '@services/incidentSlice';
 import { Incident } from '@custom-types/types';
 import { Table } from '@ui/Table';
 import { TABLE_COLUMNS, TABLE_PLACEHOLDER } from '@constants/constants';
@@ -19,7 +19,7 @@ export const IncidentsPage = () => {
   const incidents = useSelector((state) => selectIncidents.unwrapped(state.incidentsReducer));
   const filter = useFilter<Incident>({ data: incidents });
   const { isAddIncidentPending } = useSelector((state) =>
-    selectErrorsStatus.unwrapped(state.incidentsReducer)
+    selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
   const [isOpenAddInciden, setIsOpenAddInciden] = useState(false);
 
@@ -48,7 +48,9 @@ export const IncidentsPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
-          renderModal={(item) => <ModalIncident incident={item}></ModalIncident>}
+          renderModal={(item, onClose) => (
+            <ModalIncident incident={item} onClose={onClose}></ModalIncident>
+          )}
         ></FilteredTable>
       </section>
       {isOpenAddInciden && (
