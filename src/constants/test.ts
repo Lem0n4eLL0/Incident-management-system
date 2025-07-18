@@ -40,13 +40,14 @@ export const INCEDENTS: { incident: IncidentDTO[] } = {
       incident_number: '3',
       type: 'авария',
       date: '2020-02-10T00:00:00.000Z',
-      description: 'Тестовый инцедент 3',
+      description:
+        'Тестовый инцедент 5464564 564 5 4y 45 45y 45y45y45y45y 45y 45 y45y45y45y 45y 45y 45y45y45y4 5y45 y45y45y45y4y45y45y4 5y4 5y 45y45y 3',
       author: TEST_USER_DTO,
       unit: TEST_USER_DTO.unit,
       status: 'завершено',
     },
     {
-      id: '456756',
+      id: '4567',
       incident_number: '4',
       type: 'авария',
       date: '2020-02-10T00:00:00.000Z',
@@ -56,7 +57,7 @@ export const INCEDENTS: { incident: IncidentDTO[] } = {
       status: 'в работе',
     },
     {
-      id: '456756',
+      id: '956756',
       incident_number: '5',
       type: 'авария',
       date: '2020-02-10T00:00:00.000Z',

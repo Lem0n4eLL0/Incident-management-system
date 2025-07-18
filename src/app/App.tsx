@@ -1,22 +1,26 @@
 import { useDispatch, useSelector } from '@services/store';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { selectFlagsAuth } from '@services/authSlice';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
 import { HomePage } from '@pages/HomePage';
 import { ErrorPage } from '@pages/ErrorPage';
 import { IncidentsPage } from '@pages/IncidentsPage';
-import { getIncidents } from '@services/incidentSlice';
+import { getIncidents, selectStatusIncidents } from '@services/incidentSlice';
 import style from './App.module.css';
 import { AuthPage } from '@pages/AuthPage';
-import { getUser, selectUser } from '@services/userSlice';
+import { getUser, selectStatusUser, selectUser } from '@services/userSlice';
+import staticStyle from '@style/common.module.css';
+import { Loader } from '@ui/Loader';
 
 export const App = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => selectUser.unwrapped(state.userReducer));
   const { isAuthenticated } = useSelector((state) => selectFlagsAuth.unwrapped(state.authReducer));
-
+  const { isGetUserPending } = useSelector((state) =>
+    selectStatusUser.unwrapped(state.userReducer)
+  );
   const isUserLoaded = user && user.id !== '';
 
   useEffect(() => {
@@ -30,6 +34,10 @@ export const App = () => {
       dispatch(getIncidents());
     }
   }, [isAuthenticated, user]);
+
+  if (isGetUserPending) {
+    return <Loader loaderClass={staticStyle.loader_v2}></Loader>;
+  }
 
   return (
     <div className={style.app}>

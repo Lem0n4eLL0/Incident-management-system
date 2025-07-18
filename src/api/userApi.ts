@@ -64,6 +64,6 @@ export const logoutUserApi = () => {
 
 export const getUserApi = () => {
   return new Promise<UserDTO>((res) => {
-    setTimeout(() => res(TEST_USER_DTO), 300);
+    setTimeout(() => res(TEST_USER_DTO), 1000);
   });
 };

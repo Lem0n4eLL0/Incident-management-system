@@ -1,0 +1,1 @@
+export { IncidenMainCard } from './IncidenMainCard';

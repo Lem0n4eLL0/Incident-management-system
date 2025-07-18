@@ -50,7 +50,9 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
     <>
       <div className={style.content}>
         {incident.status && !isUpdateModeEnabled && (
-          <span className={clsx(style.status, incident.status && getStatusClass)}>
+          <span
+            className={clsx(staticStyle.status, style.status, incident.status && getStatusClass)}
+          >
             {incident.status}
           </span>
         )}

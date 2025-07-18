@@ -17,16 +17,9 @@
 .status {
   position: absolute;
   display: block;
-  padding: 6px 12px;
   left: 50%;
   top: 9px;
-  border-radius: 15px;
-  text-shadow: 0 0 8px rgb(0 0 0 / 20%);
-  color: var(--text-400);
-  font-weight: 600;
-  font-size: 15px;
   transform: translate(-50%);
-  box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
 }
 
 .info {
@@ -72,12 +65,12 @@
   border: 1px solid var(--modal-border-color);
   border-radius: 10px;
   margin-top: 4px;
-  padding: 10px 12px;
-  font-size: 17px;
+  padding: 8px 10px;
+  font-size: 18px;
   width: 100%;
   max-width: 500px;
-  line-height: 1.6;
-  height: calc(1.6rem * 3 + 14px);
+  line-height: 1.5;
+  height: calc(1.5rem * 3 + 28px);
   background-color: var(--bg-200);
   color: var(--text-100);
   overflow: hidden auto;
