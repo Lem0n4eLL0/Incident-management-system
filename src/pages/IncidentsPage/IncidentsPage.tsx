@@ -20,6 +20,9 @@ import { FilterFunc } from '@utils/Filter';
 export const IncidentsPage = () => {
   const dispatch = useDispatch();
   const incidents = useSelector((state) => selectIncidents.unwrapped(state.incidentsReducer));
+  const { isGetIncidentsPending } = useSelector((state) =>
+    selectStatusIncidents.unwrapped(state.incidentsReducer)
+  );
   const filter = useFilter<Incident>({ data: incidents });
 
   const { isAddIncidentPending, isUpdateIncidentPending, isDeleteIncidentPending } = useSelector(
@@ -43,6 +46,15 @@ export const IncidentsPage = () => {
     }
   }, [isAddIncidentPending, setIsOpenAddInciden]);
 
+  if (isGetIncidentsPending) {
+    return (
+      <div className={style.content}>
+        <section className={style.incidents}>
+          <Loader loaderClass={staticStyle.loader_bg}></Loader>
+        </section>
+      </div>
+    );
+  }
   return (
     <div className={style.content}>
       <section className={style.incidents}>

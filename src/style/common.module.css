@@ -144,7 +144,7 @@
     #f0f0f0 75%
   );
   background-size: 400% 400%;
-  animation: loader_bg_animation 1.5s cubic-bezier(0.4, 0.2, 0.3, 0.8) infinite;
+  animation: loader_bg_animation 1.5s cubic-bezier(0.4, 0.2, 0.3, 0.8) infinite alternate;
 }
 
 @keyframes loader_bg_animation {

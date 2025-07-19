@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from '@services/store';
-import { useEffect, useLayoutEffect } from 'react';
+import { Profiler, useEffect, useLayoutEffect } from 'react';
 import { selectIsAuthenticated } from '@services/authSlice';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
@@ -12,6 +12,7 @@ import { AuthPage } from '@pages/AuthPage';
 import { getUser, selectStatusUser, selectUser } from '@services/userSlice';
 import staticStyle from '@style/common.module.css';
 import { Loader } from '@ui/Loader';
+import { ProfilePage } from '@pages/ProfilePage';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -51,7 +52,7 @@ export const App = () => {
               <Route path="/" element={<MainLayout />}>
                 <Route index element={<HomePage />}></Route>
                 <Route path="incidents" element={<IncidentsPage />}></Route>
-                <Route path="profile" element={<ErrorPage />}></Route>
+                <Route path="profile" element={<ProfilePage />}></Route>
                 <Route path="administration" element={<ErrorPage />}></Route>
                 <Route path="analytics" element={<ErrorPage />}></Route>
               </Route>
