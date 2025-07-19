@@ -10,7 +10,8 @@ import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from 're
 import clsx from 'clsx';
 import { useDispatch, useSelector } from '@services/store';
 import { Navigate } from 'react-router-dom';
-import { loginUser, selectErrorsAuth, selectFlagsAuth } from '@services/authSlice';
+import { loginUser, selectErrorsAuth, selectIsAuthenticated } from '@services/authSlice';
+
 const EMPTY_LOGIN_REQUEST: ApiLoginRequest = {
   login: '',
   password: '',
@@ -18,7 +19,9 @@ const EMPTY_LOGIN_REQUEST: ApiLoginRequest = {
 
 export const AuthForm = () => {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useSelector((state) => selectFlagsAuth.unwrapped(state.authReducer));
+  const isAuthenticated = useSelector((state) =>
+    selectIsAuthenticated.unwrapped(state.authReducer)
+  );
   const { authUserError } = useSelector((state) => selectErrorsAuth.unwrapped(state.authReducer));
 
   const [authData, setAuthData] = useState<ApiLoginRequest>(EMPTY_LOGIN_REQUEST);
@@ -54,8 +57,10 @@ export const AuthForm = () => {
 
   const inputHandler = (field: keyof ApiLoginRequest) => (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setServerError('');
-    setErrors({});
+    if (serverError) {
+      setServerError('');
+      setErrors({});
+    }
     setAuthData((prev) => ({ ...prev, [field]: value }));
     validateField({ field, value });
   };
@@ -103,7 +108,7 @@ export const AuthForm = () => {
             formStyle.confirm_button,
             (!isFormValid || serverError) && formStyle.disabled
           )}
-          disabled={!isFormValid || serverError === null}
+          disabled={!isFormValid || !!serverError}
         >
           Вход
         </button>

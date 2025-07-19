@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from '@services/store';
 import { useEffect, useLayoutEffect } from 'react';
-import { selectFlagsAuth } from '@services/authSlice';
+import { selectIsAuthenticated } from '@services/authSlice';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
 import { HomePage } from '@pages/HomePage';
@@ -17,7 +17,9 @@ export const App = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => selectUser.unwrapped(state.userReducer));
-  const { isAuthenticated } = useSelector((state) => selectFlagsAuth.unwrapped(state.authReducer));
+  const isAuthenticated = useSelector((state) =>
+    selectIsAuthenticated.unwrapped(state.authReducer)
+  );
   const { isGetUserPending } = useSelector((state) =>
     selectStatusUser.unwrapped(state.userReducer)
   );

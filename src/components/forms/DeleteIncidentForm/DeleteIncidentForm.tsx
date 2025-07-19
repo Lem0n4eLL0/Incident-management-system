@@ -18,9 +18,6 @@ type DeleteIncidentFormProps = {
 };
 
 export const DeleteIncidentForm = ({ incident, onClose }: DeleteIncidentFormProps) => {
-  useEffect(() => {
-    console.log(incident);
-  });
   const dispatch = useDispatch();
   const { deleteIncidentError } = useSelector((state) =>
     selectErrorsIncidents.unwrapped(state.incidentsReducer)

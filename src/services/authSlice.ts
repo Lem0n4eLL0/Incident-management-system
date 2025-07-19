@@ -77,10 +77,8 @@ const authSlice = createSlice({
     }),
   }),
   selectors: {
-    selectFlags: (state) => ({
-      isAuthChecked: state.isAuthChecked,
-      isAuthenticated: state.isAuthenticated,
-    }),
+    selectIsAuthChecked: (state) => state.isAuthChecked,
+    selectIsAuthenticated: (state) => state.isAuthenticated,
     selectStatus: (state) => state.status,
     selectErrors: (state) => state.errors,
   },
@@ -88,7 +86,8 @@ const authSlice = createSlice({
 
 export const { loginUser, logoutUser } = authSlice.actions;
 export const {
-  selectFlags: selectFlagsAuth,
+  selectIsAuthChecked,
+  selectIsAuthenticated,
   selectStatus: selectStatusAuth,
   selectErrors: selectErrorsAuth,
 } = authSlice.selectors;
