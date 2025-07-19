@@ -14,6 +14,7 @@ export type Column<T extends { id: string }> = {
 export type TableProps<T extends { id: string }> = React.TableHTMLAttributes<HTMLTableElement> & {
   columns: Array<Column<T>>;
   data: Array<T>;
+  emptyDataPlaceholder?: React.ReactNode;
   placeholder?: string;
   caption?: string;
   renderModal?: (item: string, onClose: () => void) => React.ReactNode;
@@ -23,6 +24,7 @@ export function Table<T extends { id: string }>({
   data,
   columns,
   caption,
+  emptyDataPlaceholder,
   className,
   placeholder,
   renderModal,
@@ -49,7 +51,10 @@ export function Table<T extends { id: string }>({
 
   return (
     <>
-      <table className={clsx(className, style.table)} {...rest}>
+      <table
+        className={clsx(className, style.table, data.length === 0 && style.empty_table)}
+        {...rest}
+      >
         <caption className={style.caption}>{caption}</caption>
         <thead>
           <tr>
@@ -60,9 +65,9 @@ export function Table<T extends { id: string }>({
         </thead>
         <tbody>
           {data.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length}>Нет данных</td>
-            </tr>
+            <div className={style.empty_data}>
+              {emptyDataPlaceholder ? emptyDataPlaceholder : 'Нет данных'}
+            </div>
           ) : (
             data.map((item, index) => {
               return (

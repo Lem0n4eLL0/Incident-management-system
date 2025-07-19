@@ -1,0 +1,33 @@
+.content {
+    font-size: 16px;
+    border: 1px solid var(--text-100);
+    background-color: var(--bg-200);
+    font-weight: 400;
+}
+
+.item_all {
+    display: flex;
+    justify-content: center;
+}
+
+.item {
+    width: 100%;
+    padding: 3px;
+    text-wrap: nowrap;
+    cursor: pointer;
+}
+
+.item:hover {
+    background-color: var(--accent-100);
+    color: var(--text-400);
+}
+
+.item:not(:last-child) {
+    border-bottom: 1px solid var(--text-100);
+}
+
+.current {
+    background-color: var(--accent-100);
+    color: var(--text-400);
+    font-weight: 700;
+}

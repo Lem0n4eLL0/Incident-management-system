@@ -37,6 +37,7 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
   }, []);
 
   const getStatusClass = useMemo(() => {
+    if (!incident) return '';
     return incident.status === 'в работе'
       ? staticStyle.status_underway
       : incident.status === 'на рассмотрении'
@@ -45,6 +46,15 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
           ? staticStyle.status_completed
           : '';
   }, [incident]);
+
+  useEffect(() => {
+    // закрытие окна если incident удален
+    if (!incident) {
+      onClose();
+    }
+  }, [incident, onClose]);
+
+  if (!incident) return null;
 
   return (
     <>
@@ -76,7 +86,7 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
               </div>
               <div>
                 <span className={style.field}>Описание:</span>
-                <div className={style.text_block}>
+                <div className={staticStyle.text_block}>
                   <span>{incident.description}</span>
                 </div>
               </div>
@@ -94,7 +104,7 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
               </div>
               <div>
                 <span className={style.field}>Принятые меры:</span>
-                <div className={style.text_block}>
+                <div className={staticStyle.text_block}>
                   <span>{incident.measuresTaken}</span>
                 </div>
               </div>
@@ -131,7 +141,6 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
           <DeleteIncidentForm
             incident={incident}
             onClose={() => setIsOpenDeletWindow(false)}
-            onCloseAll={closeDeleteWindowHandler}
           ></DeleteIncidentForm>
         </Alert>
       )}

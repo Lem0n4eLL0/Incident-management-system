@@ -28,7 +28,7 @@ export const updateIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> =
       } else {
         reject(new Error('Инцидент не найден'));
       }
-    }, 5000);
+    }, 2000);
   });
 };
 

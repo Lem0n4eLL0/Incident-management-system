@@ -13,11 +13,11 @@ export const IncidenMainCard = ({ incident }: IncidenMainCardProps) => {
   return (
     <div className={style.content}>
       <div className={style.card_header}>
-        <h2>{`Происшествие №${incident.incidentNumber}`}</h2>
+        <h2 className={style.incident_title}>{`Происшествие №${incident.incidentNumber}`}</h2>
         <span
           className={clsx(staticStyle.status, {
-            [staticStyle.status_underway]: incident.status === 'на рассмотрении',
-            [staticStyle.status_consideration]: incident.status === 'в работе',
+            [staticStyle.status_consideration]: incident.status === 'на рассмотрении',
+            [staticStyle.status_underway]: incident.status === 'в работе',
             [staticStyle.status_completed]: incident.status === 'завершено',
           })}
         >
@@ -25,14 +25,26 @@ export const IncidenMainCard = ({ incident }: IncidenMainCardProps) => {
         </span>
       </div>
       <div className={style.card_content}>
-        <div className={style.field}>{`Подразделение: ${incident.unit}`}</div>
-        <div className={style.field}>{`Тип: ${incident.type}`}</div>
         <div className={clsx(style.text_field, staticStyle.text_block)}>{incident.description}</div>
-        <div className={style.field}>{`Автор: ${incident.author.fullName}`}</div>
+        <div className={style.field}>
+          <span className={style.field_title}>Подразделение: </span>
+          {incident.unit}
+        </div>
+        <div className={style.field}>
+          <span className={style.field_title}>Тип: </span>
+          {incident.type}
+        </div>
+        <div className={style.field}>
+          <span className={style.field_title}>Автор: </span>
+          {incident.author.fullName}
+        </div>
       </div>
       <div className={style.card_footer}>
-        <div>{incident.date?.toLocaleDateString('ru-RU')}</div>
-        <div>{`Ответственный: ${incident.responsible ?? 'нет'}`}</div>
+        <div className={staticStyle.date}>{incident.date?.toLocaleDateString('ru-RU')}</div>
+        <div>
+          <span className={style.field_title}>Ответственный: </span>
+          {incident.responsible ?? 'нет'}
+        </div>
       </div>
     </div>
   );

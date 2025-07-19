@@ -24,13 +24,27 @@ th {
   background-color: var(--table-row-color-hover);
 }
 
-.selected_line {
-  background-color: var(--table-row-color-hover);
-}
-
 .empty_cell {
   background-color: var(--table-emty-color);
   text-align: center;
+}
+
+.selected_line,
+.selected_line .empty_cell{
+  background-color: var(--table-row-color-hover);
+}
+
+.empty_table {
+  position: relative;
+  height: 100%;
+}
+
+.empty_data {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
 }
 
 th {

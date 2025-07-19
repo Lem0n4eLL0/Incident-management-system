@@ -1,19 +1,18 @@
 import { Column, Table, TableProps } from '../Table';
 import { FilterController, useFilter } from '@hooks/useFilter';
 import style from './FilteredTable.module.css';
-import { useLayoutEffect } from 'react';
+import { RefObject, useLayoutEffect, useRef, useState } from 'react';
 import { FilterFunc } from '@utils/Filter';
-
-export type FilterDefinition<T extends { id: string }, K extends keyof T> = {
-  filter: FilterFunc<T, K>;
-  filterPopup: (setFilter: (fn: FilterFunc<T, K>) => void) => React.ReactNode;
-};
 
 export type FilteredColumn<T extends { id: string }> = Column<T> &
   {
     [K in keyof T]: {
       key: K;
-      filterController?: (controller: FilterController<T>) => React.ReactNode;
+      filterController?: (
+        value: T[K],
+        onClose: () => void,
+        onChange: (newValue: T[K] | undefined, filterFunc: FilterFunc<T, K>) => void
+      ) => React.ReactNode;
     };
   }[keyof T];
 
@@ -25,7 +24,29 @@ type FilteredTable<T extends { id: string }> = TableProps<T> & {
 export function FilteredTable<T extends { id: string }>(props: FilteredTable<T>) {
   const { filter, data, columns, ...rest } = props;
 
+  const [openModals, setOpenModals] = useState<Record<string, boolean>>({});
+  const [filterValues, setFilterValues] = useState<Record<string, any>>({});
+
+  const handleOpen = (key: string) => {
+    setOpenModals((prev) => ({ ...prev, [key]: true }));
+  };
+
+  const handleClose = (key: string) => {
+    setOpenModals((prev) => ({ ...prev, [key]: false }));
+  };
+
+  const handleChange = <K extends keyof T>(
+    column: K,
+    value: T[K] | undefined,
+    filterFunc: FilterFunc<T, K>
+  ) => {
+    setFilterValues((prev) => ({ ...prev, [column as string]: value }));
+    filter.setFilter(column, (item) => filterFunc(item, value));
+  };
+
   const headerColumn = columns.map((col: FilteredColumn<T>) => {
+    const colKey = col.key.toString();
+    const isOpen = openModals[colKey] ?? false;
     const title = col.filterController ? (
       <>
         {
@@ -35,8 +56,14 @@ export function FilteredTable<T extends { id: string }>(props: FilteredTable<T>)
               type="button"
               title={col.title?.toString()}
               className={style.filter_button}
+              onClick={() => handleOpen(colKey)}
             ></button>
-            {col.filterController(filter)}
+            {isOpen &&
+              col.filterController(
+                filterValues[colKey],
+                () => handleClose(colKey),
+                (newValue, filterFunc) => handleChange(col.key, newValue, filterFunc)
+              )}
           </div>
         }
       </>

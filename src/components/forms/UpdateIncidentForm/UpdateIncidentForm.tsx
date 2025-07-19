@@ -23,6 +23,7 @@ import {
   selectStatusIncidents,
   updateIncident,
 } from '@services/incidentSlice';
+import { formatDate } from '@utils/dateFormatter';
 
 type UpdateIncidentFormProps = {
   onClose: () => void;
@@ -134,7 +135,7 @@ export const UpdateIncidentForm = ({ onClose, incident }: UpdateIncidentFormProp
             lableClassName={style.lable_input}
             type="date"
             name="date"
-            value={formData.date}
+            value={formatDate(formData.date)}
             onChange={changeHandler('date')}
             error={
               <span className={clsx(staticStyle.error, formStyle.input_error)}>

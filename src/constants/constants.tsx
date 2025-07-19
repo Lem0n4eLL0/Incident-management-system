@@ -4,12 +4,14 @@ import {
   INCIDENT_TYPES,
   IncidentDTO,
   IncidentStatus,
+  IncidentType,
   User,
 } from '@custom-types/types';
-import { FilteredColumn } from '@components/ui/FilteredTable/FilteredTable';
+import { FilteredColumn } from '@ui/FilteredTable/FilteredTable';
 import { FilterFunc } from '@utils/Filter';
 import { ModalFilter } from '@components/ModalFilter';
-import { Select } from '@components/ui/Select';
+import { Select } from '@ui/Select';
+import { CustomSelect } from '@ui/CustomSelect';
 
 export const TABLE_PLACEHOLDER = '—';
 export const LOCAL_STORAGE_REFRESH_TOKEN_ALIAS = 'refreshToken';
@@ -75,20 +77,14 @@ export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
   {
     key: 'type',
     title: 'Тип',
-    filterController: (controller) => (
-      <ModalFilter<Incident, 'type'>
-        controller={controller}
-        column={'type'}
-        filterFunc={typeFilter}
-      >
-        {({ value, onChange }) => (
-          <Select
-            value={value}
-            options={INCIDENT_TYPES}
-            onChange={onChange}
-            placeholder={'- Любой -'}
-          />
-        )}
+    filterController: (newValue, onClose, onChange) => (
+      <ModalFilter onClose={onClose}>
+        <CustomSelect<IncidentType>
+          value={newValue}
+          options={INCIDENT_TYPES}
+          onChange={(value) => onChange(value, typeFilter)}
+          onClose={onClose}
+        />
       </ModalFilter>
     ),
   },
@@ -102,20 +98,14 @@ export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
   {
     key: 'status',
     title: 'Статус',
-    filterController: (controller) => (
-      <ModalFilter<Incident, 'status'>
-        controller={controller}
-        column={'status'}
-        filterFunc={statusFilter}
-      >
-        {({ value, onChange }) => (
-          <Select<IncidentStatus>
-            value={value}
-            options={INCIDENT_STATUSES}
-            onChange={onChange}
-            placeholder={'- Любой -'}
-          />
-        )}
+    filterController: (newValue, onClose, onChange) => (
+      <ModalFilter onClose={onClose}>
+        <CustomSelect<IncidentStatus>
+          value={newValue}
+          options={INCIDENT_STATUSES}
+          onChange={(value) => onChange(value, statusFilter)}
+          onClose={onClose}
+        />
       </ModalFilter>
     ),
   },

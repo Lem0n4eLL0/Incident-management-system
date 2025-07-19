@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from '@services/store';
 import style from './IncidentsPage.module.css';
+import formStyle from '@style/form.module.css';
 import staticStyle from '@style/common.module.css';
 import { selectStatusIncidents, selectIncidents } from '@services/incidentSlice';
 import { Incident } from '@custom-types/types';
@@ -13,6 +14,7 @@ import clsx from 'clsx';
 import { useParams } from 'react-router-dom';
 import { ModalIncident } from '@components/ModalIncident';
 import { AddIncidentForm } from '@components/forms/AddIncidentForm';
+import { Loader } from '@components/ui/Loader';
 
 export const IncidentsPage = () => {
   const dispatch = useDispatch();
@@ -36,7 +38,7 @@ export const IncidentsPage = () => {
           <input type="search" className={style.search} name="поиск" placeholder="Поиск..."></input>
           <button
             type="button"
-            className={clsx(staticStyle.control_button, style.add_incident_button)}
+            className={clsx(formStyle.confirm_button, style.add_incident_button)}
             onClick={() => setIsOpenAddInciden(true)}
           >
             Добавить
@@ -48,6 +50,7 @@ export const IncidentsPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
+          // emptyDataPlaceholder={<Loader loaderClass={staticStyle.loader}></Loader>}
           renderModal={(id, onClose) => (
             <ModalIncident incident={incidents.find((el) => el.id === id)!} onClose={onClose} />
           )}

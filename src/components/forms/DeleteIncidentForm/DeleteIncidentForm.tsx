@@ -15,10 +15,12 @@ import clsx from 'clsx';
 type DeleteIncidentFormProps = {
   incident: Incident;
   onClose: () => void;
-  onCloseAll: () => void;
 };
 
-export const DeleteIncidentForm = ({ incident, onClose, onCloseAll }: DeleteIncidentFormProps) => {
+export const DeleteIncidentForm = ({ incident, onClose }: DeleteIncidentFormProps) => {
+  useEffect(() => {
+    console.log(incident);
+  });
   const dispatch = useDispatch();
   const { deleteIncidentError } = useSelector((state) =>
     selectErrorsIncidents.unwrapped(state.incidentsReducer)
@@ -46,10 +48,9 @@ export const DeleteIncidentForm = ({ incident, onClose, onCloseAll }: DeleteInci
     }
 
     if (wasPending.current && !isDeleteIncidentPending && !deleteIncidentError) {
-      onCloseAll();
       wasPending.current = false;
     }
-  }, [isDeleteIncidentPending, deleteIncidentError, onCloseAll]);
+  }, [isDeleteIncidentPending, deleteIncidentError]);
 
   useEffect(() => {
     setServerError(deleteIncidentError);

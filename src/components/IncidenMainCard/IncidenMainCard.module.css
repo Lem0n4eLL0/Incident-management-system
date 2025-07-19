@@ -8,7 +8,6 @@
   border: 1px solid var(--bg-300);
   box-shadow: 0 0 20px rgb(0 0 0 / 20%);
   padding: 24px;
-  margin-bottom: 24px;
   color: var(--text-100);
 }
 
@@ -18,20 +17,30 @@
   align-items: center;
 }
 
+.incident_title {
+  text-wrap: nowrap;
+}
+
 .card_content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
+  grid-template-rows: repeat(3, auto);
+  grid-template-columns: minmax(200px, 1fr) min-content;
+  gap: 10px;
 }
 
 .text_field {
-  grid-column: 1 / -1;
+  grid-row: span 3;
   font-style: italic;
   color: var(--text-secondary);
 }
 
 .field {
   font-size: 18px;
+  text-wrap: nowrap;
+}
+
+.field_title {
+  font-weight: 700;
 }
 
 .card_footer {
@@ -40,4 +49,11 @@
   flex-wrap: nowrap;
   border-top: 1px solid var(--bg-300);
   padding-top: 12px;
+}
+
+@media (width <= 760px) {
+  .card_content {
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+  }
 }
