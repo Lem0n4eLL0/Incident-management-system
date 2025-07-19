@@ -50,7 +50,6 @@ export const IncidentsPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
-          // emptyDataPlaceholder={<Loader loaderClass={staticStyle.loader}></Loader>}
           renderModal={(id, onClose) => (
             <ModalIncident incident={incidents.find((el) => el.id === id)!} onClose={onClose} />
           )}

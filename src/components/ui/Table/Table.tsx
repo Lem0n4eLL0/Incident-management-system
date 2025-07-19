@@ -65,9 +65,15 @@ export function Table<T extends { id: string }>({
         </thead>
         <tbody>
           {data.length === 0 ? (
-            <div className={style.empty_data}>
-              {emptyDataPlaceholder ? emptyDataPlaceholder : 'Нет данных'}
-            </div>
+            <tr>
+              <td colSpan={columns.length}>
+                {emptyDataPlaceholder ? (
+                  <div className={style.empty_data}>{emptyDataPlaceholder}</div>
+                ) : (
+                  <div className={clsx(style.empty_data, style.empty_data_column)}>Нет данных</div>
+                )}
+              </td>
+            </tr>
           ) : (
             data.map((item, index) => {
               return (

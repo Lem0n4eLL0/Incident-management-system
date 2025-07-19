@@ -40,10 +40,15 @@ th {
 }
 
 .empty_data {
+  width: 100%;
+  height: 100%;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.empty_data_column {
   font-size: 40px;
 }
 
