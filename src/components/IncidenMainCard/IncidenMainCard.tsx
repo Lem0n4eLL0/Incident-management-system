@@ -19,6 +19,7 @@ export const IncidenMainCard = ({ incident }: IncidenMainCardProps) => {
             [staticStyle.status_consideration]: incident.status === 'на рассмотрении',
             [staticStyle.status_underway]: incident.status === 'в работе',
             [staticStyle.status_completed]: incident.status === 'завершено',
+            [staticStyle.hidden]: !incident.status,
           })}
         >
           {incident.status}

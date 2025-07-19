@@ -2,7 +2,7 @@
   padding: 10px 14px;
   font-size: 16px;
   border-radius: 10px;
-  border: 2px solid var(--border-300, #ccc);
+  border: 2px solid var(--border-400);
   transition: border-color 0.2s;
 }
 

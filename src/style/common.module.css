@@ -10,6 +10,10 @@
   color: var(--text-100);
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 .modal {
   font-size: 20px;
   display: flex;

@@ -17,12 +17,16 @@ export const TABLE_PLACEHOLDER = '—';
 export const LOCAL_STORAGE_REFRESH_TOKEN_ALIAS = 'refreshToken';
 export const COOKIE_ACCESS_TOKEN_ALIAS = 'accessToken';
 
-const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
+export const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
   return value ? incident.type === value : true;
 };
 
-const statusFilter: FilterFunc<Incident, 'status'> = (incident, value) => {
+export const statusFilter: FilterFunc<Incident, 'status'> = (incident, value) => {
   return value ? incident.status === value : true;
+};
+
+export const descriptionFilter: FilterFunc<Incident, 'description'> = (incident, value) => {
+  return value ? incident.description.toLowerCase().includes(value.trim().toLowerCase()) : true;
 };
 
 export const EMPTY_USER: User = {

@@ -1,8 +1,17 @@
 .content {
-    font-size: 16px;
-    border: 1px solid var(--text-100);
-    background-color: var(--bg-200);
+    font-size: 14px;
+  background-color: var(--bg-100);
+  overflow: hidden;
+  min-width: 100px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+}
+
+.item {
+    width: 100%;
     font-weight: 400;
+    padding: 4px 8px;
+    white-space: nowrap;
+    cursor: pointer;
 }
 
 .item_all {
@@ -10,11 +19,8 @@
     justify-content: center;
 }
 
-.item {
-    width: 100%;
-    padding: 3px;
-    text-wrap: nowrap;
-    cursor: pointer;
+.item.item_all {
+    border-bottom: 1px solid var(--border-100);
 }
 
 .item:hover {
@@ -22,12 +28,10 @@
     color: var(--text-400);
 }
 
-.item:not(:last-child) {
-    border-bottom: 1px solid var(--text-100);
-}
-
 .current {
     background-color: var(--accent-100);
     color: var(--text-400);
     font-weight: 700;
 }
+
+
