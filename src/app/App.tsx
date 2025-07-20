@@ -14,6 +14,8 @@ import staticStyle from '@style/common.module.css';
 import { Loader } from '@ui/Loader';
 import { ProfilePage } from '@pages/ProfilePage';
 import clsx from 'clsx';
+import { ProtectedRoute } from '@components/ProtectedRoute';
+import { ERROR_FORBIDDEN } from '@constants/constants';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -54,9 +56,14 @@ export const App = () => {
                 <Route index element={<HomePage />}></Route>
                 <Route path="incidents" element={<IncidentsPage />}></Route>
                 <Route path="profile" element={<ProfilePage />}></Route>
-                <Route path="administration" element={<ErrorPage />}></Route>
-                <Route path="analytics" element={<ErrorPage />}></Route>
+                <Route element={<ProtectedRoute acсessRoles={['руководитель', 'администратор']} />}>
+                  <Route path="analytics" element={<ErrorPage />}></Route>
+                  <Route element={<ProtectedRoute acсessRoles={['администратор']} />}>
+                    <Route path="administration" element={<ErrorPage />}></Route>
+                  </Route>
+                </Route>
               </Route>
+              <Route path="/forbidden" element={<ErrorPage error={ERROR_FORBIDDEN} />} />
               <Route path="*" element={<ErrorPage />}></Route>
             </>
           )}

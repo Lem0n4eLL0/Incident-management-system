@@ -1,4 +1,5 @@
 import {
+  ApiError,
   Incident,
   INCIDENT_STATUSES,
   INCIDENT_TYPES,
@@ -71,6 +72,11 @@ export const EMPTY_INCIDENTDTO: IncidentDTO = {
   status: '',
   measures_taken: '',
   responsible: '',
+};
+
+export const ERROR_FORBIDDEN: ApiError = {
+  code: 403,
+  message: 'отказано в досупе',
 };
 
 export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
