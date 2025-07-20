@@ -3,7 +3,7 @@ import { Incident, IncidentDTO, User, UserDTO } from '@custom-types/types';
 
 export const TEST_USER_DTO: UserDTO = {
   id: '1',
-  role: 'сотрудник',
+  role: 'администратор',
   full_name: 'Владислав Черванев',
   unit: 'Красный крест',
   position: 'превышает',

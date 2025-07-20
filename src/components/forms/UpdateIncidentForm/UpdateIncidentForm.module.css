@@ -4,8 +4,7 @@
   flex-grow: 1;
   color: var(--text-100);
   background-color: var(--bg-100);
-  max-height: auto;
-  max-height: 494px;
+  max-height: 512px;
   padding: 0;
   width: 100%;
 }

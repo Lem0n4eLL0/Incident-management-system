@@ -19,7 +19,7 @@
   display: flex;
   justify-content: end;
   background-color: var(--bg-100);
-  min-width: 400px;
+  min-width: 360px;
   min-height: 500px;
 }
 
@@ -115,20 +115,18 @@
 }
 
 .loader {
-  min-width: min(70px, 50%);
-  min-height: min(70px, 50%);
   border-radius: 50%;
   border: 6px solid var(--bg-300);
   border-right: 6px solid var(--accent-100);
+  aspect-ratio: 1 / 1;
   animation: loader_animation 0.83s cubic-bezier(0.4, 0.2, 0.3, 0.8) infinite;
 }
 
 .loader_v2 {
-  min-width: min(70px, 50%);
-  min-height: min(70px, 50%);
   border-radius: 50%;
   border: 6px solid var(--bg-300);
   border-right: 6px solid var(--accent-100);
+  aspect-ratio: 1 / 1;
   animation: loader_animation 0.83s cubic-bezier(0.6, 0, 0.8, 0.7) infinite alternate;
   
 }

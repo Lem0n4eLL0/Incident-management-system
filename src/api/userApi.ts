@@ -67,3 +67,9 @@ export const getUserApi = () => {
     setTimeout(() => res(TEST_USER_DTO), 1000);
   });
 };
+
+export const updateUserApi = (user: Partial<UserDTO>) => {
+  return new Promise<UserDTO>((res) => {
+    setTimeout(() => res({ ...TEST_USER_DTO, ...user }), 1000);
+  });
+};

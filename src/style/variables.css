@@ -64,4 +64,7 @@
   --status-none-color: var(--bg-250);
   --form-bg-color: var(--bg-200);
   --form-bg-color-v2: var(--bg-300);
+
+  /* svg */
+  --svg-pen-color: var(--accent-100);
 }

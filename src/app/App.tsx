@@ -13,6 +13,7 @@ import { getUser, selectStatusUser, selectUser } from '@services/userSlice';
 import staticStyle from '@style/common.module.css';
 import { Loader } from '@ui/Loader';
 import { ProfilePage } from '@pages/ProfilePage';
+import clsx from 'clsx';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ export const App = () => {
   }, [isAuthenticated, user]);
 
   if (isGetUserPending) {
-    return <Loader loaderClass={staticStyle.loader_v2}></Loader>;
+    return <Loader loaderClass={clsx(staticStyle.loader_v2, style.loader)} isAbsolute></Loader>;
   }
 
   return (

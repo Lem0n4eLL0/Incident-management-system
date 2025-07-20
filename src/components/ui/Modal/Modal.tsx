@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import style from './Modal.module.css';
-import { ReactComponent as CrossIcon } from '../../../assets/cross.svg';
+import { ReactComponent as CrossIcon } from '@assets/cross.svg';
 import clsx from 'clsx';
 type ModalProps = {
   children: React.ReactNode;

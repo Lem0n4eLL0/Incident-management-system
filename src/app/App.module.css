@@ -4,3 +4,7 @@
   flex-direction: column;
   background-color: var(--main-bg-color);
 }
+
+.loader {
+  width: 70px;
+}

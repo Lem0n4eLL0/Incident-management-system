@@ -6,8 +6,8 @@ import {
 } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
-import { getUserApi, loginUserApi } from '@api/userApi';
-import { mapUserFromDto } from '@custom-types/mapperDTO';
+import { getUserApi, loginUserApi, updateUserApi } from '@api/userApi';
+import { mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -55,6 +55,23 @@ const userSlice = createSlice({
         state.status.isGetUserPending = false;
       },
     }),
+    updateUser: create.asyncThunk(async (user: Partial<UserDTO>) => await updateUserApi(user), {
+      pending: (state) => {
+        state.status.isUpdateUserPending = true;
+        state.errors.updateUserError = undefined;
+      },
+      rejected: (state, action) => {
+        state.errors.updateUserError = {
+          code: action.error.code,
+          message: action.error.message,
+        };
+        state.status.isUpdateUserPending = false;
+      },
+      fulfilled: (state, action) => {
+        state.user = mapUserFromDto(action.payload);
+        state.status.isUpdateUserPending = false;
+      },
+    }),
   }),
   selectors: {
     selectUser: (state) => state.user,
@@ -63,7 +80,7 @@ const userSlice = createSlice({
   },
 });
 
-export const { getUser } = userSlice.actions;
+export const { getUser, updateUser } = userSlice.actions;
 export const {
   selectUser,
   selectStatus: selectStatusUser,

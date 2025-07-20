@@ -5,7 +5,7 @@ export const getIncidentsApi = (): Promise<IncidentDTO[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(INCEDENTS.incident);
-    }, 10000);
+    }, 1000);
   });
 };
 

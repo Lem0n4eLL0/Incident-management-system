@@ -23,11 +23,11 @@ export const HomePage = () => {
         <section className={style.introduction}>
           <h1 className={style.greetings}>Здравствуйте, {user!.fullName}!</h1>
           <div className={style.statistic}>
-            <Loader loaderClass={staticStyle.loader_bg}></Loader>
+            <Loader loaderClass={staticStyle.loader_bg} isAbsolute></Loader>
           </div>
         </section>
         <section className={style.incidents}>
-          <Loader loaderClass={staticStyle.loader_bg}></Loader>
+          <Loader loaderClass={staticStyle.loader_bg} isAbsolute></Loader>
         </section>
       </div>
     );

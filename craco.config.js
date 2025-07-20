@@ -17,6 +17,7 @@ module.exports = {
       '@api': resolvePath('./src/api'),
       '@style': resolvePath('./src/style'),
       '@hooks': resolvePath('./src/hooks'),
+      '@assets': resolvePath('./src/assets'),
     },
   },
 };
