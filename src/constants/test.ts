@@ -2,7 +2,7 @@ import { mapUserToDto } from '@custom-types/mapperDTO';
 import { Incident, IncidentDTO, User, UserDTO } from '@custom-types/types';
 
 export const TEST_USER_DTO: UserDTO = {
-  id: '1',
+  id: 'test_user_1',
   role: 'сотрудник',
   full_name: 'Владислав Черванев',
   unit: 'Красный крест',
@@ -10,6 +10,37 @@ export const TEST_USER_DTO: UserDTO = {
   telephone: '89456762343',
   email: 'zacrivgre@bk.ru',
 };
+
+export const TEST_USERS: UserDTO[] = [
+  TEST_USER_DTO,
+  {
+    id: 'user-001',
+    role: 'админ',
+    full_name: 'Администратор',
+    unit: 'IT отдел',
+    position: 'Главный админ',
+    telephone: '88005553535',
+    email: 'admin@example.com',
+  },
+  {
+    id: 'stjsrtjsrtjsrtsrtn',
+    role: 'сотрудник',
+    full_name: 'Зубенко Михаил Петрович',
+    unit: 'Мафиозники',
+    position: 'Вор в законе',
+    telephone: '89998887777',
+    email: 'shumilovskiyGorodok@bk.ru',
+  },
+  {
+    id: 'smbq389hb34q0ihsrtjsrtsrtn',
+    role: 'руководитель',
+    full_name: 'Санек',
+    unit: 'Top gan',
+    position: 'Почетаемый',
+    telephone: '856783991234',
+    email: 'lolkek@bk.ru',
+  },
+];
 
 export const INCEDENTS: { incident: IncidentDTO[] } = {
   incident: [

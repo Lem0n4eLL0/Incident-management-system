@@ -42,7 +42,8 @@ export type Incident = {
   responsible?: string;
 };
 
-export type TableIncident = Pick<Incident, 'incidentNumber' | 'type' | 'unit' | 'date' | 'status'>; // Убрать если не пределаю в строгую типизацию
+export type TableIncident = Pick<Incident, 'incidentNumber' | 'type' | 'unit' | 'date' | 'status'>;
+export type TableUsers = Pick<User, 'fullName' | 'unit' | 'position' | 'role'>;
 
 export type IncidentDTO = {
   id: string;

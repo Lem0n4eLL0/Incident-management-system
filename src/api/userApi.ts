@@ -1,7 +1,8 @@
 import { COOKIE_ACCESS_TOKEN_ALIAS, LOCAL_STORAGE_REFRESH_TOKEN_ALIAS } from '@constants/constants';
-import { TEST_USER_DTO } from '@constants/test';
+import { TEST_USER_DTO, TEST_USERS } from '@constants/test';
 import { ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import Cookies from 'js-cookie';
+import { v4 as uuidv4 } from 'uuid';
 
 const URL_API = process.env.REACT_APP_API_URL;
 
@@ -71,5 +72,35 @@ export const getUserApi = () => {
 export const updateUserApi = (user: Partial<UserDTO>) => {
   return new Promise<UserDTO>((res) => {
     setTimeout(() => res({ ...TEST_USER_DTO, ...user }), 1000);
+  });
+};
+
+export const createUserApi = (user: Partial<UserDTO>) => {
+  return new Promise<UserDTO>((res) => {
+    setTimeout(() => {
+      const newUser: UserDTO = {
+        id: uuidv4(),
+        full_name: user.full_name || '',
+        role: user.role || 'сотрудник',
+        unit: user.unit || '',
+        position: user.position || '',
+        telephone: user.telephone || '',
+        email: user.email || '',
+      };
+      TEST_USERS.push(newUser);
+      res(newUser);
+    }, 500);
+  });
+};
+
+export const deleteUsersApi = (id: string) => {
+  return new Promise<UserDTO>((res, rej) => {
+    setTimeout(() => {
+      const index = TEST_USERS.findIndex((u) => u.id === id);
+      if (index === -1) return rej(new Error('User not found'));
+
+      const deleted = TEST_USERS.splice(index, 1)[0];
+      res(deleted);
+    }, 500);
   });
 };

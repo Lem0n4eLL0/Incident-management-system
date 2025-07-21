@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
-import { getUserApi, loginUserApi, updateUserApi } from '@api/userApi';
+import { createUserApi, getUserApi, loginUserApi, updateUserApi } from '@api/userApi';
 import { mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
 
 const createSlice = buildCreateSlice({
@@ -18,10 +18,14 @@ type TUserState = {
   status: {
     isGetUserPending: boolean;
     isUpdateUserPending: boolean;
+    isCreateUserPending: boolean;
+    isDeleteUserPending: boolean;
   };
   errors: {
     getUserError?: ApiError;
     updateUserError?: ApiError;
+    createUserError?: ApiError;
+    deleteUserError?: ApiError;
   };
 };
 
@@ -30,6 +34,8 @@ const initialState: TUserState = {
   status: {
     isGetUserPending: false,
     isUpdateUserPending: false,
+    isCreateUserPending: false,
+    isDeleteUserPending: false,
   },
   errors: {},
 };
