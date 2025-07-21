@@ -25,7 +25,7 @@
 
 .field {
   display: flex;
-  gap: 18px; 
+  gap: 18px;
   align-items: center;
   font-size: 20px;
 }
@@ -44,21 +44,6 @@
   width: auto;
   height: min-content;
   border: 2px solid;
-}
-
-.role_admin {
-  border-color: var(--primary-100);
-  color: var(--primary-100);
-}
-
-.role_manager {
-  border-color: var(--accent-100);
-  color: var(--accent-100);
-}
-
-.role_employee {
-  border-color: var(--additional-100);
-  color: var(--additional-100);
 }
 
 .title {
@@ -85,7 +70,6 @@
 .change_value .loader {
   width: 20px;
   border-width: 3px;
-
 }
 
 .change_button {
@@ -134,7 +118,7 @@
 
 .change_input::placeholder {
   color: var(--text-300);
-  opacity: 0.7
+  opacity: 0.7;
 }
 
 .change_input.change_input_not_valid {

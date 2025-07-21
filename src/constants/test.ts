@@ -1,9 +1,9 @@
 import { mapUserToDto } from '@custom-types/mapperDTO';
-import { Incident, IncidentDTO, User, UserDTO } from '@custom-types/types';
+import { FullUserDTO, Incident, IncidentDTO, User, UserDTO } from '@custom-types/types';
 
 export const TEST_USER_DTO: UserDTO = {
   id: 'test_user_1',
-  role: 'сотрудник',
+  role: 'администратор',
   full_name: 'Владислав Черванев',
   unit: 'Красный крест',
   position: 'превышает',
@@ -11,16 +11,44 @@ export const TEST_USER_DTO: UserDTO = {
   email: 'zacrivgre@bk.ru',
 };
 
-export const TEST_USERS: UserDTO[] = [
-  TEST_USER_DTO,
+export const TEST_FULL_USER_DTO: FullUserDTO = {
+  ...TEST_USER_DTO,
+  login: 'login',
+  password: 'password',
+  token: {
+    jti: 'aeghojarnpoauebrpuibnarepareg',
+    is_blacklisted: 'false',
+    created_at_formatted: '2025-07-21T10:30:45.000Z',
+    expires_at_formatted: '2025-07-21T10:30:45.000Z',
+    token_timer: '10m 30s',
+  },
+  last_login: '2025-07-21T10:30:45.000Z',
+  is_active: 'true',
+  is_staff: 'false',
+};
+
+export const TEST_FULL_USERS: FullUserDTO[] = [
+  TEST_FULL_USER_DTO,
   {
     id: 'user-001',
-    role: 'админ',
+    role: 'администратор',
     full_name: 'Администратор',
     unit: 'IT отдел',
     position: 'Главный админ',
     telephone: '88005553535',
     email: 'admin@example.com',
+    login: 'login',
+    password: 'password',
+    token: {
+      jti: 'aeghojarnpoauebrpuibnarepareg',
+      is_blacklisted: 'false',
+      created_at_formatted: '2025-07-21T10:30:45.000Z',
+      expires_at_formatted: '2025-07-21T10:30:45.000Z',
+      token_timer: '10m 30s',
+    },
+    last_login: '2025-07-21T10:30:45.000Z',
+    is_active: 'true',
+    is_staff: 'false',
   },
   {
     id: 'stjsrtjsrtjsrtsrtn',
@@ -30,15 +58,39 @@ export const TEST_USERS: UserDTO[] = [
     position: 'Вор в законе',
     telephone: '89998887777',
     email: 'shumilovskiyGorodok@bk.ru',
+    login: 'login',
+    password: 'password',
+    token: {
+      jti: 'aeghojarnpoauebrpuibnarepareg',
+      is_blacklisted: 'false',
+      created_at_formatted: '2025-07-21T10:30:45.000Z',
+      expires_at_formatted: '2025-07-21T10:30:45.000Z',
+      token_timer: '10m 30s',
+    },
+    last_login: '2025-07-21T10:30:45.000Z',
+    is_active: 'true',
+    is_staff: 'false',
   },
   {
     id: 'smbq389hb34q0ihsrtjsrtsrtn',
     role: 'руководитель',
     full_name: 'Санек',
     unit: 'Top gan',
-    position: 'Почетаемый',
+    position: 'Почитаемый',
     telephone: '856783991234',
     email: 'lolkek@bk.ru',
+    login: 'login',
+    password: 'password',
+    token: {
+      jti: 'aeghojarnpoauebrpuibnarepareg',
+      is_blacklisted: 'false',
+      created_at_formatted: '2025-07-21T10:30:45.000Z',
+      expires_at_formatted: '2025-07-21T10:30:45.000Z',
+      token_timer: '10m 30s',
+    },
+    last_login: '2025-07-21T10:30:45.000Z',
+    is_active: 'true',
+    is_staff: 'false',
   },
 ];
 

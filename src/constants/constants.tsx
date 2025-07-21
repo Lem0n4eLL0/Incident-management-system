@@ -1,12 +1,16 @@
 import {
   ApiError,
+  CreateUserDTO,
   Incident,
   INCIDENT_STATUSES,
   INCIDENT_TYPES,
   IncidentDTO,
   IncidentStatus,
   IncidentType,
+  Role,
   User,
+  USER_ROLES,
+  UserDTO,
 } from '@custom-types/types';
 import { FilteredColumn } from '@ui/FilteredTable/FilteredTable';
 import { FilterFunc } from '@utils/Filter';
@@ -30,6 +34,14 @@ export const descriptionFilter: FilterFunc<Incident, 'description'> = (incident,
   return value ? incident.description.toLowerCase().includes(value.trim().toLowerCase()) : true;
 };
 
+export const roleFilter: FilterFunc<User, 'role'> = (incident, value) => {
+  return value ? incident.role === value : true;
+};
+
+export const fullNameFilter: FilterFunc<User, 'fullName'> = (incident, value) => {
+  return value ? incident.fullName.trim().toLowerCase().includes(value.trim().toLowerCase()) : true;
+};
+
 export const EMPTY_USER: User = {
   id: '',
   role: 'сотрудник',
@@ -38,6 +50,22 @@ export const EMPTY_USER: User = {
   position: '',
   telephone: '',
   email: '',
+};
+
+export const EMPTY_USERDTO: UserDTO = {
+  id: '',
+  role: '',
+  full_name: '',
+  unit: '',
+  position: '',
+  telephone: '',
+  email: '',
+};
+
+export const EMPTY_CREATE_USERDTO: CreateUserDTO = {
+  ...EMPTY_USERDTO,
+  login: '',
+  password: '',
 };
 
 export const EMPTY_INCIDENT: Incident = {
@@ -60,15 +88,7 @@ export const EMPTY_INCIDENTDTO: IncidentDTO = {
   date: '',
   description: '',
   unit: '',
-  author: {
-    id: '',
-    role: '',
-    full_name: '',
-    unit: '',
-    position: '',
-    telephone: '',
-    email: '',
-  },
+  author: EMPTY_USERDTO,
   status: '',
   measures_taken: '',
   responsible: '',
@@ -79,7 +99,36 @@ export const ERROR_FORBIDDEN: ApiError = {
   message: 'отказано в досупе',
 };
 
-export const TABLE_COLUMNS: FilteredColumn<Incident>[] = [
+export const TABLE_USER_COLUMNS: FilteredColumn<User>[] = [
+  {
+    key: 'fullName',
+    title: 'ФИО',
+  },
+  {
+    key: 'unit',
+    title: 'Подразделение',
+  },
+  {
+    key: 'position',
+    title: 'Должность',
+  },
+  {
+    key: 'role',
+    title: 'Роль',
+    filterController: (newValue, onClose, onChange) => (
+      <ModalFilter onClose={onClose}>
+        <CustomSelect<Role>
+          value={newValue}
+          options={USER_ROLES}
+          onChange={(value) => onChange(value, roleFilter)}
+          onClose={onClose}
+        />
+      </ModalFilter>
+    ),
+  },
+];
+
+export const TABLE_INCIDENT_COLUMNS: FilteredColumn<Incident>[] = [
   {
     key: 'incidentNumber',
     title: 'Номер',

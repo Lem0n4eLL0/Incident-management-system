@@ -1,4 +1,14 @@
-import { Role, UserDTO, User, IncidentDTO, Incident, IncidentType, IncidentStatus } from './types';
+import {
+  Role,
+  UserDTO,
+  User,
+  IncidentDTO,
+  Incident,
+  IncidentType,
+  IncidentStatus,
+  FullUserDTO,
+  FullUser,
+} from './types';
 
 export const mapUserFromDto = ({
   id,
@@ -34,6 +44,50 @@ export const mapUserToDto = ({
   position,
   telephone,
   email,
+});
+
+export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({
+  id: dto.id,
+  role: dto.role as Role,
+  fullName: dto.full_name,
+  unit: dto.unit,
+  position: dto.position,
+  telephone: dto.telephone,
+  email: dto.email,
+  login: dto.login,
+  password: dto.password,
+  token: {
+    jti: dto.token.jti,
+    isBlacklisted: dto.token.is_blacklisted === 'true',
+    createdAtFormatted: new Date(dto.token.created_at_formatted),
+    expiresAtFormatted: new Date(dto.token.expires_at_formatted),
+    tokenTimer: dto.token.token_timer,
+  },
+  lastLogin: new Date(dto.last_login),
+  isActive: dto.is_active === 'true',
+  isStaff: dto.is_staff === 'true',
+});
+
+export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
+  id: user.id,
+  role: user.role,
+  full_name: user.fullName,
+  unit: user.unit,
+  position: user.position,
+  telephone: user.telephone,
+  email: user.email,
+  login: user.login,
+  password: user.password,
+  token: {
+    jti: user.token.jti,
+    is_blacklisted: user.token.isBlacklisted ? 'true' : 'false',
+    created_at_formatted: user.token.createdAtFormatted.toISOString(),
+    expires_at_formatted: user.token.expiresAtFormatted.toISOString(),
+    token_timer: user.token.tokenTimer,
+  },
+  last_login: user.lastLogin.toISOString(),
+  is_active: user.isActive ? 'true' : 'false',
+  is_staff: user.isStaff ? 'true' : 'false',
 });
 
 export const mapIncidentToDto = ({

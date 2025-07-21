@@ -1,4 +1,4 @@
-import { ApiLoginRequest, IncidentDTO, UserDTO } from '@custom-types/types';
+import { ApiLoginRequest, CreateUserDTO, IncidentDTO, UserDTO } from '@custom-types/types';
 import { TFormValidators } from '@hooks/useFormValidation';
 
 function notEmptyField(value: string): boolean {
@@ -19,6 +19,22 @@ export const getValidatableIncidentFields = (data: IncidentDTO) => {
 };
 
 export const USER_VALIDATOR: Partial<TFormValidators<UserDTO>> = {
+  full_name: {
+    validator: notEmptyField,
+    message: 'Обязательно для заполнения',
+  },
+  unit: {
+    validator: notEmptyField,
+    message: 'Обязательно для заполнения',
+  },
+  position: {
+    validator: notEmptyField,
+    message: 'Обязательно для заполнения',
+  },
+  role: {
+    validator: notEmptyField,
+    message: 'Обязательно для заполнения',
+  },
   telephone: {
     validator: phoneValidator,
     message: 'Неверный формат телефона',
@@ -26,6 +42,18 @@ export const USER_VALIDATOR: Partial<TFormValidators<UserDTO>> = {
   email: {
     validator: emailValidator,
     message: 'Неверный формат почты',
+  },
+};
+
+export const CREATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
+  ...USER_VALIDATOR,
+  login: {
+    validator: notEmptyField,
+    message: 'Обязательно для заполнения',
+  },
+  password: {
+    validator: notEmptyField,
+    message: 'Обязательно для заполнения',
   },
 };
 

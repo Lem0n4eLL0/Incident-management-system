@@ -10,10 +10,11 @@ export const getIncidentsApi = (): Promise<IncidentDTO[]> => {
 };
 
 export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, rej) => {
     setTimeout(() => {
-      INCEDENTS.incident.push(incident);
-      resolve(incident);
+      rej(new Error('ошибка сервера'));
+      // INCEDENTS.incident.push(incident);
+      // resolve(incident);
     }, 1000);
   });
 };

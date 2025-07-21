@@ -1,8 +1,8 @@
-import { TEST_USERS } from '@constants/test';
-import { UserDTO } from '@custom-types/types';
+import { TEST_FULL_USERS } from '@constants/test';
+import { FullUserDTO } from '@custom-types/types';
 
 export const getUsersApi = () => {
-  return new Promise<Array<UserDTO>>((res) => {
-    setTimeout(() => res([...TEST_USERS]), 500);
+  return new Promise<Array<FullUserDTO>>((res) => {
+    setTimeout(() => res([...TEST_FULL_USERS]), 1000);
   });
 };

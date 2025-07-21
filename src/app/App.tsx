@@ -16,6 +16,7 @@ import { ProfilePage } from '@pages/ProfilePage';
 import clsx from 'clsx';
 import { ProtectedRoute } from '@components/ProtectedRoute';
 import { ERROR_FORBIDDEN } from '@constants/constants';
+import { AdministrationPage } from '@pages/AdministrationPage';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -59,7 +60,7 @@ export const App = () => {
                 <Route element={<ProtectedRoute acсessRoles={['руководитель', 'администратор']} />}>
                   <Route path="analytics" element={<ErrorPage />}></Route>
                   <Route element={<ProtectedRoute acсessRoles={['администратор']} />}>
-                    <Route path="administration" element={<ErrorPage />}></Route>
+                    <Route path="administration" element={<AdministrationPage />}></Route>
                   </Route>
                 </Route>
               </Route>

@@ -7,11 +7,13 @@ import {
 import { userReducer } from './userSlice';
 import { incidentsReducer } from './incidentSlice';
 import { authReducer } from './authSlice';
+import { usersReducer } from './usersSlice';
 
 const rootRedusers = combineSlices({
   authReducer,
   userReducer,
   incidentsReducer,
+  usersReducer,
 });
 
 const store = configureStore({

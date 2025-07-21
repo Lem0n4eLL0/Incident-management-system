@@ -7,9 +7,13 @@
     "no-empty-source": null,
     "selector-class-pattern": null,
     "keyframes-name-pattern": null,
-    "property-no-unknown": [true, {
-      "ignoreProperties": ["composes"]
-    }],
+    "declaration-block-no-redundant-longhand-properties": null,
+    "property-no-unknown": [
+      true,
+      {
+        "ignoreProperties": ["composes"]
+      }
+    ],
     "css-modules/composed-class-names": null
   }
 }

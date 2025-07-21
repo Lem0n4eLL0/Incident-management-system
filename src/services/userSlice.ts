@@ -18,14 +18,10 @@ type TUserState = {
   status: {
     isGetUserPending: boolean;
     isUpdateUserPending: boolean;
-    isCreateUserPending: boolean;
-    isDeleteUserPending: boolean;
   };
   errors: {
     getUserError?: ApiError;
     updateUserError?: ApiError;
-    createUserError?: ApiError;
-    deleteUserError?: ApiError;
   };
 };
 
@@ -34,8 +30,6 @@ const initialState: TUserState = {
   status: {
     isGetUserPending: false,
     isUpdateUserPending: false,
-    isCreateUserPending: false,
-    isDeleteUserPending: false,
   },
   errors: {},
 };
@@ -61,6 +55,7 @@ const userSlice = createSlice({
         state.status.isGetUserPending = false;
       },
     }),
+
     updateUser: create.asyncThunk(async (user: Partial<UserDTO>) => await updateUserApi(user), {
       pending: (state) => {
         state.status.isUpdateUserPending = true;

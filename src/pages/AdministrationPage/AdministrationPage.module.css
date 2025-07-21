@@ -5,7 +5,7 @@
   flex-grow: 1;
 }
 
-.incidents {
+.users {
   display: flex;
   position: relative;
   flex-direction: column;

@@ -120,9 +120,9 @@ export const ProfilePage = () => {
           <span className={style.name}>{user?.fullName}</span>
           <span
             className={clsx(style.role, {
-              [style.role_employee]: user?.role === 'сотрудник',
-              [style.role_manager]: user?.role === 'руководитель',
-              [style.role_admin]: user?.role === 'администратор',
+              [staticStyle.role_employee]: user?.role === 'сотрудник',
+              [staticStyle.role_manager]: user?.role === 'руководитель',
+              [staticStyle.role_admin]: user?.role === 'администратор',
             })}
           >
             {user?.role}

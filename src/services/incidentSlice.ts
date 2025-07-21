@@ -131,6 +131,9 @@ const incidentsSlice = createSlice({
     clearDeleteIncidentError: create.reducer((state) => {
       state.errors.deleteIncidentError = undefined;
     }),
+    clearErrors: create.reducer((state) => {
+      state.errors = {};
+    }),
   }),
 
   selectors: {
@@ -146,6 +149,7 @@ export const {
   deleteIncident,
   updateIncident,
   clearDeleteIncidentError,
+  clearErrors: clearErrorsIncident,
 } = incidentsSlice.actions;
 export const {
   selectIncidents,

@@ -1,5 +1,5 @@
 .content {
-    font-size: 14px;
+  font-size: 14px;
   background-color: var(--bg-100);
   overflow: hidden;
   min-width: 100px;
@@ -7,31 +7,29 @@
 }
 
 .item {
-    width: 100%;
-    font-weight: 400;
-    padding: 4px 8px;
-    white-space: nowrap;
-    cursor: pointer;
+  width: 100%;
+  font-weight: 400;
+  padding: 4px 8px;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .item_all {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .item.item_all {
-    border-bottom: 1px solid var(--border-100);
+  border-bottom: 1px solid var(--border-100);
 }
 
 .item:hover {
-    background-color: var(--accent-100);
-    color: var(--text-400);
+  background-color: var(--accent-100);
+  color: var(--text-400);
 }
 
 .current {
-    background-color: var(--accent-100);
-    color: var(--text-400);
-    font-weight: 700;
+  background-color: var(--accent-100);
+  color: var(--text-400);
+  font-weight: 700;
 }
-
-

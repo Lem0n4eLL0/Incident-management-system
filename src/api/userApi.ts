@@ -1,6 +1,6 @@
 import { COOKIE_ACCESS_TOKEN_ALIAS, LOCAL_STORAGE_REFRESH_TOKEN_ALIAS } from '@constants/constants';
-import { TEST_USER_DTO, TEST_USERS } from '@constants/test';
-import { ApiLoginRequest, User, UserDTO } from '@custom-types/types';
+import { TEST_USER_DTO, TEST_FULL_USERS } from '@constants/test';
+import { ApiLoginRequest, CreateUserDTO, FullUserDTO, User, UserDTO } from '@custom-types/types';
 import Cookies from 'js-cookie';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -75,10 +75,10 @@ export const updateUserApi = (user: Partial<UserDTO>) => {
   });
 };
 
-export const createUserApi = (user: Partial<UserDTO>) => {
-  return new Promise<UserDTO>((res) => {
+export const createUserApi = (user: Partial<CreateUserDTO>) => {
+  return new Promise<FullUserDTO>((res, rej) => {
     setTimeout(() => {
-      const newUser: UserDTO = {
+      const newUser: FullUserDTO = {
         id: uuidv4(),
         full_name: user.full_name || '',
         role: user.role || 'сотрудник',
@@ -86,20 +86,33 @@ export const createUserApi = (user: Partial<UserDTO>) => {
         position: user.position || '',
         telephone: user.telephone || '',
         email: user.email || '',
+        login: user.login || '',
+        password: user.password || '',
+        token: {
+          jti: '',
+          is_blacklisted: 'false',
+          created_at_formatted: '',
+          expires_at_formatted: '',
+          token_timer: '',
+        },
+        last_login: '2025-07-21T10:30:45.000Z',
+        is_active: 'true',
+        is_staff: 'false',
       };
-      TEST_USERS.push(newUser);
-      res(newUser);
-    }, 500);
+      rej(new Error('Ошибка сервера'));
+      // TEST_FULL_USERS.push(newUser);
+      // res(newUser);
+    }, 1000);
   });
 };
 
 export const deleteUsersApi = (id: string) => {
   return new Promise<UserDTO>((res, rej) => {
     setTimeout(() => {
-      const index = TEST_USERS.findIndex((u) => u.id === id);
+      const index = TEST_FULL_USERS.findIndex((u) => u.id === id);
       if (index === -1) return rej(new Error('User not found'));
 
-      const deleted = TEST_USERS.splice(index, 1)[0];
+      const deleted = TEST_FULL_USERS.splice(index, 1)[0];
       res(deleted);
     }, 500);
   });

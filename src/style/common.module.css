@@ -10,6 +10,21 @@
   color: var(--text-100);
 }
 
+.role_admin {
+  border-color: var(--primary-100);
+  color: var(--primary-100);
+}
+
+.role_manager {
+  border-color: var(--accent-100);
+  color: var(--accent-100);
+}
+
+.role_employee {
+  border-color: var(--additional-100);
+  color: var(--additional-100);
+}
+
 .hidden {
   visibility: hidden;
 }
@@ -20,7 +35,7 @@
   justify-content: end;
   background-color: var(--bg-100);
   min-width: 360px;
-  min-height: 500px;
+  min-height: 100px;
 }
 
 .status {
@@ -29,6 +44,17 @@
   text-wrap: nowrap;
   text-shadow: 0 0 8px rgb(0 0 0 / 20%);
   color: var(--text-400);
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
+}
+
+.role {
+  padding: 6px 12px;
+  border-radius: 15px;
+  text-wrap: nowrap;
+  border: 2px solid;
+  text-shadow: 0 0 8px rgb(0 0 0 / 20%);
   font-weight: 700;
   font-size: 15px;
   box-shadow: 0 2px 6px rgb(0 0 0 / 20%);
@@ -128,19 +154,13 @@
   border-right: 6px solid var(--accent-100);
   aspect-ratio: 1 / 1;
   animation: loader_animation 0.83s cubic-bezier(0.6, 0, 0.8, 0.7) infinite alternate;
-  
 }
 
 .loader_bg {
   width: 100%;
   height: 100%;
   border-radius: 20px;
-  background: linear-gradient(
-    135deg,
-    #f0f0f0 25%,
-    #e0e0e0 50%,
-    #f0f0f0 75%
-  );
+  background: linear-gradient(135deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 400% 400%;
   animation: loader_bg_animation 1.5s cubic-bezier(0.4, 0.2, 0.3, 0.8) infinite alternate;
 }

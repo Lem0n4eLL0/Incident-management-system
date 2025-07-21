@@ -2,10 +2,14 @@ import { useDispatch, useSelector } from '@services/store';
 import style from './IncidentsPage.module.css';
 import formStyle from '@style/form.module.css';
 import staticStyle from '@style/common.module.css';
-import { selectStatusIncidents, selectIncidents } from '@services/incidentSlice';
+import {
+  selectStatusIncidents,
+  selectIncidents,
+  clearErrorsIncident,
+} from '@services/incidentSlice';
 import { Incident } from '@custom-types/types';
 import { Table } from '@ui/Table';
-import { descriptionFilter, TABLE_COLUMNS, TABLE_PLACEHOLDER } from '@constants/constants';
+import { descriptionFilter, TABLE_INCIDENT_COLUMNS, TABLE_PLACEHOLDER } from '@constants/constants';
 import { useCallback, useEffect, useLayoutEffect, useReducer, useState } from 'react';
 import { useFilter } from '@hooks/useFilter';
 import { FilteredTable } from '@ui/FilteredTable';
@@ -16,6 +20,7 @@ import { ModalIncident } from '@components/ModalIncident';
 import { AddIncidentForm } from '@components/forms/AddIncidentForm';
 import { Loader } from '@components/ui/Loader';
 import { FilterFunc } from '@utils/Filter';
+import { AddUserForm } from '@components/forms/AddUserForm';
 
 export const IncidentsPage = () => {
   const dispatch = useDispatch();
@@ -35,14 +40,13 @@ export const IncidentsPage = () => {
   );
 
   useEffect(() => {
-    if (filter) {
-      filter.setFilter('description', (item) => descriptionFilter(item, searchValue));
-    }
+    filter.setFilter('description', (item) => descriptionFilter(item, searchValue));
   }, [searchValue]);
 
   const closeModalHandler = useCallback(() => {
     if (!isAddIncidentPending) {
       setIsOpenAddInciden(false);
+      dispatch(clearErrorsIncident());
     }
   }, [isAddIncidentPending, setIsOpenAddInciden]);
 
@@ -62,7 +66,7 @@ export const IncidentsPage = () => {
           <input
             type="search"
             className={style.search}
-            name="поиск"
+            name="search"
             placeholder="Поиск..."
             onChange={searchHandler}
           ></input>
@@ -75,8 +79,7 @@ export const IncidentsPage = () => {
           </button>
         </div>
         <FilteredTable<Incident>
-          columns={TABLE_COLUMNS}
-          data={incidents}
+          columns={TABLE_INCIDENT_COLUMNS}
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
@@ -87,7 +90,7 @@ export const IncidentsPage = () => {
       </section>
       {isOpenAddInciden && (
         <Modal contentClass={staticStyle.modal} onClose={closeModalHandler} isCloseButton={false}>
-          <AddIncidentForm onClose={() => setIsOpenAddInciden(false)}></AddIncidentForm>
+          <AddIncidentForm onClose={closeModalHandler}></AddIncidentForm>
         </Modal>
       )}
     </div>

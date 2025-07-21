@@ -16,13 +16,13 @@ export type FilteredColumn<T extends { id: string }> = Column<T> &
     };
   }[keyof T];
 
-type FilteredTable<T extends { id: string }> = TableProps<T> & {
+type FilteredTable<T extends { id: string }> = Omit<TableProps<T>, 'data' | 'columns'> & {
   filter: ReturnType<typeof useFilter<T>>;
   columns: FilteredColumn<T>[];
 };
 
 export function FilteredTable<T extends { id: string }>(props: FilteredTable<T>) {
-  const { filter, data, columns, ...rest } = props;
+  const { filter, columns, ...rest } = props;
 
   const [openModals, setOpenModals] = useState<Record<string, boolean>>({});
   const [filterValues, setFilterValues] = useState<Record<string, any>>({});
@@ -44,7 +44,7 @@ export function FilteredTable<T extends { id: string }>(props: FilteredTable<T>)
     filter.setFilter(column, (item) => filterFunc(item, value));
   };
 
-  const headerColumn = columns.map((col: FilteredColumn<T>) => {
+  const headerColumn = columns.map((col) => {
     const colKey = col.key.toString();
     const isOpen = openModals[colKey] ?? false;
     const title = col.filterController ? (
