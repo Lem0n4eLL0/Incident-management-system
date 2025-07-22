@@ -3,47 +3,48 @@ import { Incident, IncidentDTO } from '@custom-types/types';
 import { fetchWithRefresh, HTTP_METHODS, URL_API } from './userApi';
 
 /* Итоговые запросы на сервер */
+/* */
+export const getIncidentsApi = (): Promise<Array<IncidentDTO>> => {
+  return fetchWithRefresh<Array<IncidentDTO>>(`${URL_API}/api/incidents/items/`, {
+    method: HTTP_METHODS.GET,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+  });
+};
 
-// export const getIncidentsApi = (): Promise<Array<IncidentDTO>> => {
-//   return fetchWithRefresh<Array<IncidentDTO>>(`${URL_API}/api/incidents/items/`, {
-//     method: HTTP_METHODS.GET,
-//     headers: {
-//       'Content-Type': 'application/json;charset=utf-8',
-//     },
-//   });
-// };
+export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
+    method: HTTP_METHODS.POST,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(incident),
+  });
+};
 
-// export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
-//   return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
-//     method: HTTP_METHODS.POST,
-//     headers: {
-//       'Content-Type': 'application/json;charset=utf-8',
-//     },
-//     body: JSON.stringify(incident),
-//   });
-// };
+export const updateIncidentApi = (incident: Partial<IncidentDTO>): Promise<IncidentDTO> => {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
+    method: HTTP_METHODS.PATCH,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(incident),
+  });
+};
 
-// export const updateIncidentApi = (incident: Partial<IncidentDTO>): Promise<IncidentDTO> => {
-//   return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
-//     method: HTTP_METHODS.PATCH,
-//     headers: {
-//       'Content-Type': 'application/json;charset=utf-8',
-//     },
-//     body: JSON.stringify(incident),
-//   });
-// };
-
-// export const deleteIncidentApi = (id: string): Promise<IncidentDTO> => {
-//   return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
-//     method: HTTP_METHODS.DELETE,
-//     headers: {
-//       'Content-Type': 'application/json;charset=utf-8',
-//     },
-//   });
-// };
+export const deleteIncidentApi = (id: string): Promise<IncidentDTO> => {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
+    method: HTTP_METHODS.DELETE,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+  });
+};
 
 /* Тестовые запросы с локальным хранилищем на клиенте */
 
+/* 
 export const getIncidentsApi = (): Promise<IncidentDTO[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -90,3 +91,4 @@ export const deleteIncidentApi = (id: string): Promise<IncidentDTO> => {
     }, 500);
   });
 };
+/**/
