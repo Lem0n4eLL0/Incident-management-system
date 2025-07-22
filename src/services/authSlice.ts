@@ -59,7 +59,7 @@ const authSlice = createSlice({
       }
     ),
 
-    logoutUser: create.asyncThunk(async () => await logoutUserApi(), {
+    logoutUser: create.asyncThunk(async (id: string) => await logoutUserApi(id), {
       pending: (state) => {
         state.errors.logoutUserError = undefined;
         state.status.isLogoutPending = true;

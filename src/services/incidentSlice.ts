@@ -124,7 +124,9 @@ const incidentsSlice = createSlice({
       },
       fulfilled: (state, action) => {
         state.status.isDeleteIncidentPending = false;
-        const index = state.incidents.findIndex((i) => i.id === action.payload);
+        const index = state.incidents.findIndex(
+          (i) => i.id === mapIncidentFromDto(action.payload).id
+        );
         if (index != -1) state.incidents.splice(index, 1);
       },
     }),

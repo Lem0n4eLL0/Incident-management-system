@@ -17,7 +17,7 @@ import {
 import { EMPTY_USER } from '@constants/constants';
 import { createUserApi, deleteUsersApi, updateUserApi } from '@api/userApi';
 import { mapFullUserFromDto, mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
-import { getUsersApi } from '@api/adminUsersApi';
+import { getUsersApi } from '@api/userApi';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },

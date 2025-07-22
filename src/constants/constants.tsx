@@ -13,7 +13,7 @@ import {
   UserDTO,
 } from '@custom-types/types';
 import { FilteredColumn } from '@ui/FilteredTable/FilteredTable';
-import { FilterFunc } from '@utils/Filter';
+import { FilterFunc, FilterFuncAny } from '@utils/Filter';
 import { ModalFilter } from '@components/ModalFilter';
 import { Select } from '@ui/Select';
 import { CustomSelect } from '@ui/CustomSelect';
@@ -21,6 +21,16 @@ import { CustomSelect } from '@ui/CustomSelect';
 export const TABLE_PLACEHOLDER = '—';
 export const LOCAL_STORAGE_REFRESH_TOKEN_ALIAS = 'refreshToken';
 export const COOKIE_ACCESS_TOKEN_ALIAS = 'accessToken';
+
+type DateRange = { from: Date; to: Date };
+
+export const filterByDateRange: FilterFuncAny<Incident> = (item, range?: DateRange): boolean => {
+  if (!range) return true;
+  const itemTime = item.date.getTime();
+  if (range.from && itemTime < range.from.getTime()) return false;
+  if (range.to && itemTime >= range.to.getTime()) return false;
+  return true;
+};
 
 export const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
   return value ? incident.type === value : true;

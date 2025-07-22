@@ -1,5 +1,7 @@
-export type FilterFunc<T, K extends keyof T> = (item: T, value?: T[K]) => boolean;
-// export type FilterFunc<T> = <K extends keyof T>(item: T, value: T[K]) => boolean;
+export type FilterFuncAny<T, K = any> = (item: T, value?: K) => boolean;
+// export type FilterFunc<T, K extends keyof T> = (item: T, value?: T[K], another?: any) => boolean;
+export type FilterFunc<T, K extends keyof T> = FilterFuncAny<T, T[K]>;
+
 export type FilterFuncMap<T> = Partial<{ [K in keyof T]: FilterFunc<T, K> }>;
 
 export class Filter<T> {

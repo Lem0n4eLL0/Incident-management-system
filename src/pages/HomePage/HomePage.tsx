@@ -8,6 +8,8 @@ import { IncidenMainCard } from '@components/IncidenMainCard';
 import { Loader } from '@ui/Loader';
 import staticStyle from '@style/common.module.css';
 import clsx from 'clsx';
+import { filterByDateRange } from '@constants/constants';
+import { useMemo, useRef } from 'react';
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -16,6 +18,38 @@ export const HomePage = () => {
   const { isGetIncidentsPending } = useSelector((state) =>
     selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
+
+  const nowDate = useRef<Date>(new Date());
+
+  const thisYearCountIncidents = useMemo(() => {
+    const thisYearStart = new Date(nowDate.current.getFullYear(), 0, 1);
+    return incidents.filter((el) => filterByDateRange(el, { from: thisYearStart })).length;
+  }, [incidents]);
+
+  const lastYearCountIncidents = useMemo(() => {
+    const thisYearStart = new Date(nowDate.current.getFullYear(), 0, 1);
+    const lastYearStart = new Date(nowDate.current.getFullYear() - 1, 0, 1);
+    return incidents.filter((el) =>
+      filterByDateRange(el, { from: lastYearStart, to: thisYearStart })
+    ).length;
+  }, [incidents]);
+
+  const thisMonthsCountIncidents = useMemo(() => {
+    const thisMonthsStart = new Date(nowDate.current.getFullYear(), nowDate.current.getMonth(), 1);
+    return incidents.filter((el) => filterByDateRange(el, { from: thisMonthsStart })).length;
+  }, [incidents]);
+
+  const lastMonthsCountIncidents = useMemo(() => {
+    const thisMonthsStart = new Date(nowDate.current.getFullYear(), nowDate.current.getMonth(), 1);
+    const lastMonthsStart = new Date(
+      nowDate.current.getFullYear(),
+      nowDate.current.getMonth() - 1,
+      1
+    );
+    return incidents.filter((el) =>
+      filterByDateRange(el, { from: lastMonthsStart, to: thisMonthsStart })
+    ).length;
+  }, [incidents]);
 
   if (isGetIncidentsPending) {
     return (
@@ -40,12 +74,16 @@ export const HomePage = () => {
         <div className={style.statistic}>
           <IncidentValue value={incidents.length} description={'всего инцедентов'} />{' '}
           <div className={style.separator}></div>
-          <IncidentValue value={32} description={'с нач. года'} difference={-3} />
+          <IncidentValue
+            value={thisYearCountIncidents}
+            description={'с нач. года'}
+            difference={thisYearCountIncidents - lastYearCountIncidents}
+          />
           <div className={clsx(style.separator, staticStyle.hidden_760)}></div>
           <IncidentValue
-            value={3}
+            value={thisMonthsCountIncidents}
             description={'с нач. мес.'}
-            difference={2}
+            difference={thisMonthsCountIncidents - lastMonthsCountIncidents}
             clasName={staticStyle.hidden_760}
           />
         </div>

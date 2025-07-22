@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
-import { createUserApi, getUserApi, loginUserApi, updateUserApi } from '@api/userApi';
+import { createUserApi, getAuthUserApi, loginUserApi, updateUserApi } from '@api/userApi';
 import { mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
 
 const createSlice = buildCreateSlice({
@@ -38,7 +38,7 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: (create) => ({
-    getUser: create.asyncThunk(async () => await getUserApi(), {
+    getUser: create.asyncThunk(async () => await getAuthUserApi(), {
       pending: (state) => {
         state.status.isGetUserPending = true;
         state.errors.getUserError = undefined;
