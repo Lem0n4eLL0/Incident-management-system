@@ -35,13 +35,6 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
     undefined
   );
 
-  const closeDeleteWindowHandler = useCallback(() => {
-    if (!isDeleteIncidentPending) {
-      setIsOpenDeletWindow(false);
-      onClose();
-    }
-  }, []);
-
   const offUpdateModeHandler = useCallback(() => {
     setIsUpdateModeEnabled(false);
   }, []);
@@ -78,13 +71,10 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
     }
   };
 
-  useEffect(() => {
-    if (!incident) {
-      onClose();
-    }
-  }, [incident, onClose]);
-
-  if (!incident) return null;
+  if (!incident) {
+    onClose();
+    return null;
+  }
 
   return (
     <>
@@ -175,12 +165,6 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
           serverError={deleteUserServerError}
           alertClassName={style.alert}
         />
-        // <Alert className={style.alert}>
-        //   <DeleteIncidentForm
-        //     incident={incident}
-        //     onClose={() => setIsOpenDeletWindow(false)}
-        //   ></DeleteIncidentForm>
-        // </Alert>
       )}
     </>
   );

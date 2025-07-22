@@ -66,6 +66,7 @@ export const IncidentsPage = () => {
       </div>
     );
   }
+
   return (
     <div className={style.content}>
       <section className={style.incidents}>
@@ -117,9 +118,5 @@ export const IncidentsPage = () => {
         </Modal>
       )}
     </div>
-  ); /**modal?: {
-    openHandler: (open: boolean, callback?: () => void) => void;
-    isOpen: boolean;
-    renderModal: (item: string, onClose: () => void) => React.ReactNode;
-  } */
+  );
 };

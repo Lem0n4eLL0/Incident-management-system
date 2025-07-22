@@ -44,7 +44,7 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
       setIsOpenDeletWindow(false);
       setDeleteUserServerError(undefined);
     }
-  }, [isDeleteUserPending, setIsUpdateModeEnabled]);
+  }, [isDeleteUserPending, setDeleteUserServerError]);
 
   const deleteUserHandler = async (e: FormEvent) => {
     e.preventDefault();
