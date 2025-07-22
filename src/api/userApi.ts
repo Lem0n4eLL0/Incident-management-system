@@ -69,9 +69,19 @@ export const getUserApi = () => {
   });
 };
 
-export const updateUserApi = (user: Partial<UserDTO>) => {
-  return new Promise<UserDTO>((res) => {
-    setTimeout(() => res({ ...TEST_USER_DTO, ...user }), 1000);
+export const updateUserApi = (user: Partial<FullUserDTO>): Promise<FullUserDTO> => {
+  return new Promise((res, rej) => {
+    setTimeout(() => {
+      const index = TEST_FULL_USERS.findIndex((u) => u.id === user.id);
+      if (index !== -1) {
+        TEST_FULL_USERS[index] = {
+          ...TEST_FULL_USERS[index],
+          ...user,
+        };
+      }
+      // rej(new Error('error message'));
+      res(TEST_FULL_USERS[index]);
+    }, 1000);
   });
 };
 
@@ -99,9 +109,9 @@ export const createUserApi = (user: Partial<CreateUserDTO>) => {
         is_active: 'true',
         is_staff: 'false',
       };
-      rej(new Error('Ошибка сервера'));
-      // TEST_FULL_USERS.push(newUser);
-      // res(newUser);
+      //rej(new Error('Ошибка сервера'));
+      TEST_FULL_USERS.push(newUser);
+      res(newUser);
     }, 1000);
   });
 };
@@ -109,6 +119,7 @@ export const createUserApi = (user: Partial<CreateUserDTO>) => {
 export const deleteUsersApi = (id: string) => {
   return new Promise<UserDTO>((res, rej) => {
     setTimeout(() => {
+      // rej(new Error('error: User not found'));
       const index = TEST_FULL_USERS.findIndex((u) => u.id === id);
       if (index === -1) return rej(new Error('User not found'));
 

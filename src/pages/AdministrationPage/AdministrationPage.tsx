@@ -28,7 +28,7 @@ export const AdministrationPage = () => {
   const { isGetUsersPending } = useSelector((state) =>
     selectStatusUsers.unwrapped(state.usersReducer)
   );
-  const { isCreateUserPending } = useSelector((state) =>
+  const { isCreateUserPending, isUpdateUserPending, isDeleteUserPending } = useSelector((state) =>
     selectStatusUsers.unwrapped(state.usersReducer)
   );
   const isUsersGet = useSelector((state) => selectIsUsersGet.unwrapped(state.usersReducer));
@@ -39,7 +39,7 @@ export const AdministrationPage = () => {
     ''
   );
   const [isOpenAddUser, setIsOpenAddUser] = useState(false);
-
+  const [isOpenModalUser, setIsOpenModalUser] = useState(false);
   useEffect(() => {
     if (!isUsersGet) dispatch(getUsers());
   }, [dispatch, isUsersGet]);
@@ -48,12 +48,19 @@ export const AdministrationPage = () => {
     filter.setFilter('fullName', (item) => fullNameFilter(item, searchValue));
   }, [searchValue]);
 
-  const closeModalHandler = useCallback(() => {
+  const closeAddUserModalHandler = useCallback(() => {
     if (!isCreateUserPending) {
       setIsOpenAddUser(false);
       dispatch(clearErrorsUsers());
     }
   }, [isCreateUserPending, setIsOpenAddUser]);
+
+  const closeUserModalHandler = (callback: () => void) => {
+    if (!isUpdateUserPending && !isDeleteUserPending) {
+      setIsOpenModalUser(false);
+      callback();
+    }
+  };
 
   if (isGetUsersPending) {
     return (
@@ -89,14 +96,27 @@ export const AdministrationPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'Пользователи в системе'}
-          renderModal={(id, onClose) => (
-            <ModalUser user={users.find((el) => el.id === id)!} onClose={onClose} />
-          )}
+          modal={{
+            openHandler: () => setIsOpenModalUser(true),
+            isOpen: isOpenModalUser,
+            renderModal: (id, onClose) => (
+              <Modal
+                contentClass={staticStyle.modal}
+                onClose={() => closeUserModalHandler(onClose)}
+              >
+                <ModalUser user={users.find((el) => el.id === id)!} onClose={onClose} />
+              </Modal>
+            ),
+          }}
         ></FilteredTable>
       </section>
       {isOpenAddUser && (
-        <Modal contentClass={staticStyle.modal} onClose={closeModalHandler} isCloseButton={false}>
-          <AddUserForm onClose={closeModalHandler}></AddUserForm>
+        <Modal
+          contentClass={staticStyle.modal}
+          onClose={closeAddUserModalHandler}
+          isCloseButton={false}
+        >
+          <AddUserForm onClose={closeAddUserModalHandler}></AddUserForm>
         </Modal>
       )}
     </div>

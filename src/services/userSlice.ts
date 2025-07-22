@@ -52,26 +52,36 @@ const userSlice = createSlice({
       },
       fulfilled: (state, action) => {
         state.user = mapUserFromDto(action.payload);
+        state.errors.getUserError = undefined;
         state.status.isGetUserPending = false;
       },
     }),
 
-    updateUser: create.asyncThunk(async (user: Partial<UserDTO>) => await updateUserApi(user), {
-      pending: (state) => {
-        state.status.isUpdateUserPending = true;
-        state.errors.updateUserError = undefined;
-      },
-      rejected: (state, action) => {
-        state.errors.updateUserError = {
-          code: action.error.code,
-          message: action.error.message,
-        };
-        state.status.isUpdateUserPending = false;
-      },
-      fulfilled: (state, action) => {
-        state.user = mapUserFromDto(action.payload);
-        state.status.isUpdateUserPending = false;
-      },
+    updateUserFetch: create.asyncThunk(
+      async (user: Partial<UserDTO>) => await updateUserApi(user),
+      {
+        pending: (state) => {
+          state.status.isUpdateUserPending = true;
+          state.errors.updateUserError = undefined;
+        },
+        rejected: (state, action) => {
+          state.errors.updateUserError = {
+            code: action.error.code,
+            message: action.error.message,
+          };
+          state.status.isUpdateUserPending = false;
+        },
+        fulfilled: (state, action) => {
+          state.user = mapUserFromDto(action.payload);
+          state.errors.updateUserError = undefined;
+          state.status.isUpdateUserPending = false;
+        },
+      }
+    ),
+    updateUser: create.reducer((state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
     }),
   }),
   selectors: {
@@ -81,7 +91,11 @@ const userSlice = createSlice({
   },
 });
 
-export const { getUser, updateUser } = userSlice.actions;
+export const {
+  getUser,
+  updateUser: updateUserUser,
+  updateUserFetch: updateUserFetchUser,
+} = userSlice.actions;
 export const {
   selectUser,
   selectStatus: selectStatusUser,

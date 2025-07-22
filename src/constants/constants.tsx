@@ -61,11 +61,18 @@ export const EMPTY_USERDTO: UserDTO = {
   telephone: '',
   email: '',
 };
-
-export const EMPTY_CREATE_USERDTO: CreateUserDTO = {
+export const EMPTY_AUTH_USERDTO: CreateUserDTO = {
   ...EMPTY_USERDTO,
   login: '',
   password: '',
+};
+
+export const EMPTY_CREATE_USERDTO: CreateUserDTO = {
+  ...EMPTY_AUTH_USERDTO,
+};
+
+export const EMPTY_UPDATE_USERDTO: CreateUserDTO = {
+  ...EMPTY_AUTH_USERDTO,
 };
 
 export const EMPTY_INCIDENT: Incident = {

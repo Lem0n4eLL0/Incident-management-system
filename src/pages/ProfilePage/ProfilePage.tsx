@@ -2,17 +2,23 @@ import { useDispatch, useSelector } from '@services/store';
 import style from './ProfilePage.module.css';
 import staticStyle from '@style/common.module.css';
 import formStyle from '@style/form.module.css';
-import { selectErrorsUser, selectStatusUser, selectUser, updateUser } from '@services/userSlice';
+import {
+  selectErrorsUser,
+  selectStatusUser,
+  selectUser,
+  updateUserFetchUser,
+} from '@services/userSlice';
 import { ReactComponent as PenIcon } from '@assets/pen.svg';
 import clsx from 'clsx';
 import { ChangeEvent, FormEventHandler, SyntheticEvent, useEffect, useRef, useState } from 'react';
 import { User, UserDTO } from '@custom-types/types';
-import { mapUserToDto } from '@custom-types/mapperDTO';
+import { mapUserToDto, mapUserFromDto } from '@custom-types/mapperDTO';
 import { EMPTY_USER } from '@constants/constants';
 import { Input } from '@components/ui/Input';
 import { useFormValidation } from '@hooks/useFormValidation';
 import { USER_VALIDATOR } from '@constants/validators';
 import { Loader } from '@components/ui/Loader';
+import { updateUserUsers } from '@services/usersSlice';
 
 const REDACTOR_MODE_OFF = { isOn: false, field: null };
 
@@ -94,10 +100,11 @@ export const ProfilePage = () => {
       return;
     }
 
-    const action = await dispatch(updateUser(formData));
+    const action = await dispatch(updateUserFetchUser(formData));
     if (!updateUserError) {
       setIsRedactorMode(REDACTOR_MODE_OFF);
       setServerError(null);
+      dispatch(updateUserUsers(mapUserFromDto(formData)));
     } else {
       setServerError(updateUserError.message ?? '');
     }

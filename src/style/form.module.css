@@ -80,16 +80,16 @@
   height: 42px;
 }
 
-.close_button:hover {
-  background-color: var(--bg-300);
-  border-color: var(--bg-300);
-}
-
 .close_button.disabled {
   background-color: var(--bg-300);
   color: var(--text-300);
   border-color: var(--bg-300);
   cursor: default;
+}
+
+.close_button:hover:not(.disabled) {
+  background-color: var(--bg-300);
+  border-color: var(--bg-300);
 }
 
 .field_title {
@@ -171,7 +171,7 @@
   border-color: var(--primary-100);
 }
 
-.attention_button:hover {
+.attention_button:hover:not(.disabled) {
   background-color: var(--primary-100);
   color: var(--text-400);
   border-color: var(--primary-100);
@@ -181,4 +181,5 @@
   background-color: var(--bg-300);
   color: var(--text-300);
   border-color: var(--bg-300);
+  cursor: default;
 }

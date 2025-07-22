@@ -9,11 +9,13 @@ import {
   ApiLoginRequest,
   CreateUserDTO,
   FullUser,
+  UpdateUser,
+  UpdateUserDTO,
   User,
   UserDTO,
 } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
-import { createUserApi, deleteUsersApi } from '@api/userApi';
+import { createUserApi, deleteUsersApi, updateUserApi } from '@api/userApi';
 import { mapFullUserFromDto, mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
 import { getUsersApi } from '@api/adminUsersApi';
 
@@ -27,12 +29,14 @@ type TUserState = {
   status: {
     isGetUsersPending: boolean;
     isCreateUserPending: boolean;
+    isUpdateUserPending: boolean;
     isDeleteUserPending: boolean;
   };
   errors: {
     getUsersError?: ApiError;
     createUserError?: ApiError;
     deleteUserError?: ApiError;
+    updateUserError?: ApiError;
   };
 };
 
@@ -42,6 +46,7 @@ const initialState: TUserState = {
   status: {
     isGetUsersPending: false,
     isCreateUserPending: false,
+    isUpdateUserPending: false,
     isDeleteUserPending: false,
   },
   errors: {},
@@ -67,6 +72,7 @@ const userSlice = createSlice({
       fulfilled: (state, action) => {
         state.users = action.payload.map((el) => mapFullUserFromDto(el));
         state.isUsersGet = true;
+        state.errors.getUsersError = undefined;
         state.status.isGetUsersPending = false;
       },
     }),
@@ -87,6 +93,7 @@ const userSlice = createSlice({
         },
         fulfilled: (state, action) => {
           state.users.push(mapFullUserFromDto(action.payload));
+          state.errors.createUserError = undefined;
           state.status.isCreateUserPending = false;
         },
       }
@@ -106,11 +113,36 @@ const userSlice = createSlice({
       },
       fulfilled: (state, action) => {
         state.users = state.users.filter((el) => el.id !== mapUserFromDto(action.payload).id);
+        state.errors.deleteUserError = undefined;
         state.status.isDeleteUserPending = false;
       },
     }),
 
-    updateUser: create.reducer((state, action: PayloadAction<User>) => {
+    updateUserFetch: create.asyncThunk(async (user: UpdateUserDTO) => await updateUserApi(user), {
+      pending: (state) => {
+        state.status.isUpdateUserPending = true;
+        state.errors.updateUserError = undefined;
+      },
+      rejected: (state, action) => {
+        state.errors.updateUserError = {
+          code: action.error.code,
+          message: action.error.message,
+        };
+        state.status.isUpdateUserPending = false;
+      },
+      fulfilled: (state, action) => {
+        const index = state.users.findIndex(
+          (el) => el.id === mapFullUserFromDto(action.payload).id
+        );
+        if (index !== -1) {
+          state.users[index] = mapFullUserFromDto(action.payload);
+        }
+        state.errors.updateUserError = undefined;
+        state.status.isUpdateUserPending = false;
+      },
+    }),
+
+    updateUser: create.reducer((state, action: PayloadAction<Partial<UpdateUser>>) => {
       const index = state.users.findIndex((el) => el.id === action.payload.id);
       if (index !== -1) {
         state.users[index] = {
@@ -119,6 +151,7 @@ const userSlice = createSlice({
         };
       }
     }),
+
     clearErrors: create.reducer((state) => {
       state.errors = {};
     }),
@@ -136,7 +169,8 @@ export const {
   getUsers,
   createUser,
   deleteUser,
-  updateUser,
+  updateUser: updateUserUsers,
+  updateUserFetch: updateUserFetchUsers,
   clearErrors: clearErrorsUsers,
 } = userSlice.actions;
 export const {

@@ -17,7 +17,11 @@ export type TableProps<T extends { id: string }> = React.TableHTMLAttributes<HTM
   emptyDataPlaceholder?: React.ReactNode;
   placeholder?: string;
   caption?: string;
-  renderModal?: (item: string, onClose: () => void) => React.ReactNode;
+  modal?: {
+    openHandler: () => void;
+    isOpen: boolean;
+    renderModal: (item: string, onClose: () => void) => React.ReactNode;
+  };
 };
 
 export function Table<T extends { id: string }>({
@@ -27,24 +31,22 @@ export function Table<T extends { id: string }>({
   emptyDataPlaceholder,
   className,
   placeholder,
-  renderModal,
+  modal,
   ...rest
 }: TableProps<T>) {
-  const [isOpenInciden, setIsOpenInciden] = useState(false);
   const [selectedIncidentId, setSelectedIncidentId] = useState<string | null>(null);
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
 
   const modalOpenHandler = useCallback(
     (e: SyntheticEvent, item: T, index: number) => {
       setSelectedIncidentId(item.id);
-      setIsOpenInciden(true);
+      modal?.openHandler();
       setSelectedRowIndex(index);
     },
-    [setSelectedIncidentId, setIsOpenInciden, setSelectedRowIndex]
+    [setSelectedIncidentId, setSelectedRowIndex]
   );
 
   const modalCloseHandler = () => {
-    setIsOpenInciden(false);
     setSelectedIncidentId(null);
     setSelectedRowIndex(null);
   };
@@ -98,11 +100,9 @@ export function Table<T extends { id: string }>({
           )}
         </tbody>
       </table>
-      {isOpenInciden && selectedIncidentId && (
-        <Modal contentClass={staticStyle.modal} onClose={modalCloseHandler}>
-          {renderModal?.(selectedIncidentId, modalCloseHandler)}
-        </Modal>
-      )}
+      {modal?.isOpen &&
+        selectedIncidentId &&
+        modal?.renderModal(selectedIncidentId, modalCloseHandler)}
     </>
   );
 }

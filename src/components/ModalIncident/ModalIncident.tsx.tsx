@@ -1,16 +1,19 @@
-import { Incident } from '@custom-types/types';
+import { ApiError, Incident } from '@custom-types/types';
 import style from './ModalIncident.module.css';
 import clsx from 'clsx';
 import staticStyle from '@style/common.module.css';
 import fromStyle from '@style/form.module.css';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DeleteIncidentForm } from '@components/forms/DeleteIncidentForm';
-import { useSelector } from '@services/store';
-import { selectStatusIncidents } from '@services/incidentSlice';
-import { Modal } from '@components/ui/Modal';
-import { Alert } from '@components/ui/Alert';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from '@services/store';
+import {
+  deleteIncident,
+  selectErrorsIncidents,
+  selectStatusIncidents,
+} from '@services/incidentSlice';
+
 import { UpdateIncidentForm } from '@components/forms/UpdateIncidentForm';
 import { mapIncidentToDto } from '@custom-types/mapperDTO';
+import { AlertWindowForm } from '@components/forms/AlertWindowForm';
 
 type ModalIncidentProps = {
   incident: Incident;
@@ -18,12 +21,19 @@ type ModalIncidentProps = {
 };
 
 export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
+  const dispatch = useDispatch();
   const { isDeleteIncidentPending } = useSelector((state) =>
     selectStatusIncidents.unwrapped(state.incidentsReducer)
+  );
+  const { deleteIncidentError } = useSelector((state) =>
+    selectErrorsIncidents.unwrapped(state.incidentsReducer)
   );
 
   const [isOpenDeleteWindow, setIsOpenDeletWindow] = useState(false);
   const [isUpdateModeEnabled, setIsUpdateModeEnabled] = useState(false);
+  const [deleteUserServerError, setDeleteUserServerError] = useState<ApiError | undefined>(
+    undefined
+  );
 
   const closeDeleteWindowHandler = useCallback(() => {
     if (!isDeleteIncidentPending) {
@@ -47,8 +57,28 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
           : '';
   }, [incident]);
 
+  const isOpenDeletWindowHandler = useCallback(() => {
+    if (!isDeleteIncidentPending) {
+      setIsOpenDeletWindow(false);
+      setDeleteUserServerError(undefined);
+    }
+  }, [isDeleteIncidentPending, setIsUpdateModeEnabled]);
+
+  const deleteIncidentHandler = async (e: FormEvent) => {
+    e.preventDefault();
+    setDeleteUserServerError(undefined);
+    const action = await dispatch(deleteIncident(incident.id));
+    if (deleteIncident.rejected.match(action)) {
+      setDeleteUserServerError({
+        code: action.error.code,
+        message: action.error.message || 'Произошла ошибка при удалении',
+      });
+    } else {
+      isOpenDeletWindowHandler();
+    }
+  };
+
   useEffect(() => {
-    // закрытие окна если incident удален
     if (!incident) {
       onClose();
     }
@@ -137,12 +167,20 @@ export function ModalIncident({ incident, onClose }: ModalIncidentProps) {
         )}
       </div>
       {isOpenDeleteWindow && (
-        <Alert className={style.alert}>
-          <DeleteIncidentForm
-            incident={incident}
-            onClose={() => setIsOpenDeletWindow(false)}
-          ></DeleteIncidentForm>
-        </Alert>
+        <AlertWindowForm
+          onSubmit={deleteIncidentHandler}
+          onClose={isOpenDeletWindowHandler}
+          title="Вы уверены?"
+          isPending={isDeleteIncidentPending}
+          serverError={deleteUserServerError}
+          alertClassName={style.alert}
+        />
+        // <Alert className={style.alert}>
+        //   <DeleteIncidentForm
+        //     incident={incident}
+        //     onClose={() => setIsOpenDeletWindow(false)}
+        //   ></DeleteIncidentForm>
+        // </Alert>
       )}
     </>
   );

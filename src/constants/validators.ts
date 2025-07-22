@@ -45,7 +45,7 @@ export const USER_VALIDATOR: Partial<TFormValidators<UserDTO>> = {
   },
 };
 
-export const CREATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
+export const USER_VALIDATOR_WITH_AUTH: Partial<TFormValidators<CreateUserDTO>> = {
   ...USER_VALIDATOR,
   login: {
     validator: notEmptyField,
@@ -55,6 +55,14 @@ export const CREATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
     validator: notEmptyField,
     message: 'Обязательно для заполнения',
   },
+};
+
+export const CREATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
+  ...USER_VALIDATOR_WITH_AUTH,
+};
+
+export const UPDATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
+  ...USER_VALIDATOR_WITH_AUTH,
 };
 
 export const INCIDENT_VALIDATORS: Partial<TFormValidators<IncidentDTO>> = {

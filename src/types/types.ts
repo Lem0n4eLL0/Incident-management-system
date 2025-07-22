@@ -24,17 +24,17 @@ export type UserDTO = {
   email: string;
 };
 
-export type CreateUser = User & {
+export type UserWithAuth = User & {
   login: string;
   password: string;
 };
 
-export type CreateUserDTO = UserDTO & {
+export type UserWithAuthDTO = UserDTO & {
   login: string;
   password: string;
 };
 
-export type FullUser = CreateUser & {
+export type FullUser = UserWithAuth & {
   login: string;
   password: string;
   token: {
@@ -49,7 +49,7 @@ export type FullUser = CreateUser & {
   isStaff: boolean;
 };
 
-export type FullUserDTO = CreateUserDTO & {
+export type FullUserDTO = UserWithAuthDTO & {
   token: {
     jti: string;
     is_blacklisted: string;
@@ -61,6 +61,12 @@ export type FullUserDTO = CreateUserDTO & {
   is_active: string;
   is_staff: string;
 };
+
+export type CreateUser = UserWithAuth;
+export type CreateUserDTO = UserWithAuthDTO;
+
+export type UpdateUser = UserWithAuth;
+export type UpdateUserDTO = UserWithAuthDTO;
 
 export const INCIDENT_TYPES = ['авария', 'инцидент', 'травма', 'пожар', 'другое'] as const;
 export type IncidentType = (typeof INCIDENT_TYPES)[number];

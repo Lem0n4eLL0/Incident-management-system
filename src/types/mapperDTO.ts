@@ -8,6 +8,8 @@ import {
   IncidentStatus,
   FullUserDTO,
   FullUser,
+  UserWithAuthDTO,
+  UserWithAuth,
 } from './types';
 
 export const mapUserFromDto = ({
@@ -44,6 +46,18 @@ export const mapUserToDto = ({
   position,
   telephone,
   email,
+});
+
+export const mapAuthUserFromDto = (dto: UserWithAuthDTO): UserWithAuth => ({
+  id: dto.id,
+  role: dto.role as Role,
+  fullName: dto.full_name,
+  unit: dto.unit,
+  position: dto.position,
+  telephone: dto.telephone,
+  email: dto.email,
+  login: dto.login,
+  password: dto.password,
 });
 
 export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({

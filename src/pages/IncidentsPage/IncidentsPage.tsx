@@ -33,6 +33,7 @@ export const IncidentsPage = () => {
   const { isAddIncidentPending, isUpdateIncidentPending, isDeleteIncidentPending } = useSelector(
     (state) => selectStatusIncidents.unwrapped(state.incidentsReducer)
   );
+  const [isOpenModalIncident, setIsOpenModalIncident] = useState(false);
   const [isOpenAddInciden, setIsOpenAddInciden] = useState(false);
   const [searchValue, searchHandler] = useReducer(
     (_: string, e: React.ChangeEvent<HTMLInputElement>) => e.target.value,
@@ -43,7 +44,13 @@ export const IncidentsPage = () => {
     filter.setFilter('description', (item) => descriptionFilter(item, searchValue));
   }, [searchValue]);
 
-  const closeModalHandler = useCallback(() => {
+  const closeIcidentModalHandler = (callback: () => void) => {
+    if (!isUpdateIncidentPending && !isDeleteIncidentPending) {
+      setIsOpenModalIncident(false);
+      callback();
+    }
+  };
+  const closeAddIncidenModalHandler = useCallback(() => {
     if (!isAddIncidentPending) {
       setIsOpenAddInciden(false);
       dispatch(clearErrorsIncident());
@@ -54,7 +61,7 @@ export const IncidentsPage = () => {
     return (
       <div className={style.content}>
         <section className={style.incidents}>
-          <Loader loaderClass={staticStyle.loader_bg}></Loader>
+          <Loader loaderClass={staticStyle.loader_bg} isAbsolute></Loader>
         </section>
       </div>
     );
@@ -83,16 +90,36 @@ export const IncidentsPage = () => {
           filter={filter}
           placeholder={TABLE_PLACEHOLDER}
           caption={'История происшествий'}
-          renderModal={(id, onClose) => (
-            <ModalIncident incident={incidents.find((el) => el.id === id)!} onClose={onClose} />
-          )}
+          modal={{
+            openHandler: () => setIsOpenModalIncident(true),
+            isOpen: isOpenModalIncident,
+            renderModal: (id, onClose) => (
+              <Modal
+                contentClass={staticStyle.modal}
+                onClose={() => closeIcidentModalHandler(onClose)}
+              >
+                <ModalIncident
+                  incident={incidents.find((el) => el.id === id)!}
+                  onClose={() => closeIcidentModalHandler(onClose)}
+                />
+              </Modal>
+            ),
+          }}
         ></FilteredTable>
       </section>
       {isOpenAddInciden && (
-        <Modal contentClass={staticStyle.modal} onClose={closeModalHandler} isCloseButton={false}>
-          <AddIncidentForm onClose={closeModalHandler}></AddIncidentForm>
+        <Modal
+          contentClass={staticStyle.modal}
+          onClose={closeAddIncidenModalHandler}
+          isCloseButton={false}
+        >
+          <AddIncidentForm onClose={closeAddIncidenModalHandler}></AddIncidentForm>
         </Modal>
       )}
     </div>
-  );
+  ); /**modal?: {
+    openHandler: (open: boolean, callback?: () => void) => void;
+    isOpen: boolean;
+    renderModal: (item: string, onClose: () => void) => React.ReactNode;
+  } */
 };

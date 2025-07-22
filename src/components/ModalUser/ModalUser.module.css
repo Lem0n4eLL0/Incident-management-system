@@ -70,6 +70,9 @@
 }
 
 .end_session {
+  padding: 10px;
+  border: 2px solid var(--primary-200);
+   border-radius: 10px;
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: min-content min-content;
@@ -82,35 +85,29 @@
 
 .timer_title {
   grid-area: title;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--primary-100);
+  font-weight: 700;
 }
 
 .timer {
   grid-area: timer;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--primary-100);
+  font-weight: 500;
   background-color: var(--bg-100);
   border-radius: 6px;
 }
 
 .end_session_button {
+  composes: attention_button from '@style/form.module.css';
   grid-area: button;
-  padding: 6px 12px;
+  padding: 4px 6px;
   font-size: 14px;
   max-width: fit-content;
-  background-color: var(--primary-100);
-  color: var(--text-400);
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  justify-self: end;
 }
 
-.end_session_button:hover {
-  background-color: var(--primary-250);
+.alert {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
