@@ -97,6 +97,9 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
+        'OPTIONS': {
+            'client_encoding': 'WIN1251',  # Устанавливает кодировку
+        },
     }
 }
 
