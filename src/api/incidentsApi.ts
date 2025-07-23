@@ -24,7 +24,7 @@ export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
 };
 
 export const updateIncidentApi = (incident: Partial<IncidentDTO>): Promise<IncidentDTO> => {
-  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/${incident.id}/`, {
     method: HTTP_METHODS.PATCH,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -34,7 +34,7 @@ export const updateIncidentApi = (incident: Partial<IncidentDTO>): Promise<Incid
 };
 
 export const deleteIncidentApi = (id: string): Promise<IncidentDTO> => {
-  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/${id}/`, {
     method: HTTP_METHODS.DELETE,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

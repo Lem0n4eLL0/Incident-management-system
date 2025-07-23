@@ -12,6 +12,14 @@ import {
   UserWithAuth,
 } from './types';
 
+export const preparingRole = (role: string) => {
+  return role === 'администратор' ? 'admin' : role === 'руководитель' ? 'manager' : 'employee';
+};
+
+export const roleFromDTO = (role: string): Role => {
+  return role === 'admin' ? 'администратор' : role === 'manager' ? 'руководитель' : 'администратор';
+};
+
 export const mapUserFromDto = ({
   id,
   role,
@@ -22,7 +30,7 @@ export const mapUserFromDto = ({
   email,
 }: UserDTO): User => ({
   id,
-  role: role as Role,
+  role: roleFromDTO(role),
   fullName: full_name,
   unit,
   position,
@@ -40,7 +48,7 @@ export const mapUserToDto = ({
   email,
 }: User): UserDTO => ({
   id,
-  role,
+  role: role as Role,
   full_name: fullName,
   unit,
   position,
@@ -59,6 +67,15 @@ export const mapAuthUserFromDto = (dto: UserWithAuthDTO): UserWithAuth => ({
   login: dto.login,
   password: dto.password,
 });
+
+export const preparingAuthUserDto = (dto: Partial<UserWithAuthDTO>): Partial<UserWithAuthDTO> => {
+  const user = {
+    ...dto,
+    role: dto.role ? preparingRole(dto.role) : undefined,
+  };
+  console.log(user);
+  return user;
+};
 
 export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({
   id: dto.id,
@@ -84,7 +101,7 @@ export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({
 
 export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
   id: user.id,
-  role: user.role,
+  role: user.role as Role,
   full_name: user.fullName,
   unit: user.unit,
   position: user.position,

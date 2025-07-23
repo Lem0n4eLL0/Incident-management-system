@@ -8,7 +8,7 @@
   background-color: var(--bg-100);
   color: var(--text-100);
   border: 2px solid var(--bg-250);
-  min-width: 300px;
+  width: 300px;
   min-height: 150px;
   box-shadow: 0 0 50px rgb(0 0 0 / 25%);
   border-radius: 16px;

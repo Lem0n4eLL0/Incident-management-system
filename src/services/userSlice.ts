@@ -7,7 +7,7 @@ import {
 import { ApiError, ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
 import { createUserApi, getAuthUserApi, loginUserApi, updateUserApi } from '@api/userApi';
-import { mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
+import { mapUserFromDto, mapUserToDto, preparingAuthUserDto } from '@custom-types/mapperDTO';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -58,7 +58,7 @@ const userSlice = createSlice({
     }),
 
     updateUserFetch: create.asyncThunk(
-      async (user: Partial<UserDTO>) => await updateUserApi(user),
+      async (user: Partial<UserDTO>) => await updateUserApi(preparingAuthUserDto(user)),
       {
         pending: (state) => {
           state.status.isUpdateUserPending = true;

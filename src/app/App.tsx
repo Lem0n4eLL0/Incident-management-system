@@ -1,6 +1,11 @@
 import { useDispatch, useSelector } from '@services/store';
 import { Profiler, useEffect, useLayoutEffect } from 'react';
-import { selectIsAuthenticated } from '@services/authSlice';
+import {
+  checkAuth,
+  selectIsAuthChecked,
+  selectIsAuthenticated,
+  selectStatusAuth,
+} from '@services/authSlice';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
 import { HomePage } from '@pages/HomePage';
@@ -25,52 +30,61 @@ export const App = () => {
   const isAuthenticated = useSelector((state) =>
     selectIsAuthenticated.unwrapped(state.authReducer)
   );
-  const { isGetUserPending } = useSelector((state) =>
-    selectStatusUser.unwrapped(state.userReducer)
+  const isAuthCheck = useSelector((state) => selectIsAuthChecked.unwrapped(state.authReducer));
+
+  const { isAuthCheckPending } = useSelector((state) =>
+    selectStatusAuth.unwrapped(state.authReducer)
   );
+
   const isUserLoaded = user && user.id !== '';
+  const isAppLoading = !isAuthCheck || isAuthCheckPending || (isAuthenticated && !isUserLoaded);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthCheck) {
+      dispatch(checkAuth());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated && !isUserLoaded) {
       dispatch(getUser());
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isUserLoaded]);
 
   useEffect(() => {
     if (isAuthenticated && isUserLoaded) {
       dispatch(getIncidents());
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, isUserLoaded]);
 
-  if (isGetUserPending) {
+  if (isAppLoading) {
     return <Loader loaderClass={clsx(staticStyle.loader_v2, style.loader)} isAbsolute></Loader>;
   }
 
   return (
     <div className={style.app}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/auth" element={<AuthPage />}></Route>
-          {isAuthenticated && (
-            <>
-              <Route path="/" element={<MainLayout />}>
-                <Route index element={<HomePage />}></Route>
-                <Route path="incidents" element={<IncidentsPage />}></Route>
-                <Route path="profile" element={<ProfilePage />}></Route>
-                <Route element={<ProtectedRoute acсessRoles={['руководитель', 'администратор']} />}>
-                  <Route path="analytics" element={<ErrorPage />}></Route>
-                  <Route element={<ProtectedRoute acсessRoles={['администратор']} />}>
-                    <Route path="administration" element={<AdministrationPage />}></Route>
-                  </Route>
+      <Routes>
+        <Route path="/auth" element={<AuthPage />}></Route>
+        {isAuthenticated && (
+          <>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<HomePage />}></Route>
+              <Route path="incidents" element={<IncidentsPage />}></Route>
+              <Route path="profile" element={<ProfilePage />}></Route>
+              <Route element={<ProtectedRoute acсessRoles={['руководитель', 'администратор']} />}>
+                <Route path="analytics" element={<ErrorPage />}></Route>
+                <Route element={<ProtectedRoute acсessRoles={['администратор']} />}>
+                  <Route path="administration" element={<AdministrationPage />}></Route>
                 </Route>
               </Route>
-              <Route path="/forbidden" element={<ErrorPage error={ERROR_FORBIDDEN} />} />
-              <Route path="*" element={<ErrorPage />}></Route>
-            </>
-          )}
-          {!isAuthenticated && <Route path="*" element={<Navigate to="/auth" />}></Route>}
-        </Routes>
-      </BrowserRouter>
+            </Route>
+            <Route path="/error" element={<ErrorPage />} />
+            <Route path="/forbidden" element={<ErrorPage error={ERROR_FORBIDDEN} />} />
+            <Route path="*" element={<ErrorPage />}></Route>
+          </>
+        )}
+        {!isAuthenticated && <Route path="*" element={<Navigate to="/auth" replace />}></Route>}
+      </Routes>
     </div>
   );
 };

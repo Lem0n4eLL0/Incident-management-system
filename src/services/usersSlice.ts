@@ -16,7 +16,12 @@ import {
 } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
 import { createUserApi, deleteUsersApi, updateUserApi } from '@api/userApi';
-import { mapFullUserFromDto, mapUserFromDto, mapUserToDto } from '@custom-types/mapperDTO';
+import {
+  mapFullUserFromDto,
+  mapUserFromDto,
+  mapUserToDto,
+  preparingAuthUserDto,
+} from '@custom-types/mapperDTO';
 import { getUsersApi } from '@api/userApi';
 
 const createSlice = buildCreateSlice({
@@ -78,7 +83,7 @@ const userSlice = createSlice({
     }),
 
     createUser: create.asyncThunk(
-      async (user: Partial<CreateUserDTO>) => await createUserApi(user),
+      async (user: CreateUserDTO) => await createUserApi(preparingAuthUserDto(user)),
       {
         pending: (state) => {
           state.status.isCreateUserPending = true;
@@ -118,29 +123,32 @@ const userSlice = createSlice({
       },
     }),
 
-    updateUserFetch: create.asyncThunk(async (user: UpdateUserDTO) => await updateUserApi(user), {
-      pending: (state) => {
-        state.status.isUpdateUserPending = true;
-        state.errors.updateUserError = undefined;
-      },
-      rejected: (state, action) => {
-        state.errors.updateUserError = {
-          code: action.error.code,
-          message: action.error.message,
-        };
-        state.status.isUpdateUserPending = false;
-      },
-      fulfilled: (state, action) => {
-        const index = state.users.findIndex(
-          (el) => el.id === mapFullUserFromDto(action.payload).id
-        );
-        if (index !== -1) {
-          state.users[index] = mapFullUserFromDto(action.payload);
-        }
-        state.errors.updateUserError = undefined;
-        state.status.isUpdateUserPending = false;
-      },
-    }),
+    updateUserFetch: create.asyncThunk(
+      async (user: UpdateUserDTO) => await updateUserApi(preparingAuthUserDto(user)),
+      {
+        pending: (state) => {
+          state.status.isUpdateUserPending = true;
+          state.errors.updateUserError = undefined;
+        },
+        rejected: (state, action) => {
+          state.errors.updateUserError = {
+            code: action.error.code,
+            message: action.error.message,
+          };
+          state.status.isUpdateUserPending = false;
+        },
+        fulfilled: (state, action) => {
+          const index = state.users.findIndex(
+            (el) => el.id === mapFullUserFromDto(action.payload).id
+          );
+          if (index !== -1) {
+            state.users[index] = mapFullUserFromDto(action.payload);
+          }
+          state.errors.updateUserError = undefined;
+          state.status.isUpdateUserPending = false;
+        },
+      }
+    ),
 
     updateUser: create.reducer((state, action: PayloadAction<Partial<UpdateUser>>) => {
       const index = state.users.findIndex((el) => el.id === action.payload.id);

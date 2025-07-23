@@ -7,7 +7,7 @@
   color: var(--modal-text-color);
   align-items: center;
   padding: 50px min(calc(-0.0367rem + 2.9411vw), 20px) 40px;
-  min-width: clamp(350px, 50vw, 500px);
+  width: clamp(350px, 50vw, 500px);
   height: 650px;
 }
 

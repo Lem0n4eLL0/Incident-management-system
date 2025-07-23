@@ -1,6 +1,6 @@
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest } from '@custom-types/types';
-import { loginUserApi, logoutUserApi } from '@api/userApi';
+import { checkAuthApi, loginUserApi, logoutUserApi } from '@api/userApi';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -13,10 +13,12 @@ type TAuthState = {
   errors: {
     authUserError?: ApiError;
     logoutUserError?: ApiError;
+    authCheckError?: ApiError;
   };
   status: {
     isLoginPending: boolean;
     isLogoutPending: boolean;
+    isAuthCheckPending: boolean;
   };
 };
 
@@ -27,6 +29,7 @@ const initialState: TAuthState = {
   status: {
     isLoginPending: false,
     isLogoutPending: false,
+    isAuthCheckPending: false,
   },
 };
 
@@ -34,6 +37,28 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: (create) => ({
+    checkAuth: create.asyncThunk(async () => await checkAuthApi(), {
+      pending: (state) => {
+        state.isAuthChecked = false;
+        state.errors.authCheckError = undefined;
+        state.status.isAuthCheckPending = true;
+      },
+      rejected: (state, action) => {
+        state.errors.authCheckError = {
+          code: action.error.code,
+          message: action.error.message,
+        };
+        state.isAuthChecked = true;
+        state.isAuthenticated = false;
+        state.status.isAuthCheckPending = false;
+      },
+      fulfilled: (state, action) => {
+        state.isAuthChecked = true;
+        state.status.isAuthCheckPending = false;
+        state.isAuthenticated = action.payload.success;
+        state.errors.authCheckError = undefined;
+      },
+    }),
     loginUser: create.asyncThunk(
       async (loginData: ApiLoginRequest) => await loginUserApi(loginData),
       {
@@ -55,6 +80,7 @@ const authSlice = createSlice({
           state.isAuthChecked = true;
           state.status.isLoginPending = false;
           state.isAuthenticated = action.payload.success;
+          state.errors.authUserError = undefined;
         },
       }
     ),
@@ -73,6 +99,7 @@ const authSlice = createSlice({
       },
       fulfilled: (state) => {
         state.status.isLogoutPending = false;
+        state.errors.logoutUserError = undefined;
       },
     }),
   }),
@@ -84,7 +111,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginUser, logoutUser } = authSlice.actions;
+export const { loginUser, logoutUser, checkAuth } = authSlice.actions;
 export const {
   selectIsAuthChecked,
   selectIsAuthenticated,

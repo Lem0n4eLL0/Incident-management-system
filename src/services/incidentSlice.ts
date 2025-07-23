@@ -77,10 +77,7 @@ const incidentsSlice = createSlice({
         },
         fulfilled: (state, action) => {
           state.status.isAddIncidentPending = false;
-          state.incidents.push(
-            mapIncidentFromDto({ ...action.payload, id: Math.random().toString(36) })
-          ); // временно id
-          // state.incidents.push(mapIncidentFromDto(action.payload));
+          state.incidents.push(mapIncidentFromDto(action.payload));
         },
       }
     ),
