@@ -1,0 +1,20 @@
+/api/users/: GET, POST, PUT, DELETE, PATCH
+
+/api/incidents/items/: GET, POST, PUT, DELETE, PATCH
+/api/incidents/analytics/report-xlsx/: GET
+
+/api/auth/token/: POST (получение токенов)
+/api/auth/token/refresh/: POST (обновление по refresh)
+
+Маршруты, которые есть, но хз пригодятся ли они тебе:
+/api/auth/token/verify/: POST (проверка действительности токена)
+/admin/: (вход в дефолтную среду админа Django)
+
+/logout_user/*id пользователя*/: POST
+/logout_all_users/: POST
+
+
+/api/incidents/soft_delete_incident/*id инцидента*/: DELETE
+/soft_delete_user/*id юзера*/: DELETE
+
+/me/: GET

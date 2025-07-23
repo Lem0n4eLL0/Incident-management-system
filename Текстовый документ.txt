@@ -1,0 +1,91 @@
+from users.models import User, Unit
+
+unit = Unit.objects.first()  # или создайте новый, если пусто
+if not unit:
+    unit = Unit.objects.create(name='Default Unit')
+
+User.objects.create_superuser(
+    email='f.vladik0202@mail.ru',
+    password='12345',
+    unit=unit,
+    # другие обязательные поля, если есть
+)
+
+
+(для создания суперпользователя)
+
+
+
+
+
+инцидент
+
+{
+  "incident_number": "INC-002",
+  "type": "травма",
+  "date": "2025-07-07",
+  "description": "Cat bites me",
+  "status": "в работе",
+  "measures_taken": "Bite in response",
+  "responsible": "Petr Petrov"
+}
+
+
+unit - подразделение
+position - должность
+
+Попробовать создать сотрудника через shell, если создание от админки он видеть не будет.
+from users.models import User
+user = User.objects.get(email='boss@mail.ru')
+user.set_password('12345')
+user.save()
+
+exit()
+
+
+добавить пользователя
+{
+  "email": "EBobik@mail.ru",
+  "password": "67890",
+  "full_name": "Bobik Bobikov",
+  "unit": "fb9a581a-7f52-4b6a-91f5-92df6ac5c66a",
+  "position": "ассистент",
+  "telephone": "+79691112233",
+  "role": "manager"
+}
+
+При PUT и PATCH нужно вставлять в адрес /id/
+
+
+
+
+
+
+
+
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+
+# ❌ Удалить все токены (аккуратно!)
+OutstandingToken.objects.all().delete()
+BlacklistedToken.objects.all().delete()
+
+
+UPDATE incidents SET is_deleted = false WHERE id = '***'; (если восстановить какую запись из мягкого удаления)
+
+
+
+
+
+
+
+
+{
+  "email": "Kolik@mail.ru",
+  "login": "Kolik",
+  "password": "12345",
+  "full_name": "Kolik",
+  "unit": "IT Company",
+  "position": "админ",
+  "telephone": "+79691112233",
+  "role": "admin"
+}

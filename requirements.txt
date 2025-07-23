@@ -1,0 +1,6 @@
+Django>=4.2
+psycopg2-binary
+django-rest-framework
+djangorestframework-simplejwt
+django-filter
+python-dotenv
