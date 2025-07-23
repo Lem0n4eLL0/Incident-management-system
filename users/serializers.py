@@ -85,19 +85,23 @@ class UserSerializer(serializers.ModelSerializer):
         return name
 
 class UserCreateByAdminSerializer(serializers.ModelSerializer):
-    unit = serializers.SlugRelatedField( #для подгонки
-        queryset=Unit.objects.all(),
-        slug_field='name'
-    )
+    unit = serializers.CharField()
     password = serializers.CharField(write_only=True, required=False)  # при update пароль может не передаваться
+    login = serializers.CharField(required=True)  # <--- добавили поле
 
     class Meta:
         model = User
         fields = (
-            'email', 'password', 'full_name', 'unit', 'position', 'telephone', 'role'
+            'email', 'login', 'password', 'full_name', 'unit', 'position', 'telephone', 'role'
         )
 
     def create(self, validated_data):
+
+        unit_name = validated_data.pop('unit')
+        unit, _ = Unit.objects.get_or_create(name=unit_name)  # ← ключевой момент
+
+        validated_data['unit'] = unit
+
         password = validated_data.pop('password')
         user = User(**validated_data)
         user.set_password(password)
@@ -105,6 +109,12 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
+
+        unit_name = validated_data.pop('unit', None)
+        if unit_name:
+            unit, _ = Unit.objects.get_or_create(name=unit_name)
+            validated_data['unit'] = unit
+
         password = validated_data.pop('password', None)
 
         for attr, value in validated_data.items():

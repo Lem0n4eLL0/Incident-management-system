@@ -380,3 +380,415 @@ def current_user_view(request):
 # Create your views here.
 
 
+
+
+
+
+
+
+
+
+Запрос новый 2:
+У меня unit (подразделение) - это отдельная таблица в бд. (id и name).
+Мне необходимо сделать следующее, реализовать логику: когда кто-то вводит unit при создании пользователя, то ты отправляешь строку. Если нет такого подразделения в базе, то оно создаётся в бд, исходя из того, что ввёл пользователь. А если есть в базе, то оно применяется к пользователю.
+И проблема: при создании инцидента с несуществующим подразделением записывается пустота, такого быть не должно.
+
+users/models:
+
+import uuid
+from django.db import models
+from django.contrib.auth.models import (
+    AbstractBaseUser, PermissionsMixin, BaseUserManager,
+)
+
+from users.managers import ActiveUserManager, UserManager
+
+class Unit(models.Model):
+    id   = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=128, unique=True)
+
+    def __str__(self):
+        return self.name
+
+class UserManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra):
+        if not email:
+            raise ValueError('Email обязателен')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, password, **extra):
+        extra.setdefault('role', User.Role.ADMIN)
+        extra.setdefault('is_staff', True)
+        extra.setdefault('is_superuser', True)
+        return self.create_user(email, password, **extra)
+
+class User(AbstractBaseUser, PermissionsMixin):
+    class Role(models.TextChoices):
+        EMPLOYEE = 'employee', 'сотрудник'
+        MANAGER  = 'manager',  'руководитель'
+        ADMIN    = 'admin',    'администратор'
+
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email     = models.EmailField(unique=True)
+    login = models.CharField(max_length=64, unique=True)
+    full_name = models.CharField(max_length=128)
+    unit      = models.ForeignKey(Unit, on_delete=models.PROTECT, related_name='users')
+    position  = models.CharField(max_length=64)
+    telephone = models.CharField(max_length=32)
+    role      = models.CharField(max_length=16, choices=Role.choices, default=Role.EMPLOYEE)
+
+    is_active = models.BooleanField(default=True)
+    is_staff  = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    is_deleted = models.BooleanField(default=False) # флаг мягкого удаления
+    objects = ActiveUserManager()  # фильтрует удалённых
+    all_objects = UserManager()  # доступ ко всем
+
+    USERNAME_FIELD = 'login'
+    REQUIRED_FIELDS = ['email']
+
+    def __str__(self):
+        return self.full_name
+
+# Create your models here.
+
+users/serializers:
+
+from rest_framework import serializers
+from .models import User, Unit
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+from django.utils import timezone
+
+from django.utils.dateformat import format as django_date_format
+from django.utils.timezone import now
+
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import authenticate
+
+class UnitSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Unit
+        fields = ('id', 'name')
+
+class UserSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField()
+    unit = serializers.SlugRelatedField(
+            queryset=Unit.objects.all(),
+            slug_field='name'
+        )
+#    unit = UnitSerializer(read_only=True) 
+#    unit = serializers.CharField(source='unit.name', read_only=True) #Для подгонки полей фронт-бэк
+#    unit_id = serializers.PrimaryKeyRelatedField(queryset=Unit.objects.all(), source='unit', write_only=True)
+
+    full_name_display = serializers.SerializerMethodField()
+
+    last_login = serializers.DateTimeField(read_only=True)
+    is_active = serializers.BooleanField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
+    password = serializers.CharField(write_only=True)
+#    role_display = serializers.SerializerMethodField() # Для подгонки полей фронт-бэк
+    role = serializers.CharField(source='get_role_display', read_only=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id', 'role', 'login', 'full_name', 'full_name_display', 'unit',
+            'position', 'telephone', 'email',
+            'token',
+            'last_login', 'is_active', 'is_staff', 'password'
+        )
+
+# убрал 'unit_id', 'role_display', для подгонки 
+        read_only_fields = ('id', 'role', 'email')
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        request = self.context.get('request')
+        if not request or request.user.role != User.Role.ADMIN:
+            for field in ['last_login', 'is_active', 'is_staff', 'password', 'token']:
+                self.fields.pop(field, None)
+
+
+
+
+    def _get_latest_token(self, obj):
+        tokens = OutstandingToken.objects.filter(user=obj).order_by('-created_at')
+        return tokens.first() if tokens.exists() else None
+
+
+
+    def get_token(self, obj):
+        request = self.context.get('request')
+        if not request or request.user.role != User.Role.ADMIN:
+            return None
+
+        token = OutstandingToken.objects.filter(user=obj).order_by('-created_at').first()
+        if not token:
+            return None
+
+        return TokenInfoSerializer(token).data
+
+
+#Для подгонки полей фронт-бэк
+    def get_role_display(self, obj):
+        return obj.get_role_display()
+
+    def get_full_name_display(self, obj):
+        name = obj.full_name
+        if obj.is_deleted:
+            name += " (удалён)"
+        return name
+
+class UserCreateByAdminSerializer(serializers.ModelSerializer):
+    unit = serializers.SlugRelatedField( #для подгонки
+        queryset=Unit.objects.all(),
+        slug_field='name'
+    )
+    password = serializers.CharField(write_only=True, required=False)  # при update пароль может не передаваться
+    login = serializers.CharField(required=True)  # <--- добавили поле
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'login', 'password', 'full_name', 'unit', 'position', 'telephone', 'role'
+        )
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
+class UserSelfUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'telephone')
+
+class TokenInfoSerializer(serializers.ModelSerializer):
+    is_blacklisted = serializers.SerializerMethodField()
+    created_at_formatted = serializers.SerializerMethodField()
+    expires_at_formatted = serializers.SerializerMethodField()
+    token_timer = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OutstandingToken
+        fields = (
+            'jti', 'is_blacklisted',
+            'created_at_formatted', 'expires_at_formatted', 'token_timer',
+        )
+
+    #    fields = (
+    #        'jti', 'created_at', 'expires_at', 'is_blacklisted',
+    #        'created_at_formatted', 'expires_at_formatted', 'expires_in_pretty',
+    #    )
+
+    def get_is_blacklisted(self, obj):
+        return hasattr(obj, 'blacklistedtoken')
+
+    def get_created_at_formatted(self, obj):
+        return django_date_format(obj.created_at, "F j, Y, P")  # July 20, 2025, 9:59 a.m.
+
+    def get_expires_at_formatted(self, obj):
+        return django_date_format(obj.expires_at, "F j, Y, P")
+
+    def get_token_timer(self, obj):
+        delta = obj.expires_at - now()
+        total_seconds = int(delta.total_seconds())
+
+        if total_seconds < 0:
+            return "expired"
+
+        days = total_seconds // 86400
+        hours = (total_seconds % 86400) // 3600
+        minutes = (total_seconds % 3600) // 60
+        seconds = total_seconds % 60
+
+        return f"{days} days; {hours:02d}h {minutes:02d}m {seconds:02d}s"
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    login = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        login = attrs.get('login')
+        password = attrs.get('password')
+
+        try:
+            user = User.objects.get(login=login)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'detail': 'Неверный логин или пароль'})
+
+        if not user.check_password(password):
+            raise serializers.ValidationError({'detail': 'Неверный логин или пароль'})
+
+        if not user.is_active:
+            raise serializers.ValidationError({'detail': 'Пользователь деактивирован'})
+
+        refresh = self.get_token(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
+
+users/views:
+
+from django.shortcuts import render
+from rest_framework import viewsets, permissions
+from .models import User
+from .serializers import UserSerializer
+from .permissions import IsAdmin
+from .serializers import UserSerializer, UserCreateByAdminSerializer, UserSelfUpdateSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenVerifyView
+from rest_framework.response import Response
+from rest_framework import status
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+
+from .serializers import CustomTokenObtainPairSerializer
+
+class UserViewSet(viewsets.ModelViewSet):
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.role == 'admin':
+            return User.objects.select_related('unit').all()
+        return User.objects.select_related('unit').filter(id=user.id)
+
+
+    def get_serializer_class(self):
+        user = self.request.user
+        if self.action in ['create', 'update', 'partial_update']:
+            if user.role == 'admin':
+                return UserCreateByAdminSerializer
+            return UserSelfUpdateSerializer
+        return UserSerializer
+
+    def get_permissions(self):
+        if self.action == 'create' or self.action == 'destroy':
+            return [IsAdmin()]
+        if self.action in ['update', 'partial_update']:
+            return [IsAuthenticated()]
+        return [IsAuthenticated()]
+
+    def update(self, request, *args, **kwargs):
+        if request.user.role != 'admin' and request.user.id != self.get_object().id:
+            raise PermissionDenied("Вы можете редактировать только свой профиль.")
+        return super().update(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        if request.user.role != 'admin' and request.user.id != self.get_object().id:
+            raise PermissionDenied("Вы можете редактировать только свой профиль.")
+        return super().partial_update(request, *args, **kwargs)
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            response.data['success'] = True
+        return response
+
+
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200:
+            data = response.data
+            data['success'] = True
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({'success': False}, status=response.status_code)
+
+class CustomTokenVerifyView(TokenVerifyView):
+    def post(self, request, *args, **kwargs):
+        try:
+            response = super().post(request, *args, **kwargs)
+            data = response.data
+            data['success'] = True
+            return Response(data, status=status.HTTP_200_OK)
+        except Exception:
+            return Response({'success': False}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
+def logout_user(request, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        tokens = OutstandingToken.objects.filter(user=user)
+        for token in tokens:
+            _, _ = BlacklistedToken.objects.get_or_create(token=token)
+        return Response({'detail': f'User {user.email} successfully logged out.'}, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAdminUser])
+def logout_all_users(request):
+    tokens = OutstandingToken.objects.all()
+    for token in tokens:
+        _, _ = BlacklistedToken.objects.get_or_create(token=token)
+    return Response({'detail': 'All users successfully logged out.'}, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+@permission_classes([permissions.IsAdminUser])
+def soft_delete_user(request, user_id):
+    try:
+        user = User.all_objects.get(pk=user_id)  # доступ к удалённым
+        user.is_deleted = True
+        user.save()
+        return Response({'detail': 'User soft-deleted.'})
+    except User.DoesNotExist:
+        return Response({'detail': 'User not found.'}, status=404)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def current_user_view(request):
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
+# Create your views here.
+
+
+
+
+
+
+
+
+
+3 запрос:
+Следующее, что мне нужно сделать. Когда удаляется инцидент, то при успешном удалении должна вернуться в ответ вся информация про инцидент (все поля).
+
+

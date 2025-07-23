@@ -21,7 +21,7 @@ class Incident(models.Model):
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     incident_number = models.CharField(max_length=32, unique=True, db_index=True)
     type            = models.CharField(max_length=16, choices=Type.choices)
-    date            = models.DateField(db_index=True)
+    date            = models.DateTimeField(db_index=True)
     description     = models.TextField()
     author          = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name='incidents')
     unit_snapshot   = models.ForeignKey(Unit, on_delete=models.PROTECT, related_name='incidents')

@@ -193,7 +193,7 @@ class IncidentSummaryAPIView(APIView):
             }
         })
 
-@api_view(['DELETE'])  # можно оставить 'POST', но DELETE логичнее
+@api_view(['DELETE'])
 @permission_classes([permissions.IsAuthenticated])
 def soft_delete_incident(request, incident_id):
     try:
@@ -203,15 +203,14 @@ def soft_delete_incident(request, incident_id):
 
     user = request.user
 
-    # Админ — можно всё
-    if user.role == User.Role.ADMIN:
-        pass
-    # Сотрудник/Руководитель — только свои записи
-    elif incident.author != user:
+    # Проверка прав
+    if user.role != User.Role.ADMIN and incident.author != user:
         return Response({'detail': 'Недостаточно прав для удаления этого инцидента.'}, status=403)
 
-    # Выполняем мягкое удаление
+    # Мягкое удаление
     incident.is_deleted = True
     incident.save()
 
-    return Response({'detail': 'Инцидент мягко удалён.'})
+    # Вернуть сериализованные данные
+    serializer = IncidentSerializer(incident)
+    return Response(serializer.data, status=200)

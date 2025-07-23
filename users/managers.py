@@ -8,12 +8,18 @@ class UserManager(BaseUserManager):
         if not extra.get('login'):
             raise ValueError('Login обязателен')
         email = self.normalize_email(email)
+
+        from .models import User
+
         user = self.model(email=email, **extra)
         user.set_password(password)
         user.save()
         return user
 
     def create_superuser(self, email, password, **extra):
+
+        from .models import User
+
         extra.setdefault('role', User.Role.ADMIN)
         extra.setdefault('is_staff', True)
         extra.setdefault('is_superuser', True)
