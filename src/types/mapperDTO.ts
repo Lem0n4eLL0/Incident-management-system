@@ -32,6 +32,13 @@ export const roleFromDTO = (role: string): Role => {
         : (role as Role);
 };
 
+function toISOStringSafe(date?: string | Date | null): string | undefined {
+  if (!date) return undefined;
+
+  const parsed = typeof date === 'string' ? new Date(date) : date;
+  return !isNaN(parsed.getTime()) ? parsed.toISOString() : undefined;
+}
+
 export const mapUserFromDto = ({
   id,
   role,
@@ -124,11 +131,11 @@ export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
   token: {
     jti: user.token.jti,
     is_blacklisted: user.token.isBlacklisted ? 'true' : 'false',
-    created_at_formatted: user.token.createdAtFormatted.toISOString(),
-    expires_at_formatted: user.token.expiresAtFormatted.toISOString(),
+    created_at_formatted: user.token.createdAtFormatted.toISOString() ?? '',
+    expires_at_formatted: user.token.expiresAtFormatted.toISOString() ?? '',
     token_timer: user.token.tokenTimer,
   },
-  last_login: user.lastLogin.toISOString(),
+  last_login: toISOStringSafe(user.lastLogin) ?? '',
   is_active: user.isActive ? 'true' : 'false',
   is_staff: user.isStaff ? 'true' : 'false',
 });

@@ -72,7 +72,7 @@
 .end_session {
   padding: 10px;
   border: 2px solid var(--primary-200);
-   border-radius: 10px;
+  border-radius: 10px;
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: min-content min-content;
@@ -109,5 +109,3 @@
   align-items: center;
   justify-content: center;
 }
-
-

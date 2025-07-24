@@ -33,7 +33,7 @@ async function fetchUserData(token) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 

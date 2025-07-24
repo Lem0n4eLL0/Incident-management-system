@@ -98,7 +98,7 @@ export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Pro
     .then((res) => checkResponse<T>(res))
     .catch((err) => {
       console.log(err);
-      if (err.code === 'token_not_valid') {
+      if (err.code === 'token_expired') {
         return refreshToken()
           .then((refreshRes) => {
             if (options.headers) {
@@ -108,7 +108,7 @@ export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Pro
             return fetch(url, options).then((res) => checkResponseWithErrorHandler<T>(res));
           })
           .catch((refreshErr) => {
-            if (refreshErr.code === 'token_not_valid') {
+            if (refreshErr.code === 'token_expired') {
               handleLogout();
             }
             return Promise.reject({
@@ -153,7 +153,7 @@ export const checkAuthApi = async (): Promise<TServerResponse> => {
       }
     })
     .catch((err) => {
-      if (err.code === 'token_not_valid') {
+      if (err.code === 'token_expired') {
         return Promise.resolve({ success: false });
       }
       return handleServerError(err);

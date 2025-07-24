@@ -1,0 +1,17 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  flex-grow: 1;
+}
+
+.charts {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  gap: 40px;
+  padding: 34px;
+  border-radius: 20px;
+  background-color: var(--incident-bg-color);
+  min-height: 100%;
+}
