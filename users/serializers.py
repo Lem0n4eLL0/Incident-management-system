@@ -32,7 +32,7 @@ class UserSerializer(serializers.ModelSerializer):
     is_staff = serializers.BooleanField(read_only=True)
     password = serializers.CharField(write_only=True)
 #    role_display = serializers.SerializerMethodField() # Для подгонки полей фронт-бэк
-    role = serializers.CharField(source='get_role_display', read_only=True)
+    role = serializers.ChoiceField(choices=User.Role.choices)
 
     class Meta:
         model = User
@@ -79,8 +79,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 #Для подгонки полей фронт-бэк
-    def get_role_display(self, obj):
-        return obj.get_role_display()
+  #  def get_role_display(self, obj):
+   #     return obj.get_role_display()
 
     def get_full_name_display(self, obj):
         name = obj.full_name
@@ -91,7 +91,8 @@ class UserSerializer(serializers.ModelSerializer):
 class UserCreateByAdminSerializer(serializers.ModelSerializer):
     unit = serializers.CharField()
     password = serializers.CharField(write_only=True, required=False)  # при update пароль может не передаваться
-    login = serializers.CharField(required=True)  # <--- добавили поле
+    login = serializers.CharField(required=True)  
+    role = serializers.ChoiceField(choices=User.Role.choices) # <--- добавил (project30)
 
     class Meta:
         model = User
@@ -217,6 +218,7 @@ class UserMeSerializer(serializers.ModelSerializer):
 
 class UserRestrictedSerializer(serializers.ModelSerializer):
     unit = serializers.CharField(source='unit.name', read_only=True)
+    role = serializers.ChoiceField(choices=User.Role.choices)
     class Meta:
         model = User
         fields = [
