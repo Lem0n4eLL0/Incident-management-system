@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False # иначе Django будет показывать HTML
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*'] # изменил на '*' чтобы не падало в DEBUG=False
 
 
 # Application definition
@@ -97,15 +97,13 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
-        'OPTIONS': {
-            'client_encoding': 'WIN1251',  # Устанавливает кодировку
-        },
     }
 }
 
 AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'utils.exception_handler.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -171,4 +169,3 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #APPEND_SLASH = True - для слеша
-#DEBUG = True

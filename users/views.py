@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 from .models import User
 from .serializers import UserSerializer
 from .permissions import IsAdmin
-from .serializers import UserSerializer, UserCreateByAdminSerializer, UserSelfUpdateSerializer
+from .serializers import UserSerializer, UserCreateByAdminSerializer, UserSelfUpdateSerializer, UserRestrictedSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 
@@ -29,10 +29,16 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         user = self.request.user
+
         if self.action in ['create', 'update', 'partial_update']:
             if user.role == 'admin':
                 return UserCreateByAdminSerializer
             return UserSelfUpdateSerializer
+
+        # Возвращаем ограниченный сериализатор для не-админов
+        if user.role != 'admin':
+            return UserRestrictedSerializer
+
         return UserSerializer
 
     def get_permissions(self):
@@ -50,7 +56,17 @@ class UserViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, *args, **kwargs):
         if request.user.role != 'admin' and request.user.id != self.get_object().id:
             raise PermissionDenied("Вы можете редактировать только свой профиль.")
-        return super().partial_update(request, *args, **kwargs)
+
+        # Выполняем обновление через сериализатор валидации
+        instance = self.get_object()
+        serializer_class = self.get_serializer_class()  # Это вернёт UserSelfUpdateSerializer
+        serializer = serializer_class(instance, data=request.data, partial=True, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        # Но отдаём в ответ — UserRestrictedSerializer
+        response_serializer = UserRestrictedSerializer(instance, context=self.get_serializer_context())
+        return Response(response_serializer.data, status=status.HTTP_200_OK)
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -122,7 +138,16 @@ def soft_delete_user(request, user_id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def current_user_view(request):
-    serializer = UserSerializer(request.user)
+    from .serializers import UserRestrictedSerializer, UserSerializer
+    user = request.user
+
+    if user.role == 'admin':
+        serializer = UserSerializer(user, context={'request': request})
+    else:
+        serializer = UserRestrictedSerializer(user)
+
     return Response(serializer.data)
+
+
 
 # Create your views here.

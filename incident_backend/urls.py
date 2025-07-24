@@ -30,6 +30,8 @@ from users.views import soft_delete_user
 
 from users.views import current_user_view
 
+from django.http import JsonResponse
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
@@ -43,3 +45,13 @@ urlpatterns = [
     path('me/', current_user_view, name='current-user'),
 
 ]
+
+
+def custom_404(request, exception=None):
+    return JsonResponse({'detail': 'Страница не найдена'}, status=404)
+
+def custom_500(request):
+    return JsonResponse({'detail': 'Внутренняя ошибка сервера'}, status=500)
+
+handler404 = 'incident_backend.urls.custom_404'
+handler500 = 'incident_backend.urls.custom_500'

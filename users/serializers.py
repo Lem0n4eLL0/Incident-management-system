@@ -24,9 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
 #    unit = serializers.CharField(source='unit.name', read_only=True) #Для подгонки полей фронт-бэк
 #    unit_id = serializers.PrimaryKeyRelatedField(queryset=Unit.objects.all(), source='unit', write_only=True)
 
-    full_name_display = serializers.SerializerMethodField()
+ #   full_name_display = serializers.SerializerMethodField()
 
-    last_login = serializers.DateTimeField(read_only=True)
+    last_login = serializers.SerializerMethodField()
     is_active = serializers.BooleanField(read_only=True)
     is_staff = serializers.BooleanField(read_only=True)
     password = serializers.CharField(write_only=True)
@@ -36,13 +36,13 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'role', 'login', 'full_name', 'full_name_display', 'unit',
+            'id', 'role', 'login', 'full_name', 'unit',
             'position', 'telephone', 'email',
             'token',
             'last_login', 'is_active', 'is_staff', 'password'
         )
 
-# убрал 'unit_id', 'role_display', для подгонки 
+# убрал 'unit_id', 'role_display', для подгонки    'full_name_display',
         read_only_fields = ('id', 'role', 'email')
 
 
@@ -52,6 +52,9 @@ class UserSerializer(serializers.ModelSerializer):
         if not request or request.user.role != User.Role.ADMIN:
             for field in ['last_login', 'is_active', 'is_staff', 'password', 'token']:
                 self.fields.pop(field, None)
+
+    def get_last_login(self, obj):
+        return obj.last_login.isoformat() if obj.last_login else ''
 
 
 
@@ -65,11 +68,11 @@ class UserSerializer(serializers.ModelSerializer):
     def get_token(self, obj):
         request = self.context.get('request')
         if not request or request.user.role != User.Role.ADMIN:
-            return None
+            return ''
 
         token = OutstandingToken.objects.filter(user=obj).order_by('-created_at').first()
         if not token:
-            return None
+            return ''
 
         return TokenInfoSerializer(token).data
 
@@ -196,3 +199,22 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
+
+class UserMeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ['login']  # исключаем login
+
+class UserRestrictedSerializer(serializers.ModelSerializer):
+    unit = serializers.CharField(source='unit.name', read_only=True)
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'role',
+            'full_name',
+            'unit',
+            'position',
+            'telephone',
+            'email',
+        ]
