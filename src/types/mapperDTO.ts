@@ -13,11 +13,23 @@ import {
 } from './types';
 
 export const preparingRole = (role: string) => {
-  return role === 'администратор' ? 'admin' : role === 'руководитель' ? 'manager' : 'employee';
+  return role === 'администратор'
+    ? 'admin'
+    : role === 'руководитель'
+      ? 'manager'
+      : role === 'сотрудник'
+        ? 'employee'
+        : 'employee';
 };
 
 export const roleFromDTO = (role: string): Role => {
-  return role === 'admin' ? 'администратор' : role === 'manager' ? 'руководитель' : 'администратор';
+  return role === 'admin'
+    ? 'администратор'
+    : role === 'manager'
+      ? 'руководитель'
+      : role === 'empoyee'
+        ? 'сотрудник'
+        : (role as Role);
 };
 
 export const mapUserFromDto = ({

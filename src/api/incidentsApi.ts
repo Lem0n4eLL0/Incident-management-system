@@ -34,7 +34,7 @@ export const updateIncidentApi = (incident: Partial<IncidentDTO>): Promise<Incid
 };
 
 export const deleteIncidentApi = (id: string): Promise<IncidentDTO> => {
-  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/${id}/`, {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/soft_delete_incident/${id}/`, {
     method: HTTP_METHODS.DELETE,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

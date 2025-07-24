@@ -56,6 +56,13 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        author: mapUserToDto(user),
+        unit: user.unit,
+      }));
+    }
   }, []);
 
   useEffect(() => {
@@ -93,6 +100,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
       if (!validator.validateAll(getValidatableIncidentFields(formData))) {
         return;
       }
+      console.log(formData);
       dispatch(addIncident(formData));
     },
     [formData, validator.validateAll, dispatch]
@@ -177,7 +185,7 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
             lableClassName={style.lable_input}
             type="text"
             name="unit"
-            value={formData.unit}
+            value={formData.author.unit}
             inputTitle={<FieldTitle>Подразделение</FieldTitle>}
             disabled
           ></Input>

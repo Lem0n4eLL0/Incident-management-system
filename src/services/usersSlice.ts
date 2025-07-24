@@ -15,7 +15,7 @@ import {
   UserDTO,
 } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
-import { createUserApi, deleteUsersApi, updateUserApi } from '@api/userApi';
+import { createUserApi, deleteUsersApi, logoutUserApi, updateUserApi } from '@api/userApi';
 import {
   mapFullUserFromDto,
   mapUserFromDto,
@@ -36,12 +36,14 @@ type TUserState = {
     isCreateUserPending: boolean;
     isUpdateUserPending: boolean;
     isDeleteUserPending: boolean;
+    isLogoutUserPending: boolean;
   };
   errors: {
     getUsersError?: ApiError;
     createUserError?: ApiError;
     deleteUserError?: ApiError;
     updateUserError?: ApiError;
+    logoutUserError?: ApiError;
   };
 };
 
@@ -53,6 +55,7 @@ const initialState: TUserState = {
     isCreateUserPending: false,
     isUpdateUserPending: false,
     isDeleteUserPending: false,
+    isLogoutUserPending: false,
   },
   errors: {},
 };
@@ -149,6 +152,35 @@ const userSlice = createSlice({
         },
       }
     ),
+
+    logoutUser: create.asyncThunk(async (id: string) => await logoutUserApi(id), {
+      pending: (state) => {
+        state.status.isLogoutUserPending = true;
+        state.errors.logoutUserError = undefined;
+      },
+      rejected: (state, action) => {
+        state.errors.logoutUserError = {
+          code: action.error.code,
+          message: action.error.message,
+        };
+        state.status.isLogoutUserPending = false;
+      },
+      fulfilled: (state, action) => {
+        const index = state.users.findIndex((el) => (el.id = action.payload.id));
+        if (index !== -1) {
+          state.users[index] = {
+            ...state.users[index],
+            token: {
+              ...state.users[index].token,
+              tokenTimer: 'разлогинен',
+            },
+          };
+        }
+        state.errors.logoutUserError = undefined;
+        state.status.isLogoutUserPending = false;
+      },
+    }),
+
     clear: create.reducer((state) => {
       state.users = [];
       state.errors = {};
@@ -186,6 +218,7 @@ export const {
   getUsers,
   createUser,
   deleteUser,
+  logoutUser,
   clear: clearUsers,
   updateUser: updateUserUsers,
   updateUserFetch: updateUserFetchUsers,

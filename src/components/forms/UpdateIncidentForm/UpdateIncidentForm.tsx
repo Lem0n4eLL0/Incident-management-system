@@ -54,6 +54,13 @@ export const UpdateIncidentForm = ({ onClose, incident }: UpdateIncidentFormProp
     if (inputRef.current) {
       inputRef.current.focus();
     }
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        author: mapUserToDto(user),
+        unit: user.unit,
+      }));
+    }
   }, []);
 
   useEffect(() => {

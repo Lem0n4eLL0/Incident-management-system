@@ -25,6 +25,19 @@ export const HTTP_METHODS = {
   DELETE: 'DELETE',
 } as const;
 
+type TServerResponse<T = object> = T & {
+  success: boolean;
+};
+
+export type TRefreshResponse = TServerResponse<{
+  refresh: string;
+  access: string;
+}>;
+
+export type ResponseWithId = TServerResponse<{
+  id: string;
+}>;
+
 const handleServerError = async (res: Response): Promise<never> => {
   const errorBody = await res.json();
   const code = res.status;
@@ -47,15 +60,6 @@ const checkResponseWithErrorHandler = <T>(res: Response): Promise<T> => {
 const checkResponse = <T>(res: Response): Promise<T> => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
-
-type TServerResponse<T = object> = T & {
-  success: boolean;
-};
-
-export type TRefreshResponse = TServerResponse<{
-  refresh: string;
-  access: string;
-}>;
 
 /* Итоговые запросы на сервер */
 export const refreshToken = (): Promise<TRefreshResponse> => {
@@ -213,7 +217,7 @@ export const updateUserApi = (user: Partial<FullUserDTO>): Promise<FullUserDTO> 
 };
 
 export const deleteUsersApi = (id: string): Promise<FullUserDTO> => {
-  return fetchWithRefresh<FullUserDTO>(`${URL_API}/api/users/${id}/`, {
+  return fetchWithRefresh<FullUserDTO>(`${URL_API}/soft_delete_user/${id}/`, {
     method: HTTP_METHODS.DELETE,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -221,13 +225,13 @@ export const deleteUsersApi = (id: string): Promise<FullUserDTO> => {
   });
 };
 
-export const logoutUserApi = (id: string): Promise<TServerResponse> => {
-  return fetchWithRefresh<TServerResponse>(`${URL_API}/logout_user/${id}/`, {
+export const logoutUserApi = (id: string): Promise<ResponseWithId> => {
+  return fetchWithRefresh<ResponseWithId>(`${URL_API}/logout_user/${id}/`, {
     method: HTTP_METHODS.POST,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
-  });
+  }).then((res) => ({ success: res.success, id: id }));
 };
 
 export const logoutMeApi = (): Promise<TServerResponse> => {
@@ -241,7 +245,7 @@ export const logoutMeApi = (): Promise<TServerResponse> => {
 };
 
 export const logoutAll = (): Promise<TServerResponse> => {
-  return fetchWithRefresh<TServerResponse>(`${URL_API}/logout_user/`, {
+  return fetchWithRefresh<TServerResponse>(`${URL_API}/logout_all_users/`, {
     method: HTTP_METHODS.POST,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',

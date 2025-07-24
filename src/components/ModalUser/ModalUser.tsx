@@ -4,12 +4,12 @@ import style from './ModalUser.module.css';
 import clsx from 'clsx';
 import staticStyle from '@style/common.module.css';
 import fromStyle from '@style/form.module.css';
-import { FormEvent, useCallback, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { UpdateUserForm } from '@components/forms/UpdateUserForm';
 import { selectStatusUser, selectUser } from '@services/userSlice';
 import { mapFullUserToDto } from '@custom-types/mapperDTO';
 import { AlertWindowForm } from '@components/forms/AlertWindowForm';
-import { deleteUser, selectErrorsUsers, selectStatusUsers } from '@services/usersSlice';
+import { deleteUser, logoutUser, selectErrorsUsers, selectStatusUsers } from '@services/usersSlice';
 
 type ModalUserProps = {
   user: FullUser;
@@ -23,10 +23,13 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
   const { isUpdateUserPending, isDeleteUserPending } = useSelector((state) =>
     selectStatusUsers.unwrapped(state.usersReducer)
   );
-  const { deleteUserError } = useSelector((state) =>
+  const { logoutUserError } = useSelector((state) =>
     selectErrorsUsers.unwrapped(state.usersReducer)
   );
 
+  const [logoutUserServerError, setLogoutUserServerError] = useState<ApiError | undefined>(
+    undefined
+  );
   const [isOpenDeleteWindow, setIsOpenDeletWindow] = useState(false);
   const [isUpdateModeEnabled, setIsUpdateModeEnabled] = useState(false);
   const [deleteUserServerError, setDeleteUserServerError] = useState<ApiError | undefined>(
@@ -59,6 +62,14 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
       isOpenDeletWindowHandler();
     }
   };
+
+  const logoutUserHandler = () => {
+    dispatch(logoutUser(user.id));
+  };
+
+  useEffect(() => {
+    setLogoutUserServerError(logoutUserError);
+  }, [logoutUserError]);
 
   if (!user) {
     onClose();
@@ -114,11 +125,12 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
               </div>
               <div className={style.end_session}>
                 <span className={clsx(style.timer_title, style.field)}>До завершения сеанса:</span>
+                <span className={staticStyle.error}>{logoutUserServerError?.message}</span>
                 <span className={style.timer}>{user.token.tokenTimer}</span>
                 <button
                   type="button"
                   className={clsx(style.end_session_button)}
-                  // onClick={}
+                  onClick={logoutUserHandler}
                 >
                   завершить
                 </button>
