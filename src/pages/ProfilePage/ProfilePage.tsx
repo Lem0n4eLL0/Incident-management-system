@@ -11,7 +11,7 @@ import {
 import { ReactComponent as PenIcon } from '@assets/pen.svg';
 import clsx from 'clsx';
 import { ChangeEvent, FormEventHandler, SyntheticEvent, useEffect, useRef, useState } from 'react';
-import { User, UserDTO } from '@custom-types/types';
+import { ApiError, User, UserDTO } from '@custom-types/types';
 import { mapUserToDto, mapUserFromDto } from '@custom-types/mapperDTO';
 import { EMPTY_USER } from '@constants/constants';
 import { Input } from '@components/ui/Input';
@@ -19,6 +19,7 @@ import { useFormValidation } from '@hooks/useFormValidation';
 import { USER_VALIDATOR } from '@constants/validators';
 import { Loader } from '@components/ui/Loader';
 import { updateUserUsers } from '@services/usersSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const REDACTOR_MODE_OFF = { isOn: false, field: null };
 
@@ -42,17 +43,19 @@ export const ProfilePage = () => {
   const { errors, isAllValid, validateField, validateAll, setErrors } =
     useFormValidation(USER_VALIDATOR);
 
-  const [serverError, setServerError] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<ApiError | undefined>(undefined);
   useEffect(() => {
     phoneInputRef.current?.focus(); // не работает
     emailInputRef.current?.focus();
   }, []);
 
-  useEffect(() => {
-    if (updateUserError?.message) {
-      setServerError(updateUserError.message);
-    }
-  }, [updateUserError, setServerError]);
+  // useEffect(() => {
+  //   if (updateUserError) {
+  //     setServerError(updateUserError);
+  //   } else {
+  //     setServerError(undefined);
+  //   }
+  // }, [updateUserError, setServerError]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -75,7 +78,7 @@ export const ProfilePage = () => {
         setIsRedactorMode(REDACTOR_MODE_OFF);
         setFormData((prev) => ({ ...prev, [field]: mapUserToDto(user!)?.[field] }));
         setErrors({});
-        setServerError(null);
+        setServerError(undefined);
       }
     };
 
@@ -100,20 +103,22 @@ export const ProfilePage = () => {
       return;
     }
 
-    const action = await dispatch(updateUserFetchUser(formData));
-    if (!updateUserError) {
+    try {
+      const resultAction = await dispatch(updateUserFetchUser(formData));
+      const updatedUser = unwrapResult(resultAction);
+
       setIsRedactorMode(REDACTOR_MODE_OFF);
-      setServerError(null);
-      dispatch(updateUserUsers(mapUserFromDto(formData)));
-    } else {
-      setServerError(updateUserError.message ?? '');
+      setServerError(undefined);
+      dispatch(updateUserUsers(mapUserFromDto(updatedUser)));
+    } catch (err: any) {
+      setServerError(err?.message ?? 'Произошла ошибка');
     }
   };
 
   const inputHandler = (field: keyof UserDTO) => (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     if (serverError) {
-      setServerError('');
+      setServerError(undefined);
       setErrors({});
     }
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -154,7 +159,7 @@ export const ProfilePage = () => {
                   value={formData.telephone}
                   error={
                     <span className={clsx(staticStyle.error, style.input_error)}>
-                      {serverError ?? errors.telephone}
+                      {serverError?.message ?? errors.telephone}
                     </span>
                   }
                   onChange={inputHandler('telephone')}
@@ -196,7 +201,7 @@ export const ProfilePage = () => {
                   value={formData.email}
                   error={
                     <span className={clsx(staticStyle.error, style.input_error)}>
-                      {serverError ?? errors.email}
+                      {serverError?.message ?? errors.email}
                     </span>
                   }
                   onChange={inputHandler('email')}
