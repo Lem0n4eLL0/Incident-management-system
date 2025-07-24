@@ -53,6 +53,16 @@ class UserViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("Вы можете редактировать только свой профиль.")
         return super().update(request, *args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        # Создаём через UserCreateByAdminSerializer
+        serializer = UserCreateByAdminSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+
+        # Ответ — через полный UserSerializer
+        response_serializer = UserSerializer(user, context=self.get_serializer_context())
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+
     def partial_update(self, request, *args, **kwargs):
         if request.user.role != 'admin' and request.user.id != self.get_object().id:
             raise PermissionDenied("Вы можете редактировать только свой профиль.")
@@ -64,8 +74,11 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        # Но отдаём в ответ — UserRestrictedSerializer
-        response_serializer = UserRestrictedSerializer(instance, context=self.get_serializer_context())
+        # Для админа возвращаем полный UserSerializer
+        if request.user.role == 'admin':
+            response_serializer = UserSerializer(instance, context=self.get_serializer_context())
+        else:
+            response_serializer = UserRestrictedSerializer(instance, context=self.get_serializer_context())
         return Response(response_serializer.data, status=status.HTTP_200_OK)
 
     def get_serializer_context(self):
@@ -86,6 +99,9 @@ class CustomTokenRefreshView(TokenRefreshView):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
             data = response.data
+
+            # Удаляем refresh токен из ответа
+            data.pop('refresh', None)
             data['success'] = True
             return Response(data, status=status.HTTP_200_OK)
         else:
@@ -131,7 +147,11 @@ def soft_delete_user(request, user_id):
         user = User.all_objects.get(pk=user_id)  # доступ к удалённым
         user.is_deleted = True
         user.save()
-        return Response({'detail': 'User soft-deleted.'})
+
+        # Возвращаем сериализованные данные пользователя
+        serializer = UserSerializer(user, context={'request': request})
+        return Response(serializer.data, status=200)
+
     except User.DoesNotExist:
         return Response({'detail': 'User not found.'}, status=404)
 
@@ -147,6 +167,17 @@ def current_user_view(request):
         serializer = UserRestrictedSerializer(user)
 
     return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_me(request):
+    user = request.user
+    tokens = OutstandingToken.objects.filter(user=user)
+
+    for token in tokens:
+        BlacklistedToken.objects.get_or_create(token=token)
+
+    return Response({'detail': 'User successfully logged out.'}, status=200)
 
 
 

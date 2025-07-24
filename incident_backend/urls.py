@@ -29,6 +29,7 @@ from incidents.views import IncidentViewSet, soft_delete_incident
 from users.views import soft_delete_user
 
 from users.views import current_user_view
+from users.views import logout_me
 
 from django.http import JsonResponse
 
@@ -43,6 +44,7 @@ urlpatterns = [
     path('logout_all_users/', logout_all_users, name='logout_all_users'),
     path('soft_delete_user/<uuid:user_id>/', soft_delete_user, name='soft_delete_user'),
     path('me/', current_user_view, name='current-user'),
+    path('api/auth/logout_me/', logout_me, name='logout-me'),
 
 ]
 

@@ -8,6 +8,7 @@ from django.utils.timezone import now
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import update_last_login
 
 class UnitSerializer(serializers.ModelSerializer):
     class Meta:
@@ -107,7 +108,7 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop('password')
 
-        # 👉 Назначаем админ-флаги, если роль — admin
+        # Назначаем админ-флаги, если роль — admin
         role = validated_data.get('role')
         if role == 'admin':
             validated_data['is_staff'] = True
@@ -200,6 +201,8 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         if not user.is_active:
             raise serializers.ValidationError({'detail': 'Пользователь деактивирован'})
+
+        update_last_login(None, user)
 
         refresh = self.get_token(user)
         return {

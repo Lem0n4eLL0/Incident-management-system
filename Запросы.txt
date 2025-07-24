@@ -19,7 +19,11 @@
 
 /me/: GET
 
-Создание createsuperuser в shell
+/api/auth/logout_me/: POST
+
+
+
+"Создание createsuperuser в shell"
 
 
 from users.models import User, Unit
