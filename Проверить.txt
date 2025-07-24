@@ -788,7 +788,106 @@ def current_user_view(request):
 
 
 
-3 запрос:
-Следующее, что мне нужно сделать. Когда удаляется инцидент, то при успешном удалении должна вернуться в ответ вся информация про инцидент (все поля).
+remote: Total 53 (delta 16), reused 53 (delta 16), pack-reused 0 (from 0)
+Unpacking objects: 100% (53/53), 39.66 KiB | 236.00 KiB/s, done.
+From github.com:Lem0n4eLL0/Incident-management-system
+   b4a3fe9..e73f934  backend-development -> origin/backend-development
+Auto-merging incident_backend/settings.py
+Merge made by the 'ort' strategy.
+ .env                                                    |   2 +-
+ .gitignore                                              |   1 +
+ common/__pycache__/managers.cpython-313.pyc             | Bin 0 -> 1149 bytes
+ incident_backend/__pycache__/__init__.cpython-313.pyc   | Bin 0 -> 184 bytes
+ incident_backend/__pycache__/settings.cpython-313.pyc   | Bin 0 -> 3930 bytes
+ incident_backend/__pycache__/urls.cpython-313.pyc       | Bin 0 -> 2285 bytes
+ incident_backend/__pycache__/wsgi.cpython-313.pyc       | Bin 0 -> 690 bytes
+ incident_backend/settings.py                            |   3 +++
+ incidents/__pycache__/__init__.cpython-313.pyc          | Bin 0 -> 177 bytes
+ incidents/__pycache__/admin.cpython-313.pyc             | Bin 0 -> 221 bytes
+ incidents/__pycache__/apps.cpython-313.pyc              | Bin 0 -> 547 bytes
+ incidents/__pycache__/filters.cpython-313.pyc           | Bin 0 -> 1493 bytes
+ incidents/__pycache__/models.cpython-313.pyc            | Bin 0 -> 3225 bytes
+ incidents/__pycache__/permissions.cpython-313.pyc       | Bin 0 -> 974 bytes
+ incidents/__pycache__/serializers.cpython-313.pyc       | Bin 0 -> 1977 bytes
+ incidents/__pycache__/urls.cpython-313.pyc              | Bin 0 -> 994 bytes
+ incidents/__pycache__/views.cpython-313.pyc             | Bin 0 -> 11325 bytes
+ .../migrations/__pycache__/0001_initial.cpython-313.pyc | Bin 0 -> 1931 bytes
+ .../migrations/__pycache__/0002_initial.cpython-313.pyc | Bin 0 -> 1791 bytes
+ .../0003_alter_incident_status.cpython-313.pyc          | Bin 0 -> 972 bytes
+ .../0004_incident_is_deleted.cpython-313.pyc            | Bin 0 -> 818 bytes
+ .../migrations/__pycache__/__init__.cpython-313.pyc     | Bin 0 -> 188 bytes
+ users/__pycache__/__init__.cpython-313.pyc              | Bin 0 -> 173 bytes
+ users/__pycache__/admin.cpython-313.pyc                 | Bin 0 -> 555 bytes
+ users/__pycache__/apps.cpython-313.pyc                  | Bin 0 -> 535 bytes
+ users/__pycache__/managers.cpython-313.pyc              | Bin 0 -> 2151 bytes
+ users/__pycache__/models.cpython-313.pyc                | Bin 0 -> 4145 bytes
+ users/__pycache__/permissions.cpython-313.pyc           | Bin 0 -> 706 bytes
+ users/__pycache__/serializers.cpython-313.pyc           | Bin 0 -> 10333 bytes
+ users/__pycache__/urls.cpython-313.pyc                  | Bin 0 -> 447 bytes
+ users/__pycache__/views.cpython-313.pyc                 | Bin 0 -> 8847 bytes
+ .../migrations/__pycache__/0001_initial.cpython-313.pyc | Bin 0 -> 3199 bytes
+ ..._alter_user_managers_user_is_deleted.cpython-313.pyc | Bin 0 -> 1113 bytes
+ .../0003_alter_user_managers.cpython-313.pyc            | Bin 0 -> 719 bytes
+ .../__pycache__/0004_user_login.cpython-313.pyc         | Bin 0 -> 816 bytes
+ .../__pycache__/0005_alter_user_login.cpython-313.pyc   | Bin 0 -> 828 bytes
+ .../__pycache__/0006_fill_null_logins.cpython-313.pyc   | Bin 0 -> 1171 bytes
+ .../__pycache__/0007_alter_user_login.cpython-313.pyc   | Bin 0 -> 812 bytes
+ users/migrations/__pycache__/__init__.cpython-313.pyc   | Bin 0 -> 184 bytes
+ 39 files changed, 5 insertions(+), 1 deletion(-)
+ create mode 100644 common/__pycache__/managers.cpython-313.pyc
+ create mode 100644 incident_backend/__pycache__/__init__.cpython-313.pyc
+ create mode 100644 incident_backend/__pycache__/settings.cpython-313.pyc
+ create mode 100644 incident_backend/__pycache__/urls.cpython-313.pyc
+ create mode 100644 incident_backend/__pycache__/wsgi.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/__init__.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/admin.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/apps.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/filters.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/models.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/permissions.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/serializers.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/urls.cpython-313.pyc
+ create mode 100644 incidents/__pycache__/views.cpython-313.pyc
+ create mode 100644 incidents/migrations/__pycache__/0001_initial.cpython-313.pyc
+ create mode 100644 incidents/migrations/__pycache__/0002_initial.cpython-313.pyc
+ create mode 100644 incidents/migrations/__pycache__/0003_alter_incident_status.cpython-313.pyc
+ create mode 100644 incidents/migrations/__pycache__/0004_incident_is_deleted.cpython-313.pyc
+ create mode 100644 incidents/migrations/__pycache__/__init__.cpython-313.pyc
+ create mode 100644 users/__pycache__/__init__.cpython-313.pyc
+ create mode 100644 users/__pycache__/admin.cpython-313.pyc
+ create mode 100644 users/__pycache__/apps.cpython-313.pyc
+ create mode 100644 users/__pycache__/managers.cpython-313.pyc
+ create mode 100644 users/__pycache__/models.cpython-313.pyc
+ create mode 100644 users/__pycache__/permissions.cpython-313.pyc
+ create mode 100644 users/__pycache__/serializers.cpython-313.pyc
+ create mode 100644 users/__pycache__/urls.cpython-313.pyc
+ create mode 100644 users/__pycache__/views.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0001_initial.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0002_alter_user_managers_user_is_deleted.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0003_alter_user_managers.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0004_user_login.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0005_alter_user_login.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0006_fill_null_logins.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/0007_alter_user_login.cpython-313.pyc
+ create mode 100644 users/migrations/__pycache__/__init__.cpython-313.pyc
+PS D:\Всякое\ПГУТИ (3 курс)\Практика\Проект\Incident-management-system> git status
+On branch backend-development
+Your branch is ahead of 'origin/backend-development' by 2 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+PS D:\Всякое\ПГУТИ (3 курс)\Практика\Проект\Incident-management-system> git push
+Enumerating objects: 76, done.
+Counting objects: 100% (69/69), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (40/40), done.
+Writing objects: 100% (40/40), 23.86 KiB | 1.40 MiB/s, done.
+Total 40 (delta 25), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (25/25), completed with 13 local objects.
+To github.com:Lem0n4eLL0/Incident-management-system.git
+   e73f934..6fe2f09  backend-development -> backend-development
+PS D:\Всякое\ПГУТИ (3 курс)\Практика\Проект\Incident-management-system>
+ *  History restored 
+
 
 

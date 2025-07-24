@@ -106,6 +106,13 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
         validated_data['unit'] = unit
 
         password = validated_data.pop('password')
+
+        # 👉 Назначаем админ-флаги, если роль — admin
+        role = validated_data.get('role')
+        if role == 'admin':
+            validated_data['is_staff'] = True
+            validated_data['is_superuser'] = True
+
         user = User(**validated_data)
         user.set_password(password)
         user.save()
