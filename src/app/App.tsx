@@ -49,7 +49,7 @@ export const App = () => {
     if (isAuthenticated && !isUserLoaded) {
       dispatch(getUser());
     }
-  }, [isAuthenticated, isUserLoaded]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated && isUserLoaded) {

@@ -8,7 +8,11 @@ import {
   User,
   UserDTO,
 } from '@custom-types/types';
-import Cookies from 'js-cookie';
+import { logoutMeAuth } from '@services/authSlice';
+import { clearIncident } from '@services/incidentSlice';
+import { store } from '@services/store';
+import { clearUser } from '@services/userSlice';
+import { clearUsers } from '@services/usersSlice';
 import { v4 as uuidv4 } from 'uuid';
 
 export const URL_API = process.env.REACT_APP_API_URL;
@@ -36,8 +40,13 @@ const handleServerError = async (res: Response): Promise<never> => {
   return Promise.reject({ code, message: `${message} ${code}` });
 };
 
-const checkResponse = <T>(res: Response): Promise<T> =>
-  res.ok ? res.json() : handleServerError(res);
+const checkResponseWithErrorHandler = <T>(res: Response): Promise<T> => {
+  return res.ok ? res.json() : handleServerError(res);
+};
+
+const checkResponse = <T>(res: Response): Promise<T> => {
+  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
+};
 
 type TServerResponse<T = object> = T & {
   success: boolean;
@@ -62,10 +71,17 @@ export const refreshToken = (): Promise<TRefreshResponse> => {
     .then((res) => checkResponse<TRefreshResponse>(res))
     .then((res) => {
       if (!res.success) return Promise.reject(res);
-      localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, res.refresh);
-      Cookies.set(COOKIE_ACCESS_TOKEN_ALIAS, res.access, { secure: true });
+      // localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, res.refresh);
+      localStorage.setItem(COOKIE_ACCESS_TOKEN_ALIAS, res.access);
       return res;
     });
+};
+
+const handleLogout = () => {
+  store.dispatch(logoutMeAuth());
+  store.dispatch(clearUser());
+  store.dispatch(clearUsers());
+  store.dispatch(clearIncident());
 };
 
 export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Promise<T> => {
@@ -77,14 +93,25 @@ export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Pro
   return fetch(url, options)
     .then((res) => checkResponse<T>(res))
     .catch((err) => {
-      if (err.code === 'TOKEN_EXPIRED') {
-        return refreshToken().then((refreshRes) => {
-          if (options.headers) {
-            (options.headers as { [key: string]: string }).Authorization =
-              `Bearer ${refreshRes.access}`;
-          }
-          return fetch(url, options).then((res) => checkResponse<T>(res));
-        });
+      console.log(err);
+      if (err.code === 'token_not_valid') {
+        return refreshToken()
+          .then((refreshRes) => {
+            if (options.headers) {
+              (options.headers as { [key: string]: string }).Authorization =
+                `Bearer ${refreshRes.access}`;
+            }
+            return fetch(url, options).then((res) => checkResponseWithErrorHandler<T>(res));
+          })
+          .catch((refreshErr) => {
+            if (refreshErr.code === 'token_not_valid') {
+              handleLogout();
+            }
+            return Promise.reject({
+              code: refreshErr.code,
+              message: refreshErr.message,
+            });
+          });
       }
       return Promise.reject({
         code: err.code,
@@ -111,7 +138,8 @@ export const checkAuthApi = async (): Promise<TServerResponse> => {
   })
     .then(async (res) => {
       const action = await res.json();
-      console.log(res);
+      console.log('checkAuth');
+      console.log(action);
       if (action.success) {
         return action;
       } else {
@@ -121,7 +149,7 @@ export const checkAuthApi = async (): Promise<TServerResponse> => {
       }
     })
     .catch((err) => {
-      if (err.code === 'TOKEN_EXPIRED') {
+      if (err.code === 'token_not_valid') {
         return Promise.resolve({ success: false });
       }
       return handleServerError(err);
@@ -136,7 +164,7 @@ export const loginUserApi = (loginData: ApiLoginRequest): Promise<TRefreshRespon
     },
     body: JSON.stringify(loginData),
   })
-    .then((res) => checkResponse<TRefreshResponse>(res))
+    .then((res) => checkResponseWithErrorHandler<TRefreshResponse>(res))
     .then((res) => {
       if (!res.success) return Promise.reject(res);
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, res.refresh);
@@ -200,6 +228,16 @@ export const logoutUserApi = (id: string): Promise<TServerResponse> => {
       'Content-Type': 'application/json;charset=utf-8',
     },
   });
+};
+
+export const logoutMeApi = (): Promise<TServerResponse> => {
+  // return fetchWithRefresh<TServerResponse>(`${URL_API}/api/auth/logout_me/`, {
+  //   method: HTTP_METHODS.POST,
+  //   headers: {
+  //     'Content-Type': 'application/json;charset=utf-8',
+  //   },
+  // });
+  return new Promise<TServerResponse>((res) => res({ success: true }));
 };
 
 export const logoutAll = (): Promise<TServerResponse> => {

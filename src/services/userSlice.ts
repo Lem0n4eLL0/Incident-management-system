@@ -26,7 +26,7 @@ type TUserState = {
 };
 
 const initialState: TUserState = {
-  user: EMPTY_USER,
+  user: null,
   status: {
     isGetUserPending: false,
     isUpdateUserPending: false,
@@ -78,6 +78,13 @@ const userSlice = createSlice({
         },
       }
     ),
+    clear: create.reducer((state) => {
+      state.user = null;
+      state.errors = {};
+      state.status.isGetUserPending = false;
+      state.status.isUpdateUserPending = false;
+    }),
+
     updateUser: create.reducer((state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
@@ -95,6 +102,7 @@ export const {
   getUser,
   updateUser: updateUserUser,
   updateUserFetch: updateUserFetchUser,
+  clear: clearUser,
 } = userSlice.actions;
 export const {
   selectUser,

@@ -127,6 +127,16 @@ const incidentsSlice = createSlice({
         if (index != -1) state.incidents.splice(index, 1);
       },
     }),
+
+    clear: create.reducer((state) => {
+      state.incidents = [];
+      state.errors = {};
+      state.status.isAddIncidentPending = false;
+      state.status.isDeleteIncidentPending = false;
+      state.status.isGetIncidentsPending = false;
+      state.status.isUpdateIncidentPending = false;
+    }),
+
     clearDeleteIncidentError: create.reducer((state) => {
       state.errors.deleteIncidentError = undefined;
     }),
@@ -148,6 +158,7 @@ export const {
   deleteIncident,
   updateIncident,
   clearDeleteIncidentError,
+  clear: clearIncident,
   clearErrors: clearErrorsIncident,
 } = incidentsSlice.actions;
 export const {

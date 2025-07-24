@@ -149,6 +149,15 @@ const userSlice = createSlice({
         },
       }
     ),
+    clear: create.reducer((state) => {
+      state.users = [];
+      state.errors = {};
+      state.isUsersGet = false;
+      state.status.isCreateUserPending = false;
+      state.status.isDeleteUserPending = false;
+      state.status.isGetUsersPending = false;
+      state.status.isUpdateUserPending = false;
+    }),
 
     updateUser: create.reducer((state, action: PayloadAction<Partial<UpdateUser>>) => {
       const index = state.users.findIndex((el) => el.id === action.payload.id);
@@ -177,6 +186,7 @@ export const {
   getUsers,
   createUser,
   deleteUser,
+  clear: clearUsers,
   updateUser: updateUserUsers,
   updateUserFetch: updateUserFetchUsers,
   clearErrors: clearErrorsUsers,

@@ -1,6 +1,6 @@
-import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
+import { asyncThunkCreator, buildCreateSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest } from '@custom-types/types';
-import { checkAuthApi, loginUserApi, logoutUserApi } from '@api/userApi';
+import { checkAuthApi, loginUserApi, logoutMeApi, logoutUserApi } from '@api/userApi';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -85,10 +85,11 @@ const authSlice = createSlice({
       }
     ),
 
-    logoutUser: create.asyncThunk(async (id: string) => await logoutUserApi(id), {
+    logoutMe: create.asyncThunk(async () => await logoutMeApi(), {
       pending: (state) => {
         state.errors.logoutUserError = undefined;
         state.status.isLogoutPending = true;
+        state.isAuthChecked = true;
       },
       rejected: (state, action) => {
         state.errors.logoutUserError = {
@@ -100,6 +101,7 @@ const authSlice = createSlice({
       fulfilled: (state) => {
         state.status.isLogoutPending = false;
         state.errors.logoutUserError = undefined;
+        state.isAuthenticated = false;
       },
     }),
   }),
@@ -111,7 +113,7 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginUser, logoutUser, checkAuth } = authSlice.actions;
+export const { loginUser, logoutMe: logoutMeAuth, checkAuth } = authSlice.actions;
 export const {
   selectIsAuthChecked,
   selectIsAuthenticated,
