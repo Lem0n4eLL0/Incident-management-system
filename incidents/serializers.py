@@ -5,14 +5,18 @@ from users.serializers import UserSerializer
 class IncidentSerializer(serializers.ModelSerializer):
     incident_number = serializers.CharField(required=False, allow_blank=True)
     author = UserSerializer(read_only=True)
+    unit = serializers.SerializerMethodField()  # ← добавляем поле unit (строковое имя)
 
     class Meta:
         model = Incident
         fields = (
-            'id', 'incident_number', 'type', 'date', 'description',
+            'id', 'incident_number', 'type', 'date', 'unit', 'description',
             'author', 'status', 'measures_taken', 'responsible',
         )
         read_only_fields = ('id', 'author')
+
+    def get_unit(self, obj):
+        return str(obj.unit_snapshot.name) if obj.unit_snapshot else None
 
     def create(self, validated_data):
         user = self.context['request'].user
