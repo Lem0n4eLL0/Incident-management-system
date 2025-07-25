@@ -18,6 +18,8 @@ from django.http import HttpResponse
 
 from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
+from openpyxl.styles import PatternFill, Font, Border, Side
+from openpyxl.utils import get_column_letter
 
 from users.models import User
 
@@ -90,8 +92,8 @@ class IncidentReportXLSXAPIView(APIView):
 
     def get(self, request):
         user = request.user
-        date_from = request.query_params.get('date_from')
-        date_to = request.query_params.get('date_to')
+        date_from = request.query_params.get('date_from') or request.query_params.get('dateRange.from')
+        date_to = request.query_params.get('date_to') or request.query_params.get('dateRange.to')
         status = request.query_params.get('status')
         unit = request.query_params.get('unit')
         type_filter = request.query_params.get('type')
@@ -114,7 +116,7 @@ class IncidentReportXLSXAPIView(APIView):
         if status:
             queryset = queryset.filter(status=status)
         if unit:
-            queryset = queryset.filter(unit_snapshot_id=unit)
+            queryset = queryset.filter(unit_snapshot__name=unit)
         if type_filter:
             queryset = queryset.filter(type=type_filter)
 
@@ -122,11 +124,46 @@ class IncidentReportXLSXAPIView(APIView):
         ws = wb.active
         ws.title = "Происшествия"
 
+        # Стили
+        header_fill = PatternFill(start_color="DCE6F1", end_color="DCE6F1", fill_type="solid")
+        bold_font = Font(bold=True, color="000000")
+        thin_border = Border(
+            left=Side(style="thin", color="CCCCCC"),
+            right=Side(style="thin", color="CCCCCC"),
+            top=Side(style="thin", color="CCCCCC"),
+            bottom=Side(style="thin", color="CCCCCC"),
+        )
+
+        def apply_header_style(row_idx):
+            for cell in ws[row_idx]:
+                cell.fill = header_fill
+                cell.font = bold_font
+                cell.border = thin_border
+
+        # Фильтры
+        ws.append(["Параметры фильтрации"])
+        apply_header_style(ws.max_row)
+
+        ws.append(["Период с", date_from or "Все", "по", date_to or "Все"])
+        apply_header_style(ws.max_row)
+
+        ws.append(["Подразделение", unit or "Все"])
+        apply_header_style(ws.max_row)
+
+        ws.append(["Тип", type_filter or "Все"])
+        apply_header_style(ws.max_row)
+
+        ws.append(["Статус", status or "Все"])
+        apply_header_style(ws.max_row)
+
+        ws.append([])  # пустая строка
+
         # Заголовки
         ws.append([
             'ID', 'Номер инцидента', 'Дата', 'Тип', 'Подразделение',
             'Статус', 'Описание', 'Предпринятые меры', 'Ответственный'
         ])
+        apply_header_style(ws.max_row)
 
         for i in queryset:
             ws.append([
@@ -140,6 +177,17 @@ class IncidentReportXLSXAPIView(APIView):
                 str(i.measures_taken),
                 str(i.responsible),
             ])
+
+        # Автоширина
+        for col in ws.columns:
+            max_length = 0
+            column = col[0].column_letter
+            for cell in col:
+                try:
+                    max_length = max(max_length, len(str(cell.value)))
+                except:
+                    pass
+            ws.column_dimensions[column].width = max_length + 2
 
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename=incidents_report.xlsx'
