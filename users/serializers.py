@@ -186,7 +186,13 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_login(self, value):
-        if User.objects.filter(login=value).exists():
+        instance = getattr(self, 'instance', None)
+        existing = User.objects.filter(login=value)
+
+        if instance:
+            existing = existing.exclude(id=instance.id)
+
+        if existing.exists():
             raise ValidationError("Пользователь с таким логином уже существует.")
         return value
 

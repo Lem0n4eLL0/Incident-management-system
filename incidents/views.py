@@ -23,6 +23,8 @@ from openpyxl.utils import get_column_letter
 
 from users.models import User
 
+from datetime import datetime
+
 
 class IsAuthorOrManager(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
@@ -91,12 +93,43 @@ class IncidentReportXLSXAPIView(APIView):
     permission_classes = [IsAuthenticated, IsManagerOrAdmin]
 
     def get(self, request):
+        return self._generate_report(request, request.query_params)
+
+    def post(self, request):
+        return self._generate_report(request, request.data)
+
+    def _generate_report(self, request, params):
+      #  print("params =", params)
         user = request.user
-        date_from = request.query_params.get('date_from') or request.query_params.get('dateRange.from')
-        date_to = request.query_params.get('date_to') or request.query_params.get('dateRange.to')
-        status = request.query_params.get('status')
-        unit = request.query_params.get('unit')
-        type_filter = request.query_params.get('type')
+
+        def get_param(key):
+            return params.get(key) or request.query_params.get(key)
+
+# Получаем весь диапазон
+        date_range = params.get("dateRange") or {}
+
+# Теперь вытаскиваем from/to из вложенного словаря или напрямую
+        date_from = params.get("date_from") or date_range.get("from") or request.query_params.get("date_from") or request.query_params.get("dateRange.from")
+        date_to = params.get("date_to") or date_range.get("to") or request.query_params.get("date_to") or request.query_params.get("dateRange.to")
+
+        # Преобразование ISO-строк в объекты datetime.date
+        if date_from:
+            try:
+                date_from = datetime.fromisoformat(date_from.replace("Z", "")).date()
+            except ValueError:
+                date_from = None  # или верни ошибку
+
+        if date_to:
+            try:
+                date_to = datetime.fromisoformat(date_to.replace("Z", "")).date()
+            except ValueError:
+                date_to = None
+
+       # date_from = get_param('date_from') or get_param('dateRange.from')
+       # date_to = get_param('date_to') or get_param('dateRange.to')
+        status = get_param('status')
+        unit = get_param('unit')
+        type_filter = get_param('type')
 
         queryset = Incident.objects.select_related('unit_snapshot')
 
