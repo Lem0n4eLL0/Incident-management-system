@@ -10,6 +10,9 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 
+from django.db import IntegrityError
+from rest_framework.exceptions import ValidationError
+
 class UnitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Unit
@@ -140,7 +143,14 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         user = User(**validated_data)
         user.set_password(password)
-        user.save()
+
+
+        try:
+            user.save()
+        except IntegrityError:
+            raise ValidationError({'login': 'Пользователь с таким логином уже существует.'})
+
+
         return user
 
     def update(self, instance, validated_data):
@@ -174,6 +184,11 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+    def validate_login(self, value):
+        if User.objects.filter(login=value).exists():
+            raise ValidationError("Пользователь с таким логином уже существует.")
+        return value
 
 
 
