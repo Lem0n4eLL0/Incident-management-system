@@ -1,6 +1,7 @@
 import {
   ApiError,
   CreateUserDTO,
+  DateRange,
   Incident,
   INCIDENT_STATUSES,
   INCIDENT_TYPES,
@@ -20,16 +21,21 @@ import { CustomSelect } from '@ui/CustomSelect';
 
 export const TABLE_PLACEHOLDER = '—';
 export const LOCAL_STORAGE_REFRESH_TOKEN_ALIAS = 'refreshToken';
-export const COOKIE_ACCESS_TOKEN_ALIAS = 'accessToken';
+export const LOCAL_STORAGE_ACCESS_TOKEN_ALIAS = 'accessToken';
 
-type DateRange = { from: Date; to: Date };
-
-export const filterByDateRange: FilterFuncAny<Incident> = (item, range?: DateRange): boolean => {
+export const filterByDateRange: FilterFuncAny<Incident> = (
+  incident,
+  range?: DateRange
+): boolean => {
   if (!range) return true;
-  const itemTime = item.date.getTime();
+  const itemTime = incident.date.getTime();
   if (range.from && itemTime < range.from.getTime()) return false;
   if (range.to && itemTime >= range.to.getTime()) return false;
   return true;
+};
+
+export const unitfilter: FilterFunc<Incident, 'unit'> = (incident, value) => {
+  return value ? incident.unit === value.trim() : true;
 };
 
 export const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
@@ -185,4 +191,46 @@ export const TABLE_INCIDENT_COLUMNS: FilteredColumn<Incident>[] = [
       </ModalFilter>
     ),
   },
+];
+
+export const TABLE_REPORT_INCIDENT_COLUMNS: FilteredColumn<Incident>[] = [
+  {
+    key: 'incidentNumber',
+    title: 'Номер',
+  },
+  {
+    key: 'type',
+    title: 'Тип',
+  },
+  {
+    key: 'unit',
+    title: 'Подразделение',
+  },
+  {
+    key: 'date',
+    title: 'Дата',
+    render: (incident) =>
+      incident.date ? new Date(incident.date).toLocaleDateString('ru-RU') : '',
+  },
+  {
+    key: 'status',
+    title: 'Статус',
+  },
+  // {
+  //   key: 'description',
+  //   title: 'Описание',
+  // },
+  // {
+  //   key: 'author',
+  //   title: 'Aвтор',
+  //   render: (incident) => incident.author ? incident.author.fullName : '',
+  // },
+  // {
+  //   key: 'measuresTaken',
+  //   title: 'Предпринятые меры'
+  // },
+  // {
+  //   key: 'responsible',
+  //   title: 'Ответственный'
+  // }
 ];

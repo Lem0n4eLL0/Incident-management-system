@@ -32,9 +32,8 @@
 .modal {
   font-size: 20px;
   display: flex;
-  justify-content: end;
   background-color: var(--bg-100);
-  min-width: 360px;
+  width: clamp(350px, 50vw, 500px);
   min-height: 100px;
 }
 
@@ -116,10 +115,12 @@
 }
 
 .error {
+  max-height: calc(1.2em * 5);
   font-size: 16px;
+  line-height: 1.2em;
   color: var(--error-text-color-v2);
   text-wrap: wrap;
-  word-break: break-all;
+  word-break: break-word;
 }
 
 *::-webkit-scrollbar {
@@ -184,11 +185,5 @@
 
   100% {
     transform: rotateZ(360deg);
-  }
-}
-
-@media (width <= 760px) {
-  .hidden_760 {
-    display: none;
   }
 }

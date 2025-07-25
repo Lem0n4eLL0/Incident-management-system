@@ -8,6 +8,7 @@ import { ApiError, ApiLoginRequest, User, UserDTO } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
 import { createUserApi, getAuthUserApi, loginUserApi, updateUserApi } from '@api/userApi';
 import { mapUserFromDto, mapUserToDto, preparingAuthUserDto } from '@custom-types/mapperDTO';
+import { logoutMeAuth } from './authSlice';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -78,19 +79,15 @@ const userSlice = createSlice({
         },
       }
     ),
-    clear: create.reducer((state) => {
-      state.user = null;
-      state.errors = {};
-      state.status.isGetUserPending = false;
-      state.status.isUpdateUserPending = false;
-    }),
-
     updateUser: create.reducer((state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {
         state.user = { ...state.user, ...action.payload };
       }
     }),
   }),
+  extraReducers: (builder) => {
+    builder.addCase(logoutMeAuth, () => initialState);
+  },
   selectors: {
     selectUser: (state) => state.user,
     selectStatus: (state) => state.status,
@@ -102,7 +99,6 @@ export const {
   getUser,
   updateUser: updateUserUser,
   updateUserFetch: updateUserFetchUser,
-  clear: clearUser,
 } = userSlice.actions;
 export const {
   selectUser,

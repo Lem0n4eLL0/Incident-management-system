@@ -57,3 +57,16 @@
   flex-direction: column;
   gap: 20px;
 }
+
+
+@media (width <= 600px) {
+  .hidden_600 {
+    display: none;
+  }
+}
+
+@media (width <= 760px) {
+  .hidden_760 {
+    display: none;
+  }
+}

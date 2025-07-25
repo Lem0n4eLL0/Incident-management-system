@@ -73,18 +73,19 @@ export const HomePage = () => {
         <h1 className={style.greetings}>Здравствуйте, {user!.fullName}!</h1>{' '}
         <div className={style.statistic}>
           <IncidentValue value={incidents.length} description={'всего инцедентов'} />{' '}
-          <div className={style.separator}></div>
+          <div className={clsx(style.separator, style.hidden_600)}></div>
           <IncidentValue
             value={thisYearCountIncidents}
             description={'с нач. года'}
             difference={thisYearCountIncidents - lastYearCountIncidents}
+            clasName={style.hidden_600}
           />
-          <div className={clsx(style.separator, staticStyle.hidden_760)}></div>
+          <div className={clsx(style.separator, style.hidden_760)}></div>
           <IncidentValue
             value={thisMonthsCountIncidents}
             description={'с нач. мес.'}
             difference={thisMonthsCountIncidents - lastMonthsCountIncidents}
-            clasName={staticStyle.hidden_760}
+            clasName={style.hidden_760}
           />
         </div>
       </section>

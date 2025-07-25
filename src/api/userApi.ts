@@ -1,18 +1,19 @@
-import { COOKIE_ACCESS_TOKEN_ALIAS, LOCAL_STORAGE_REFRESH_TOKEN_ALIAS } from '@constants/constants';
+import {
+  LOCAL_STORAGE_ACCESS_TOKEN_ALIAS,
+  LOCAL_STORAGE_REFRESH_TOKEN_ALIAS,
+} from '@constants/constants';
 import { TEST_USER_DTO, TEST_FULL_USERS } from '@constants/test';
 import {
   ApiError,
   ApiLoginRequest,
+  CreateReportDataDTO,
   CreateUserDTO,
   FullUserDTO,
   User,
   UserDTO,
 } from '@custom-types/types';
 import { logoutMeAuth } from '@services/authSlice';
-import { clearIncident } from '@services/incidentSlice';
 import { store } from '@services/store';
-import { clearUser } from '@services/userSlice';
-import { clearUsers } from '@services/usersSlice';
 import { v4 as uuidv4 } from 'uuid';
 
 export const URL_API = process.env.REACT_APP_API_URL;
@@ -38,27 +39,24 @@ export type ResponseWithId = TServerResponse<{
   id: string;
 }>;
 
-const handleServerError = async (res: Response): Promise<never> => {
+const checkResponseWithErrorHandler = async <T>(res: Response): Promise<T> => {
+  if (res.ok) return res.json();
+
   const errorBody = await res.json();
-  const code = res.status;
+  const code = errorBody?.code || res.status;
   const message = Array.isArray(errorBody?.detail)
     ? errorBody.detail[0]
     : errorBody?.detail || 'Произошла ошибка';
 
-  if (res.status >= 500) {
-    window.location.href = '/error';
-    return Promise.reject({ code, message });
+  if (code === 'token_expired' || code === 'token_not_valid') {
+    return Promise.reject({ code: 'token_expired', message });
   }
 
+  // if (res.status >= 500) {
+  //   window.location.href = '/error';
+  //   return  Promise.reject();
+  // }
   return Promise.reject({ code, message: `${message} ${code}` });
-};
-
-const checkResponseWithErrorHandler = <T>(res: Response): Promise<T> => {
-  return res.ok ? res.json() : handleServerError(res);
-};
-
-const checkResponse = <T>(res: Response): Promise<T> => {
-  return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
 /* Итоговые запросы на сервер */
@@ -72,32 +70,23 @@ export const refreshToken = (): Promise<TRefreshResponse> => {
       refresh: localStorage.getItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS),
     }),
   })
-    .then((res) => checkResponse<TRefreshResponse>(res))
+    .then((res) => checkResponseWithErrorHandler<TRefreshResponse>(res))
     .then((res) => {
       if (!res.success) return Promise.reject(res);
-      // localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, res.refresh);
-      localStorage.setItem(COOKIE_ACCESS_TOKEN_ALIAS, res.access);
+      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS, res.access);
       return res;
     });
 };
 
-const handleLogout = () => {
-  store.dispatch(logoutMeAuth());
-  store.dispatch(clearUser());
-  store.dispatch(clearUsers());
-  store.dispatch(clearIncident());
-};
-
 export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Promise<T> => {
-  const accessToken = localStorage.getItem(COOKIE_ACCESS_TOKEN_ALIAS);
+  const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS);
   if (accessToken && options.headers) {
     (options.headers as { [key: string]: string }).Authorization = `Bearer ${accessToken}`;
   }
 
   return fetch(url, options)
-    .then((res) => checkResponse<T>(res))
+    .then((res) => checkResponseWithErrorHandler<T>(res))
     .catch((err) => {
-      console.log(err);
       if (err.code === 'token_expired') {
         return refreshToken()
           .then((refreshRes) => {
@@ -109,23 +98,20 @@ export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Pro
           })
           .catch((refreshErr) => {
             if (refreshErr.code === 'token_expired') {
-              handleLogout();
+              localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, '');
+              localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS, '');
+              logoutMeAuth();
+              window.location.reload();
             }
-            return Promise.reject({
-              code: refreshErr.code,
-              message: refreshErr.message,
-            });
+            return Promise.reject(refreshErr);
           });
       }
-      return Promise.reject({
-        code: err.code,
-        message: err.message,
-      });
+      return Promise.reject(err);
     });
 };
 
 export const checkAuthApi = async (): Promise<TServerResponse> => {
-  const accessToken = localStorage.getItem(COOKIE_ACCESS_TOKEN_ALIAS);
+  const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS);
 
   if (!accessToken) {
     return Promise.reject(new Error('No access token found'));
@@ -142,8 +128,6 @@ export const checkAuthApi = async (): Promise<TServerResponse> => {
   })
     .then(async (res) => {
       const action = await res.json();
-      console.log('checkAuth');
-      console.log(action);
       if (action.success) {
         return action;
       } else {
@@ -156,7 +140,7 @@ export const checkAuthApi = async (): Promise<TServerResponse> => {
       if (err.code === 'token_expired') {
         return Promise.resolve({ success: false });
       }
-      return handleServerError(err);
+      return Promise.reject(err);
     });
 };
 
@@ -172,7 +156,7 @@ export const loginUserApi = (loginData: ApiLoginRequest): Promise<TRefreshRespon
     .then((res) => {
       if (!res.success) return Promise.reject(res);
       localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, res.refresh);
-      localStorage.setItem(COOKIE_ACCESS_TOKEN_ALIAS, res.access);
+      localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS, res.access);
       return res;
     });
 };
@@ -183,7 +167,7 @@ export const getAuthUserApi = (): Promise<UserDTO> => {
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
-  }).catch((err) => handleServerError(err));
+  });
 };
 
 export const getUsersApi = (): Promise<Array<FullUserDTO>> => {
@@ -196,7 +180,6 @@ export const getUsersApi = (): Promise<Array<FullUserDTO>> => {
 };
 
 export const createUserApi = (user: Partial<CreateUserDTO>): Promise<FullUserDTO> => {
-  console.log(user);
   return fetchWithRefresh<FullUserDTO>(`${URL_API}/api/users/`, {
     method: HTTP_METHODS.POST,
     headers: {
@@ -226,22 +209,13 @@ export const deleteUsersApi = (id: string): Promise<FullUserDTO> => {
 };
 
 export const logoutUserApi = (id: string): Promise<ResponseWithId> => {
+  console.log(id);
   return fetchWithRefresh<ResponseWithId>(`${URL_API}/logout_user/${id}/`, {
     method: HTTP_METHODS.POST,
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
     },
   }).then((res) => ({ success: res.success, id: id }));
-};
-
-export const logoutMeApi = (): Promise<TServerResponse> => {
-  // return fetchWithRefresh<TServerResponse>(`${URL_API}/api/auth/logout_me/`, {
-  //   method: HTTP_METHODS.POST,
-  //   headers: {
-  //     'Content-Type': 'application/json;charset=utf-8',
-  //   },
-  // });
-  return new Promise<TServerResponse>((res) => res({ success: true }));
 };
 
 export const logoutAll = (): Promise<TServerResponse> => {
@@ -251,6 +225,28 @@ export const logoutAll = (): Promise<TServerResponse> => {
       'Content-Type': 'application/json;charset=utf-8',
     },
   });
+};
+
+export const createReportApi = async (body: CreateReportDataDTO): Promise<Blob> => {
+  const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS);
+  const response = await fetch(`${URL_API}/api/incidents/analytics/report-xlsx/`, {
+    method: HTTP_METHODS.POST,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw {
+      code: response.status,
+      message: error?.message || 'Ошибка при формировании отчета',
+    };
+  }
+
+  return await response.blob();
 };
 
 /* Тестовые запросы с локальным хранилищем на клиенте */

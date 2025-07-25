@@ -36,7 +36,11 @@ export function useFilter<T>(props: useFilterProps<T>): FilterController<T> {
     setFilters(() => new Filter<T>());
   };
 
-  const filteredData = useMemo(() => data.filter((item) => filters.apply(item)), [filters, data]);
+  const filteredData = useMemo(() => {
+    const test = data.filter((item) => filters.apply(item));
+    console.log(test);
+    return test;
+  }, [filters, data]);
 
   return {
     filteredData,

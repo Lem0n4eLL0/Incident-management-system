@@ -1,4 +1,10 @@
-import { ApiLoginRequest, CreateUserDTO, IncidentDTO, UserDTO } from '@custom-types/types';
+import {
+  ApiLoginRequest,
+  CreateReportData,
+  CreateUserDTO,
+  IncidentDTO,
+  UserDTO,
+} from '@custom-types/types';
 import { TFormValidators } from '@hooks/useFormValidation';
 
 function notEmptyField(value: string): boolean {
@@ -63,6 +69,7 @@ export const CREATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
 
 export const UPDATE_USER_VALIDATOR: Partial<TFormValidators<CreateUserDTO>> = {
   ...USER_VALIDATOR_WITH_AUTH,
+  password: undefined,
 };
 
 export const INCIDENT_VALIDATORS: Partial<TFormValidators<IncidentDTO>> = {
@@ -92,5 +99,20 @@ export const LOGIN_REQUEST_VALIDATORS: TFormValidators<ApiLoginRequest> = {
   password: {
     validator: notEmptyField,
     message: 'Обязательно для заполнения',
+  },
+};
+
+const validDateRange = (range?: { from: Date; to: Date }): boolean => {
+  if (!range || !(range.from instanceof Date) || !(range.to instanceof Date)) return false;
+  if (isNaN(range.from.getTime()) || isNaN(range.to.getTime())) return false;
+  return range.from < range.to;
+};
+
+export type FilterCreateReportData = Pick<CreateReportData, 'dateRange'>;
+
+export const CREATE_REPOT_DATA_VALIDATORS: TFormValidators<CreateReportData> = {
+  dateRange: {
+    validator: validDateRange,
+    message: 'Неверный формат даты',
   },
 };

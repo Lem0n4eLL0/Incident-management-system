@@ -1,6 +1,10 @@
 import { asyncThunkCreator, buildCreateSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest } from '@custom-types/types';
-import { checkAuthApi, loginUserApi, logoutMeApi, logoutUserApi } from '@api/userApi';
+import { checkAuthApi, loginUserApi } from '@api/userApi';
+import {
+  LOCAL_STORAGE_ACCESS_TOKEN_ALIAS,
+  LOCAL_STORAGE_REFRESH_TOKEN_ALIAS,
+} from '@constants/constants';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -9,7 +13,6 @@ const createSlice = buildCreateSlice({
 type TAuthState = {
   isAuthChecked: boolean;
   isAuthenticated: boolean;
-
   errors: {
     authUserError?: ApiError;
     logoutUserError?: ApiError;
@@ -85,26 +88,9 @@ const authSlice = createSlice({
       }
     ),
 
-    logoutMe: create.asyncThunk(async () => await logoutMeApi(), {
-      pending: (state) => {
-        state.errors.logoutUserError = undefined;
-        state.status.isLogoutPending = true;
-        state.isAuthChecked = true;
-      },
-      rejected: (state, action) => {
-        state.errors.logoutUserError = {
-          code: action.error.code,
-          message: action.error.message,
-        };
-        state.status.isLogoutPending = false;
-      },
-      fulfilled: (state) => {
-        state.status.isLogoutPending = false;
-        state.errors.logoutUserError = undefined;
-        state.isAuthenticated = false;
-      },
-    }),
+    logoutMe: create.reducer(() => initialState),
   }),
+
   selectors: {
     selectIsAuthChecked: (state) => state.isAuthChecked,
     selectIsAuthenticated: (state) => state.isAuthenticated,

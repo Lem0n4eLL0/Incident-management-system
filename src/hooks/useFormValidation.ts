@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 export type TFieldType<T> = {
   field: keyof T;
-  value: string;
+  value: any;
 };
 
 export type TFormValidators<T> = {
   [key in keyof T]: {
-    validator: (value: string) => boolean;
+    validator: (value: any) => boolean;
     message: string;
   };
 };
@@ -29,7 +29,7 @@ export function useFormValidation<T>(validators: Partial<TFormValidators<T>>) {
     return true;
   };
 
-  const validateAll = (formData: Partial<Record<keyof T, string>>): boolean => {
+  const validateAll = (formData: Partial<Record<keyof T, any>>): boolean => {
     let isValid = true;
     const newErrors: TValidationErrors<T> = {};
 
@@ -45,7 +45,7 @@ export function useFormValidation<T>(validators: Partial<TFormValidators<T>>) {
     return isValid;
   };
 
-  const isAllValid = (formData: Partial<Record<keyof T, string>>): boolean => {
+  const isAllValid = (formData: Partial<Record<keyof T, any>>): boolean => {
     for (const field in validators) {
       const validator = validators[field];
       if (validator && !validator.validator(formData[field] || '')) {

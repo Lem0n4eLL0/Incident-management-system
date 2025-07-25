@@ -67,4 +67,17 @@
 
   /* svg */
   --svg-pen-color: var(--accent-100);
+
+  /* charts_color */
+  --charts-100:  #529CE5;
+  --charts-200: #E59C52;
+  --charts-300: #c6cccc;
+  --charts-400: #af9676;
+  --charts-500: #5252E5;
+  --charts-600: #ca8dda;
+  --charts-700: #72dbbc;
+  --charts-800: #72c3ca;
+  --charts-900: #56C056;
+  --charts-1000: #f56b6d;
+  --charts-hover: var(--accent-400);
 }

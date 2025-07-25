@@ -10,16 +10,29 @@ import {
 } from '@services/userSlice';
 import { ReactComponent as PenIcon } from '@assets/pen.svg';
 import clsx from 'clsx';
-import { ChangeEvent, FormEventHandler, SyntheticEvent, useEffect, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEventHandler,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { ApiError, User, UserDTO } from '@custom-types/types';
 import { mapUserToDto, mapUserFromDto } from '@custom-types/mapperDTO';
-import { EMPTY_USER } from '@constants/constants';
+import {
+  EMPTY_USER,
+  LOCAL_STORAGE_ACCESS_TOKEN_ALIAS,
+  LOCAL_STORAGE_REFRESH_TOKEN_ALIAS,
+} from '@constants/constants';
 import { Input } from '@components/ui/Input';
 import { useFormValidation } from '@hooks/useFormValidation';
 import { USER_VALIDATOR } from '@constants/validators';
 import { Loader } from '@components/ui/Loader';
 import { updateUserUsers } from '@services/usersSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { logoutMeAuth } from '@services/authSlice';
 
 const REDACTOR_MODE_OFF = { isOn: false, field: null };
 
@@ -124,6 +137,13 @@ export const ProfilePage = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     validateField({ field, value });
   };
+
+  const logoutHandler = useCallback(() => {
+    localStorage.setItem(LOCAL_STORAGE_REFRESH_TOKEN_ALIAS, '');
+    localStorage.setItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS, '');
+    dispatch(logoutMeAuth());
+    window.location.reload();
+  }, []);
 
   return (
     <div className={style.content}>
@@ -232,6 +252,9 @@ export const ProfilePage = () => {
             )}
           </div>
         </div>
+        <button type="button" className={formStyle.attention_button} onClick={logoutHandler}>
+          Выйти
+        </button>
       </section>
     </div>
   );

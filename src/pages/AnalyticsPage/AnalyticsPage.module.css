@@ -15,3 +15,52 @@
   background-color: var(--incident-bg-color);
   min-height: 100%;
 }
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.charts_controller {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.select_title {
+  font-size: 24px;
+}
+
+.select {
+  border: 2px solid var(--accent-100);
+  font-size: 18px;
+  width: min-content;
+}
+
+.report_button {
+  align-self: flex-start;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+  padding: 20px;
+  background-color: var(--bg-100);
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0 0 0 / 15%);
+}
+
+.chart_title {
+  font-size: 34px;
+}
+
+.tooltip {
+  background-color: aqua;
+  color: aqua;
+  width: min-content;
+}

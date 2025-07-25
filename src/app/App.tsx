@@ -23,6 +23,7 @@ import { ProtectedRoute } from '@components/ProtectedRoute';
 import { ERROR_FORBIDDEN } from '@constants/constants';
 import { AdministrationPage } from '@pages/AdministrationPage';
 import { AnalyticsPage } from '@pages/AnalyticsPage';
+import { CreateReportPage } from '@pages/CreateReportPage/CreateReportPage';
 
 export const App = () => {
   const dispatch = useDispatch();
@@ -74,6 +75,7 @@ export const App = () => {
               <Route path="profile" element={<ProfilePage />}></Route>
               <Route element={<ProtectedRoute acсessRoles={['руководитель', 'администратор']} />}>
                 <Route path="analytics" element={<AnalyticsPage />}></Route>
+                <Route path="/report" element={<CreateReportPage />}></Route>
                 <Route element={<ProtectedRoute acсessRoles={['администратор']} />}>
                   <Route path="administration" element={<AdministrationPage />}></Route>
                 </Route>

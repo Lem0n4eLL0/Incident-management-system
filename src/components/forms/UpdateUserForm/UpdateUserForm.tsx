@@ -52,6 +52,12 @@ export const UpdateUserForm = ({ user, onClose }: UpdateUserFormProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (updateUserError) {
+      setServerError(updateUserError);
+    }
+  }, [updateUserError]);
+
   const changeHandler = useCallback(
     (field: keyof CreateUserDTO) =>
       (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -70,18 +76,12 @@ export const UpdateUserForm = ({ user, onClose }: UpdateUserFormProps) => {
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    if (!validator.validateAll(formData)) {
-      return;
-    }
+    if (!validator.validateAll(formData)) return;
+
     setServerError(undefined);
-    const action = await dispatch(updateUserFetchUsers(formData));
-    const data = mapAuthUserFromDto(formData);
-    if (!serverError && data.id === userAuth?.id) {
-      dispatch(updateUserUser(data));
-    } else {
-      setServerError(updateUserError);
-    }
+    dispatch(updateUserFetchUsers(formData));
   };
+
   return (
     <div className={style.content}>
       <form className={style.form} onSubmit={submitHandler}>

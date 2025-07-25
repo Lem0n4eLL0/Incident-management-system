@@ -102,6 +102,28 @@ export type IncidentDTO = {
   responsible?: string;
 };
 
+export type DateRange = {
+  from?: Date;
+  to?: Date;
+};
+
+export type CreateReportData = {
+  dateRange: DateRange;
+  unit?: string;
+  type?: IncidentType;
+  status?: IncidentStatus;
+};
+
+export type CreateReportDataDTO = {
+  dateRange: {
+    from: string;
+    to: string;
+  };
+  unit?: string;
+  type?: string;
+  status?: string;
+};
+
 export type ApiError = {
   code: string | number | undefined;
   message: string | undefined;

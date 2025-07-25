@@ -8,6 +8,7 @@
   align-items: center;
   padding: 50px min(calc(-0.0367rem + 2.9411vw), 20px) 40px;
   width: clamp(350px, 50vw, 500px);
+  height: 550px;
 }
 
 .role {
@@ -95,14 +96,38 @@
   border-radius: 6px;
 }
 
+.disabled {
+  cursor: default;
+}
+
 .end_session_button {
-  composes: attention_button from '@style/form.module.css';
   grid-area: button;
   padding: 4px 6px;
   font-size: 14px;
+  border-radius: 8px;
   max-width: fit-content;
   justify-self: end;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  border: 2px solid;
+  transition-property: background-color, color, border-color;
+  background-color: var(--bg-100);
+  color: var(--primary-100);
+  border-color: var(--primary-100);
 }
+
+.end_session_button:hover:not(.disabled) {
+  background-color: var(--primary-100);
+  color: var(--text-400);
+  border-color: var(--primary-100);
+}
+
+.end_session_button.disabled {
+  background-color: var(--bg-300);
+  color: var(--text-300);
+  border-color: var(--bg-300);
+  cursor: default;
+} 
 
 .alert {
   display: flex;

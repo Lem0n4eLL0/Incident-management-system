@@ -64,6 +64,7 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
   };
 
   const logoutUserHandler = () => {
+    console.log(user);
     dispatch(logoutUser(user.id));
   };
 
@@ -119,18 +120,20 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
                 <span className={style.field}>Логин:</span>
                 <span>{user.login}</span>
               </div>
-              <div>
-                <span className={style.field}>Пароль:</span>
-                <span>{user.password}</span>
-              </div>
               <div className={style.end_session}>
                 <span className={clsx(style.timer_title, style.field)}>До завершения сеанса:</span>
                 <span className={staticStyle.error}>{logoutUserServerError?.message}</span>
-                <span className={style.timer}>{user.token.tokenTimer}</span>
+                <span className={style.timer}>
+                  {user.token.tokenTimer ? user.token.tokenTimer : 'Завершен'}
+                </span>
                 <button
                   type="button"
-                  className={clsx(style.end_session_button)}
+                  className={clsx(
+                    style.end_session_button,
+                    !user.token.tokenTimer && style.disabled
+                  )}
                   onClick={logoutUserHandler}
+                  disabled={!user.token.tokenTimer}
                 >
                   завершить
                 </button>

@@ -10,6 +10,8 @@ import {
   FullUser,
   UserWithAuthDTO,
   UserWithAuth,
+  CreateReportData,
+  CreateReportDataDTO,
 } from './types';
 
 export const preparingRole = (role: string) => {
@@ -27,7 +29,7 @@ export const roleFromDTO = (role: string): Role => {
     ? 'администратор'
     : role === 'manager'
       ? 'руководитель'
-      : role === 'empoyee'
+      : role === 'employee'
         ? 'сотрудник'
         : (role as Role);
 };
@@ -36,7 +38,12 @@ function toISOStringSafe(date?: string | Date | null): string | undefined {
   if (!date) return undefined;
 
   const parsed = typeof date === 'string' ? new Date(date) : date;
-  return !isNaN(parsed.getTime()) ? parsed.toISOString() : undefined;
+
+  if (isNaN(parsed.getTime())) {
+    return undefined;
+  }
+
+  return parsed.toISOString();
 }
 
 export const mapUserFromDto = ({
@@ -77,7 +84,7 @@ export const mapUserToDto = ({
 
 export const mapAuthUserFromDto = (dto: UserWithAuthDTO): UserWithAuth => ({
   id: dto.id,
-  role: dto.role as Role,
+  role: roleFromDTO(dto.role),
   fullName: dto.full_name,
   unit: dto.unit,
   position: dto.position,
@@ -92,13 +99,12 @@ export const preparingAuthUserDto = (dto: Partial<UserWithAuthDTO>): Partial<Use
     ...dto,
     role: dto.role ? preparingRole(dto.role) : undefined,
   };
-  console.log(user);
   return user;
 };
 
 export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({
   id: dto.id,
-  role: dto.role as Role,
+  role: roleFromDTO(dto.role),
   fullName: dto.full_name,
   unit: dto.unit,
   position: dto.position,
@@ -131,8 +137,8 @@ export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
   token: {
     jti: user.token.jti,
     is_blacklisted: user.token.isBlacklisted ? 'true' : 'false',
-    created_at_formatted: user.token.createdAtFormatted.toISOString() ?? '',
-    expires_at_formatted: user.token.expiresAtFormatted.toISOString() ?? '',
+    created_at_formatted: toISOStringSafe(user.token.createdAtFormatted) ?? '',
+    expires_at_formatted: toISOStringSafe(user.token.expiresAtFormatted) ?? '',
     token_timer: user.token.tokenTimer,
   },
   last_login: toISOStringSafe(user.lastLogin) ?? '',
@@ -186,4 +192,14 @@ export const mapIncidentFromDto = ({
   description,
   responsible,
   measuresTaken: measures_taken ?? '',
+});
+
+export const mapCreateReportDataToDto = (data: CreateReportData): CreateReportDataDTO => ({
+  dateRange: {
+    from: toISOStringSafe(data.dateRange.from) ?? '',
+    to: toISOStringSafe(data.dateRange.to) ?? '',
+  },
+  unit: data.unit,
+  type: data.type,
+  status: data.status,
 });

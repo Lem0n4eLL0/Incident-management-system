@@ -7,6 +7,7 @@ import {
 import { mapIncidentFromDto } from '@custom-types/mapperDTO';
 import { ApiError, Incident, IncidentDTO } from '@custom-types/types';
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
+import { logoutMeAuth } from './authSlice';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -128,15 +129,6 @@ const incidentsSlice = createSlice({
       },
     }),
 
-    clear: create.reducer((state) => {
-      state.incidents = [];
-      state.errors = {};
-      state.status.isAddIncidentPending = false;
-      state.status.isDeleteIncidentPending = false;
-      state.status.isGetIncidentsPending = false;
-      state.status.isUpdateIncidentPending = false;
-    }),
-
     clearDeleteIncidentError: create.reducer((state) => {
       state.errors.deleteIncidentError = undefined;
     }),
@@ -144,6 +136,10 @@ const incidentsSlice = createSlice({
       state.errors = {};
     }),
   }),
+
+  extraReducers: (builder) => {
+    builder.addCase(logoutMeAuth, () => initialState);
+  },
 
   selectors: {
     selectIncidents: (state) => state.incidents,
@@ -158,7 +154,6 @@ export const {
   deleteIncident,
   updateIncident,
   clearDeleteIncidentError,
-  clear: clearIncident,
   clearErrors: clearErrorsIncident,
 } = incidentsSlice.actions;
 export const {

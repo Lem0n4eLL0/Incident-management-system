@@ -7,12 +7,16 @@
   box-shadow: 0 0 10px rgb(0 0 0 / 10%);
 }
 
-.caption {
+caption {
+  width: 100%;
   font-size: 22px;
   font-weight: 700;
   text-align: left;
   padding: 12px 16px;
   color: var(--text-200);
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 th {
@@ -70,6 +74,34 @@ th {
 .empty_data_column {
   font-size: 36px;
   text-align: center;
-  padding: 40px 0;
   color: var(--text-300);
 }
+
+/* @media (max-width: 768px) {
+  .table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    display: block;
+  }
+
+  th {
+    display: none;
+  }
+
+  .column {
+    position: relative;
+    padding-left: 50%;
+  }
+
+  .column::before {
+    position: absolute;
+    left: 16px;
+    width: 45%;
+    white-space: nowrap;
+    font-weight: 700;
+    content: attr(data-label);
+  }
+} */

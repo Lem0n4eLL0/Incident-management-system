@@ -23,6 +23,7 @@ import {
   preparingAuthUserDto,
 } from '@custom-types/mapperDTO';
 import { getUsersApi } from '@api/userApi';
+import { logoutMeAuth } from './authSlice';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },
@@ -166,29 +167,20 @@ const userSlice = createSlice({
         state.status.isLogoutUserPending = false;
       },
       fulfilled: (state, action) => {
-        const index = state.users.findIndex((el) => (el.id = action.payload.id));
+        const index = state.users.findIndex((el) => el.id === action.payload.id);
+        console.log(action.payload.id);
         if (index !== -1) {
           state.users[index] = {
             ...state.users[index],
             token: {
               ...state.users[index].token,
-              tokenTimer: 'разлогинен',
+              tokenTimer: '',
             },
           };
         }
         state.errors.logoutUserError = undefined;
         state.status.isLogoutUserPending = false;
       },
-    }),
-
-    clear: create.reducer((state) => {
-      state.users = [];
-      state.errors = {};
-      state.isUsersGet = false;
-      state.status.isCreateUserPending = false;
-      state.status.isDeleteUserPending = false;
-      state.status.isGetUsersPending = false;
-      state.status.isUpdateUserPending = false;
     }),
 
     updateUser: create.reducer((state, action: PayloadAction<Partial<UpdateUser>>) => {
@@ -205,6 +197,9 @@ const userSlice = createSlice({
       state.errors = {};
     }),
   }),
+  extraReducers: (builder) => {
+    builder.addCase(logoutMeAuth, (state) => initialState);
+  },
 
   selectors: {
     selectUsers: (state) => state.users,
@@ -219,7 +214,6 @@ export const {
   createUser,
   deleteUser,
   logoutUser,
-  clear: clearUsers,
   updateUser: updateUserUsers,
   updateUserFetch: updateUserFetchUsers,
   clearErrors: clearErrorsUsers,
