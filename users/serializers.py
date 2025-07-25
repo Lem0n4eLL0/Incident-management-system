@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
  #   full_name_display = serializers.SerializerMethodField()
 
     last_login = serializers.SerializerMethodField()
-    is_active = serializers.BooleanField(read_only=True)
+    is_active = serializers.BooleanField(required=False)
     is_staff = serializers.BooleanField(read_only=True)
     password = serializers.CharField(write_only=True)
 #    role_display = serializers.SerializerMethodField() # Для подгонки полей фронт-бэк
@@ -88,16 +88,39 @@ class UserSerializer(serializers.ModelSerializer):
             name += " (удалён)"
         return name
 
+    def update(self, instance, validated_data):
+        role = validated_data.get('role', instance.role)
+
+        # Синхронизация is_staff и is_superuser
+        if role == 'admin':
+            instance.is_staff = True
+            instance.is_superuser = True
+        else:
+            instance.is_staff = False
+            instance.is_superuser = False
+
+        password = validated_data.pop('password', None)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        if password:
+            instance.set_password(password)
+
+        instance.save()
+        return instance
+
 class UserCreateByAdminSerializer(serializers.ModelSerializer):
     unit = serializers.CharField()
     password = serializers.CharField(write_only=True, required=False)  # при update пароль может не передаваться
     login = serializers.CharField(required=True)  
     role = serializers.ChoiceField(choices=User.Role.choices) # <--- добавил (project30)
+    is_active = serializers.BooleanField(required=False)
 
     class Meta:
         model = User
         fields = (
-            'email', 'login', 'password', 'full_name', 'unit', 'position', 'telephone', 'role'
+            'email', 'login', 'password', 'full_name', 'unit', 'position', 'telephone', 'role', 'is_active'
         )
 
     def create(self, validated_data):
@@ -129,6 +152,20 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         password = validated_data.pop('password', None)
 
+        role = validated_data.get('role', instance.role)
+
+        # Синхронизация is_staff и is_superuser
+        if role == 'admin':
+            instance.is_staff = True
+            instance.is_superuser = True
+        else:
+            instance.is_staff = False
+            instance.is_superuser = False
+
+        is_active = validated_data.get('is_active')
+        if is_active is not None:
+            instance.is_active = is_active
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
@@ -137,6 +174,8 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
 
 class UserSelfUpdateSerializer(serializers.ModelSerializer):
     class Meta:
