@@ -142,8 +142,13 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         try:
             user.save()
-        except IntegrityError:
-            raise ValidationError({'login': 'Пользователь с таким логином уже существует.'})
+        except IntegrityError as e:
+            # Проверяем оба поля
+            if User.objects.filter(login=user.login).exists():
+                raise ValidationError({'login': 'Пользователь с таким логином уже существует.'})
+            if User.objects.filter(email=user.email).exists():
+                raise ValidationError({'email': 'Пользователь с такой почтой уже существует.'})
+            raise ValidationError("Ошибка сохранения пользователя.")
 
 
         return user
@@ -189,6 +194,17 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         if existing.exists():
             raise ValidationError("Пользователь с таким логином уже существует.")
+        return value
+
+    def validate_email(self, value):
+        instance = getattr(self, 'instance', None)
+        existing = User.objects.filter(email=value)
+
+        if instance:
+            existing = existing.exclude(id=instance.id)
+
+        if existing.exists():
+            raise ValidationError("Пользователь с такой почтой уже существует.")
         return value
 
 
