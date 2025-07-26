@@ -15,9 +15,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 5px;
 }
 
 .incident_title {
+  font-size: clamp(1rem, 0.7955rem + 0.9091vw, 1.5rem);
   text-wrap: nowrap;
 }
 
@@ -35,8 +37,12 @@
 }
 
 .field {
-  font-size: 18px;
+  font-size: clamp(0.875rem, 0.7727rem + 0.4545vw, 1.125rem);
   text-wrap: nowrap;
+}
+
+.responsible {
+  font-size: clamp(0.875rem, 0.7727rem + 0.4545vw, 1.125rem);
 }
 
 .field_title {
@@ -48,7 +54,16 @@
   justify-content: space-between;
   flex-wrap: nowrap;
   border-top: 1px solid var(--bg-300);
+  gap: 5px;
+  align-items: end;
   padding-top: 12px;
+}
+
+@media (width <= 600px) {
+  .card_header {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
 }
 
 @media (width <= 760px) {

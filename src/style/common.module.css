@@ -95,7 +95,7 @@
   font-weight: 700;
   font-style: italic;
   color: var(--text-300);
-  font-size: 15px;
+  font-size: clamp(0.75rem, 0.6989rem + 0.2273vw, 0.875rem);
 }
 
 .date::before {

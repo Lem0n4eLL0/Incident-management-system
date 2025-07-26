@@ -216,21 +216,21 @@ export const TABLE_REPORT_INCIDENT_COLUMNS: FilteredColumn<Incident>[] = [
     key: 'status',
     title: 'Статус',
   },
-  // {
-  //   key: 'description',
-  //   title: 'Описание',
-  // },
-  // {
-  //   key: 'author',
-  //   title: 'Aвтор',
-  //   render: (incident) => incident.author ? incident.author.fullName : '',
-  // },
-  // {
-  //   key: 'measuresTaken',
-  //   title: 'Предпринятые меры'
-  // },
-  // {
-  //   key: 'responsible',
-  //   title: 'Ответственный'
-  // }
+  {
+    key: 'description',
+    title: 'Описание',
+  },
+  {
+    key: 'author',
+    title: 'Aвтор',
+    render: (incident) => (incident.author ? incident.author.fullName : ''),
+  },
+  {
+    key: 'measuresTaken',
+    title: 'Предпринятые меры',
+  },
+  {
+    key: 'responsible',
+    title: 'Ответственный',
+  },
 ];

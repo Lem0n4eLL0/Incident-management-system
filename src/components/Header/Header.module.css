@@ -7,7 +7,7 @@
   flex-grow: 0;
   min-height: 100px;
   background-color: var(--header-bg-color);
-  padding: 10px;
+  padding: 10px 30px;
   border-bottom: 1px solid var(--header-separator-color);
 }
 
@@ -44,11 +44,5 @@
 
   .header {
     padding: 15px 10px;
-  }
-}
-
-@media (width >= 601px) and (width <= 900px) {
-  .navigation {
-    gap: 10px 20px;
   }
 }

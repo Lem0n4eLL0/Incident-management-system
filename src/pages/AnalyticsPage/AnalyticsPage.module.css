@@ -7,6 +7,7 @@
 
 .charts {
   display: flex;
+  flex-grow: 1;
   position: relative;
   flex-direction: column;
   gap: 40px;
@@ -17,50 +18,128 @@
 }
 
 .controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.charts_controller {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+  'title .'
+  'select report_button';
 }
 
 .select_title {
+  grid-area: title;
+  align-self: center;
+  justify-self: center;
   font-size: 24px;
 }
 
 .select {
+  grid-area: select;
   border: 2px solid var(--accent-100);
   font-size: 18px;
   width: min-content;
 }
 
 .report_button {
-  align-self: flex-start;
+  grid-area: report_button;
+  justify-self: end;
+  text-wrap: nowrap;
+  width: min-content;
 }
 
 .chart {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   flex-grow: 1;
   padding: 20px;
   background-color: var(--bg-100);
-  border-radius: 15px;
+  border-radius: 20px;
   box-shadow: 0 2px 10px rgba(0 0 0 / 15%);
 }
 
+.chart_header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.select_chart {
+  width: min-content;
+}
+
+.chart_wrapper {
+  width: clamp(360px, 60vw, 1000px);
+  height: 480px;
+}
+
+.chart_wrapper_circle {
+  width: clamp(360px, 60vw, 600px);
+}
+
+.chart_justify_content_left {
+  justify-self: start;
+}
+
 .chart_title {
-  font-size: 34px;
+  font-size: clamp(1.25rem, 0.9943rem + 1.1364vw, 1.875rem);
 }
 
 .tooltip {
   background-color: aqua;
   color: aqua;
   width: min-content;
+}
+
+@media (width <= 600px) {
+  .content {
+    padding: 30px 0;
+  }
+  
+  .charts {
+    border-radius: 0;
+    padding: 30px 0;
+  }
+
+  .controls {
+    grid-template-areas:
+      'title'
+      'select'
+      'report_button';
+    gap: 10px;
+    padding: 0 30px;
+  }
+
+  .select_title {
+    justify-self: start;
+    text-align: left;
+    font-size: 20px;
+  }
+
+  .select {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .report_button {
+    width: 100%;
+    justify-self: stretch;
+    padding: 10px;
+  }
+
+  .chart_header {
+    margin-bottom: 15px;
+  }
+
+  .chart_wrapper {
+    height: 400px;
+  }
+
+  .chart {
+    border-radius: 0;
+    padding: 20px 5px;
+  }
 }

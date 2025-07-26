@@ -15,7 +15,13 @@ import {
   UserDTO,
 } from '@custom-types/types';
 import { EMPTY_USER } from '@constants/constants';
-import { createUserApi, deleteUsersApi, logoutUserApi, updateUserApi } from '@api/userApi';
+import {
+  createUserApi,
+  deleteUsersApi,
+  logoutAllUserApi,
+  logoutUserApi,
+  updateUserApi,
+} from '@api/userApi';
 import {
   mapFullUserFromDto,
   mapUserFromDto,
@@ -38,6 +44,7 @@ type TUserState = {
     isUpdateUserPending: boolean;
     isDeleteUserPending: boolean;
     isLogoutUserPending: boolean;
+    isLogoutAllUserPending: boolean;
   };
   errors: {
     getUsersError?: ApiError;
@@ -45,6 +52,7 @@ type TUserState = {
     deleteUserError?: ApiError;
     updateUserError?: ApiError;
     logoutUserError?: ApiError;
+    logoutAllUserError?: ApiError;
   };
 };
 
@@ -57,6 +65,7 @@ const initialState: TUserState = {
     isUpdateUserPending: false,
     isDeleteUserPending: false,
     isLogoutUserPending: false,
+    isLogoutAllUserPending: false,
   },
   errors: {},
 };
@@ -168,18 +177,44 @@ const userSlice = createSlice({
       },
       fulfilled: (state, action) => {
         const index = state.users.findIndex((el) => el.id === action.payload.id);
-        console.log(action.payload.id);
         if (index !== -1) {
           state.users[index] = {
             ...state.users[index],
             token: {
               ...state.users[index].token,
+              isBlacklisted: true,
               tokenTimer: '',
             },
           };
         }
         state.errors.logoutUserError = undefined;
         state.status.isLogoutUserPending = false;
+      },
+    }),
+
+    logoutAllUsers: create.asyncThunk(async () => await logoutAllUserApi(), {
+      pending: (state) => {
+        state.status.isLogoutAllUserPending = true;
+        state.errors.logoutAllUserError = undefined;
+      },
+      rejected: (state, action) => {
+        state.errors.logoutAllUserError = {
+          code: action.error.code,
+          message: action.error.message,
+        };
+        state.status.isLogoutAllUserPending = false;
+      },
+      fulfilled: (state) => {
+        state.users = state.users.map((el) => ({
+          ...el,
+          token: {
+            ...el.token,
+            isBlacklisted: true,
+            tokenTimer: '',
+          },
+        }));
+        state.errors.logoutAllUserError = undefined;
+        state.status.isLogoutAllUserPending = false;
       },
     }),
 
@@ -214,6 +249,7 @@ export const {
   createUser,
   deleteUser,
   logoutUser,
+  logoutAllUsers,
   updateUser: updateUserUsers,
   updateUserFetch: updateUserFetchUsers,
   clearErrors: clearErrorsUsers,

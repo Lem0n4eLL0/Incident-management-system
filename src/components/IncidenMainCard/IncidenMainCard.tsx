@@ -42,7 +42,7 @@ export const IncidenMainCard = ({ incident }: IncidenMainCardProps) => {
       </div>
       <div className={style.card_footer}>
         <div className={staticStyle.date}>{incident.date?.toLocaleDateString('ru-RU')}</div>
-        <div>
+        <div className={style.responsible}>
           <span className={style.field_title}>Ответственный: </span>
           {incident.responsible ?? 'нет'}
         </div>

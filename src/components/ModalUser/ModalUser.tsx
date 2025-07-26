@@ -68,10 +68,13 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
     dispatch(logoutUser(user.id));
   };
 
+  const isTokenExpired = !(user.token.tokenTimer && !(user.token.tokenTimer === 'expired'));
+
   useEffect(() => {
     setLogoutUserServerError(logoutUserError);
   }, [logoutUserError]);
 
+  console.log(user.token.tokenTimer);
   if (!user) {
     onClose();
     return null;
@@ -124,16 +127,13 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
                 <span className={clsx(style.timer_title, style.field)}>До завершения сеанса:</span>
                 <span className={staticStyle.error}>{logoutUserServerError?.message}</span>
                 <span className={style.timer}>
-                  {user.token.tokenTimer ? user.token.tokenTimer : 'Завершен'}
+                  {!isTokenExpired ? user.token.tokenTimer : 'завершен'}
                 </span>
                 <button
                   type="button"
-                  className={clsx(
-                    style.end_session_button,
-                    !user.token.tokenTimer && style.disabled
-                  )}
+                  className={clsx(style.end_session_button, isTokenExpired && style.disabled)}
                   onClick={logoutUserHandler}
-                  disabled={!user.token.tokenTimer}
+                  disabled={isTokenExpired}
                 >
                   завершить
                 </button>

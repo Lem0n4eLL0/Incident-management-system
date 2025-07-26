@@ -218,7 +218,7 @@ export const logoutUserApi = (id: string): Promise<ResponseWithId> => {
   }).then((res) => ({ success: res.success, id: id }));
 };
 
-export const logoutAll = (): Promise<TServerResponse> => {
+export const logoutAllUserApi = (): Promise<TServerResponse> => {
   return fetchWithRefresh<TServerResponse>(`${URL_API}/logout_all_users/`, {
     method: HTTP_METHODS.POST,
     headers: {

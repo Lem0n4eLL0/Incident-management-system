@@ -31,8 +31,6 @@ const Header = () => {
         >
           профиль
         </NavLink>
-      </nav>
-      <nav className={style.navigation}>
         {(user?.role === 'администратор' || user?.role === 'руководитель') && (
           <NavLink
             className={({ isActive }) => clsx(style.link, isActive && style.link_active)}

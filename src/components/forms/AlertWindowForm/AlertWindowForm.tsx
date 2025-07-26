@@ -11,6 +11,7 @@ type AlertWindowFormProps = {
   onClose: () => void;
   title: string;
   isPending: boolean;
+  buttonTitle?: string;
   serverError?: ApiError;
   alertClassName?: string;
 };
@@ -21,8 +22,13 @@ export const AlertWindowForm = ({
   title,
   isPending,
   alertClassName,
+  buttonTitle,
   serverError = { code: '', message: '' },
 }: AlertWindowFormProps) => {
+  const onCloseHandler = () => {
+    if (!isPending) onClose();
+  };
+
   return (
     <Alert className={alertClassName}>
       <div className={style.content}>
@@ -35,11 +41,11 @@ export const AlertWindowForm = ({
               className={clsx(fromStyle.attention_button, isPending && fromStyle.disabled)}
               disabled={isPending}
             >
-              {isPending ? 'Удаление...' : 'Удалить'}
+              {isPending ? 'Процесс...' : (buttonTitle ?? 'Удалить')}
             </button>
             <button
               type="button"
-              onClick={onClose}
+              onClick={onCloseHandler}
               className={clsx(fromStyle.confirm_button, isPending && fromStyle.disabled)}
               disabled={isPending}
             >

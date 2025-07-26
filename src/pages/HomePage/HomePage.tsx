@@ -78,14 +78,14 @@ export const HomePage = () => {
             value={thisYearCountIncidents}
             description={'с нач. года'}
             difference={thisYearCountIncidents - lastYearCountIncidents}
-            clasName={style.hidden_600}
+            className={style.hidden_600}
           />
           <div className={clsx(style.separator, style.hidden_760)}></div>
           <IncidentValue
             value={thisMonthsCountIncidents}
             description={'с нач. мес.'}
             difference={thisMonthsCountIncidents - lastMonthsCountIncidents}
-            clasName={style.hidden_760}
+            className={style.hidden_760}
           />
         </div>
       </section>

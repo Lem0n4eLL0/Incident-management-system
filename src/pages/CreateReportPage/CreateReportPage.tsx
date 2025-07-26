@@ -29,7 +29,7 @@ export const CreateReportPage = () => {
 
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
-    setServerError(null); // Сброс прошлой ошибки
+    setServerError(null);
 
     try {
       const blob = await createReportApi(mapCreateReportDataToDto(reportData));
@@ -37,7 +37,7 @@ export const CreateReportPage = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `report_${new Date().toISOString().split('T')[0]}.xlsx`; // имя файла
+      a.download = `report_${new Date().toISOString().split('T')[0]}.xlsx`;
       document.body.appendChild(a);
       a.click();
       a.remove();

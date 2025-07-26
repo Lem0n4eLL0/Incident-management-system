@@ -27,7 +27,7 @@
 .greetings {
   display: block;
   text-align: center;
-  font-size: 26px;
+  font-size: clamp(1.25rem, 0.9943rem + 1.1364vw, 1.875rem);
   font-weight: 400;
 }
 
@@ -42,7 +42,7 @@
 .incidents_title {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 30px;
+  font-size: clamp(1.25rem, 0.9943rem + 1.1364vw, 1.875rem);
 }
 
 .separator {
@@ -60,13 +60,25 @@
 
 
 @media (width <= 600px) {
-  .hidden_600 {
+  .incidents {
+    border-radius: 0;
+  }
+
+  .content {
+    padding: 30px 0;
+  }
+  
+  .statistic {
+    border-radius: 0;
+  }
+
+  .statistic .hidden_600 {
     display: none;
   }
 }
 
 @media (width <= 760px) {
-  .hidden_760 {
+  .statistic .hidden_760 {
     display: none;
   }
 }

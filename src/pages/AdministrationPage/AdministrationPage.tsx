@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from '@services/store';
 import {
   clearErrorsUsers,
   getUsers,
+  logoutAllUsers,
+  selectErrorsUsers,
   selectIsUsersGet,
   selectStatusUsers,
   selectUsers,
@@ -10,7 +12,7 @@ import style from './AdministrationPage.module.css';
 import staticStyle from '@style/common.module.css';
 import formStyle from '@style/form.module.css';
 import { Loader } from '@components/ui/Loader';
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import clsx from 'clsx';
 import { FilteredTable } from '@components/ui/FilteredTable';
 import { User } from '@custom-types/types';
@@ -22,15 +24,21 @@ import { selectStatusUser } from '@services/userSlice';
 import { AddIncidentForm } from '@components/forms/AddIncidentForm';
 import { AddUserForm } from '@components/forms/AddUserForm';
 import { ModalUser } from '@components/ModalUser';
+import { Alert } from '@components/ui/Alert';
+import { AlertWindowForm } from '@components/forms/AlertWindowForm';
 export const AdministrationPage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => selectUsers.unwrapped(state.usersReducer));
-  const { isGetUsersPending } = useSelector((state) =>
-    selectStatusUsers.unwrapped(state.usersReducer)
+  const { logoutAllUserError } = useSelector((state) =>
+    selectErrorsUsers.unwrapped(state.usersReducer)
   );
-  const { isCreateUserPending, isUpdateUserPending, isDeleteUserPending } = useSelector((state) =>
-    selectStatusUsers.unwrapped(state.usersReducer)
-  );
+  const {
+    isCreateUserPending,
+    isUpdateUserPending,
+    isDeleteUserPending,
+    isGetUsersPending,
+    isLogoutAllUserPending,
+  } = useSelector((state) => selectStatusUsers.unwrapped(state.usersReducer));
   const isUsersGet = useSelector((state) => selectIsUsersGet.unwrapped(state.usersReducer));
 
   const filter = useFilter<User>({ data: users });
@@ -40,6 +48,8 @@ export const AdministrationPage = () => {
   );
   const [isOpenAddUser, setIsOpenAddUser] = useState(false);
   const [isOpenModalUser, setIsOpenModalUser] = useState(false);
+  const [isOpenLogoutAll, setIsOpenLogoutAll] = useState(false);
+
   useEffect(() => {
     if (!isUsersGet) dispatch(getUsers());
   }, [dispatch, isUsersGet]);
@@ -60,6 +70,11 @@ export const AdministrationPage = () => {
       setIsOpenModalUser(false);
       callback();
     }
+  };
+
+  const logoutAllUserHandler = (e: FormEvent) => {
+    e.preventDefault();
+    dispatch(logoutAllUsers());
   };
 
   if (isGetUsersPending) {
@@ -83,13 +98,22 @@ export const AdministrationPage = () => {
             placeholder="Поиск..."
             onChange={searchHandler}
           ></input>
-          <button
-            type="button"
-            className={clsx(formStyle.confirm_button, style.add_incident_button)}
-            onClick={() => setIsOpenAddUser(true)}
-          >
-            Добавить
-          </button>
+          <div className={style.buttons}>
+            <button
+              type="button"
+              className={clsx(formStyle.confirm_button, style.add_user_button)}
+              onClick={() => setIsOpenAddUser(true)}
+            >
+              Добавить
+            </button>
+            <button
+              type="button"
+              className={clsx(formStyle.attention_button, style.logout_all_button)}
+              onClick={() => setIsOpenLogoutAll(true)}
+            >
+              Завершить
+            </button>
+          </div>
         </div>
         <FilteredTable<User>
           columns={TABLE_USER_COLUMNS}
@@ -118,6 +142,17 @@ export const AdministrationPage = () => {
         >
           <AddUserForm onClose={closeAddUserModalHandler}></AddUserForm>
         </Modal>
+      )}
+      {isOpenLogoutAll && (
+        <AlertWindowForm
+          onSubmit={logoutAllUserHandler}
+          onClose={() => setIsOpenLogoutAll(false)}
+          title="Завершить сеансы всех пользователей?"
+          buttonTitle="завершить"
+          isPending={isLogoutAllUserPending}
+          serverError={logoutAllUserError}
+          alertClassName={style.alert}
+        />
       )}
     </div>
   );

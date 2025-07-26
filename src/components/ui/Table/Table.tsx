@@ -52,7 +52,7 @@ export function Table<T extends { id: string }>({
   };
 
   return (
-    <>
+    <div className={style.table_wrapper}>
       <table
         className={clsx(className, style.table, data.length === 0 && style.empty_table)}
         {...rest}
@@ -103,6 +103,6 @@ export function Table<T extends { id: string }>({
       {modal?.isOpen &&
         selectedIncidentId &&
         modal?.renderModal(selectedIncidentId, modalCloseHandler)}
-    </>
+    </div>
   );
 }

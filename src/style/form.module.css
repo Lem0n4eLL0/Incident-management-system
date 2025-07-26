@@ -159,7 +159,7 @@
 .attention_button {
   padding: 10px 16px;
   font-size: 16px;
-  max-width: 110px;
+  width: min-content;
   border-radius: 8px;
   font-weight: 700;
   cursor: pointer;
