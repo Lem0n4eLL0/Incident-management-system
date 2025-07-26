@@ -15,7 +15,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px 30px;
-  font-size: clamp(0.875rem, 0.6705rem + 0.9091vw, 1.375rem);
+  font-size: clamp(1.125rem, 0.5rem + 2vw, 1.5rem);
   justify-content: center;
 }
 

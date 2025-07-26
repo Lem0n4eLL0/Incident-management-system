@@ -94,10 +94,7 @@ export const transByUnitChart: IncidentDataTransformer<{ unit: string; count: nu
     result[unit] = (result[unit] || 0) + 1;
   });
 
-  return Object.entries(result)
-    .map(([unit, count]) => ({ unit, count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 6);
+  return Object.entries(result).map(([unit, count]) => ({ unit, count }));
 };
 
 export const AnalyticsPage = () => {

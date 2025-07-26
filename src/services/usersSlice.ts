@@ -88,7 +88,11 @@ const userSlice = createSlice({
         state.status.isGetUsersPending = false;
       },
       fulfilled: (state, action) => {
-        state.users = action.payload.map((el) => mapFullUserFromDto(el));
+        state.users = action.payload.map((el) => {
+          const user = mapFullUserFromDto(el);
+          return user;
+        });
+
         state.isUsersGet = true;
         state.errors.getUsersError = undefined;
         state.status.isGetUsersPending = false;

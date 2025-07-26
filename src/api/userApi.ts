@@ -2,7 +2,7 @@ import {
   LOCAL_STORAGE_ACCESS_TOKEN_ALIAS,
   LOCAL_STORAGE_REFRESH_TOKEN_ALIAS,
 } from '@constants/constants';
-import { TEST_USER_DTO, TEST_FULL_USERS } from '@constants/test';
+
 import {
   ApiError,
   ApiLoginRequest,

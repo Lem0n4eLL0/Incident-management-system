@@ -147,7 +147,7 @@ export const AdministrationPage = () => {
         <AlertWindowForm
           onSubmit={logoutAllUserHandler}
           onClose={() => setIsOpenLogoutAll(false)}
-          title="Завершить сеансы всех пользователей?"
+          title="Завершить все сеансы?"
           buttonTitle="завершить"
           isPending={isLogoutAllUserPending}
           serverError={logoutAllUserError}

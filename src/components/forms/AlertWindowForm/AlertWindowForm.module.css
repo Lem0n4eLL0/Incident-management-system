@@ -15,6 +15,7 @@
 }
 
 .title {
+  text-align: center;
   font-size: 32px;
   font-weight: 700;
   color: var(--primary-100);

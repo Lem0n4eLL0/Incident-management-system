@@ -1,4 +1,3 @@
-import { INCEDENTS } from '@constants/test';
 import { Incident, IncidentDTO } from '@custom-types/types';
 import { fetchWithRefresh, HTTP_METHODS, URL_API } from './userApi';
 

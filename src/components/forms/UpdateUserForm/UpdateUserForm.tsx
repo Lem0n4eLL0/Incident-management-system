@@ -6,8 +6,7 @@ import formStyle from '@style/form.module.css';
 import { ApiError, FullUserDTO, UpdateUserDTO } from '@custom-types/types';
 import { useFormValidation } from '@hooks/useFormValidation';
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CreateUserDTO, Role, USER_ROLES, UserDTO } from '@custom-types/types';
-import { EMPTY_UPDATE_USERDTO } from '@constants/constants';
+import { CreateUserDTO, Role, USER_ROLES } from '@custom-types/types';
 import { UPDATE_USER_VALIDATOR } from '@constants/validators';
 import { useDispatch, useSelector } from '@services/store';
 
@@ -17,9 +16,6 @@ import { FieldTitle } from '../FormComponents/FieldTitle';
 import { Select } from '@components/ui/Select';
 
 import { selectErrorsUsers, selectStatusUsers, updateUserFetchUsers } from '@services/usersSlice';
-import { updateUserUsers } from '@services/usersSlice';
-import { mapAuthUserFromDto } from '@custom-types/mapperDTO';
-import { selectUser, updateUserUser } from '@services/userSlice';
 
 type UpdateUserFormProps = {
   user: FullUserDTO;
@@ -28,7 +24,6 @@ type UpdateUserFormProps = {
 
 export const UpdateUserForm = ({ user, onClose }: UpdateUserFormProps) => {
   const dispatch = useDispatch();
-  const userAuth = useSelector((state) => selectUser.unwrapped(state.userReducer));
   const { isUpdateUserPending } = useSelector((state) =>
     selectStatusUsers.unwrapped(state.usersReducer)
   );
@@ -77,7 +72,7 @@ export const UpdateUserForm = ({ user, onClose }: UpdateUserFormProps) => {
   const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     if (!validator.validateAll(formData)) return;
-
+    console.log(formData);
     setServerError(undefined);
     dispatch(updateUserFetchUsers(formData));
   };

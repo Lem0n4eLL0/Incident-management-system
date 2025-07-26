@@ -102,27 +102,32 @@ export const preparingAuthUserDto = (dto: Partial<UserWithAuthDTO>): Partial<Use
   return user;
 };
 
-export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({
-  id: dto.id,
-  role: roleFromDTO(dto.role),
-  fullName: dto.full_name,
-  unit: dto.unit,
-  position: dto.position,
-  telephone: dto.telephone,
-  email: dto.email,
-  login: dto.login,
-  password: dto.password,
-  token: {
-    jti: dto.token.jti,
-    isBlacklisted: dto.token.is_blacklisted === 'true',
-    createdAtFormatted: new Date(dto.token.created_at_formatted),
-    expiresAtFormatted: new Date(dto.token.expires_at_formatted),
-    tokenTimer: dto.token.token_timer,
-  },
-  lastLogin: new Date(dto.last_login),
-  isActive: dto.is_active === 'true',
-  isStaff: dto.is_staff === 'true',
-});
+export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => {
+  console.log(dto);
+  const user = {
+    id: dto.id,
+    role: roleFromDTO(dto.role),
+    fullName: dto.full_name,
+    unit: dto.unit,
+    position: dto.position,
+    telephone: dto.telephone,
+    email: dto.email,
+    login: dto.login,
+    password: dto.password,
+    token: {
+      jti: dto.token.jti,
+      isBlacklisted: dto.token.is_blacklisted,
+      createdAtFormatted: new Date(dto.token.created_at_formatted),
+      expiresAtFormatted: new Date(dto.token.expires_at_formatted),
+      tokenTimer: dto.token.token_timer,
+    },
+    lastLogin: new Date(dto.last_login),
+    isActive: dto.is_active,
+    isStaff: dto.is_staff,
+  };
+  console.log(user);
+  return user;
+};
 
 export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
   id: user.id,
@@ -136,14 +141,14 @@ export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
   password: user.password,
   token: {
     jti: user.token.jti,
-    is_blacklisted: user.token.isBlacklisted ? 'true' : 'false',
+    is_blacklisted: user.token.isBlacklisted,
     created_at_formatted: toISOStringSafe(user.token.createdAtFormatted) ?? '',
     expires_at_formatted: toISOStringSafe(user.token.expiresAtFormatted) ?? '',
     token_timer: user.token.tokenTimer,
   },
   last_login: toISOStringSafe(user.lastLogin) ?? '',
-  is_active: user.isActive ? 'true' : 'false',
-  is_staff: user.isStaff ? 'true' : 'false',
+  is_active: user.isActive,
+  is_staff: user.isStaff,
 });
 
 export const mapIncidentToDto = ({

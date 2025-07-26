@@ -4,7 +4,7 @@ import style from './ModalUser.module.css';
 import clsx from 'clsx';
 import staticStyle from '@style/common.module.css';
 import fromStyle from '@style/form.module.css';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { UpdateUserForm } from '@components/forms/UpdateUserForm';
 import { selectStatusUser, selectUser } from '@services/userSlice';
 import { mapFullUserToDto } from '@custom-types/mapperDTO';
@@ -64,17 +64,20 @@ export const ModalUser = ({ user, onClose }: ModalUserProps) => {
   };
 
   const logoutUserHandler = () => {
-    console.log(user);
     dispatch(logoutUser(user.id));
   };
 
-  const isTokenExpired = !(user.token.tokenTimer && !(user.token.tokenTimer === 'expired'));
+  const isTokenExpired = useMemo(() => {
+    if (user) {
+      return !(user.token && user.token.tokenTimer && !(user.token.tokenTimer === 'expired'));
+    }
+    return true;
+  }, [user]);
 
   useEffect(() => {
     setLogoutUserServerError(logoutUserError);
   }, [logoutUserError]);
 
-  console.log(user.token.tokenTimer);
   if (!user) {
     onClose();
     return null;

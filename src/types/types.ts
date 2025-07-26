@@ -52,14 +52,14 @@ export type FullUser = UserWithAuth & {
 export type FullUserDTO = UserWithAuthDTO & {
   token: {
     jti: string;
-    is_blacklisted: string;
+    is_blacklisted: boolean;
     created_at_formatted: string;
     expires_at_formatted: string;
     token_timer: string; // ?
   };
   last_login: string;
-  is_active: string;
-  is_staff: string;
+  is_active: boolean;
+  is_staff: boolean;
 };
 
 export type CreateUser = UserWithAuth;
