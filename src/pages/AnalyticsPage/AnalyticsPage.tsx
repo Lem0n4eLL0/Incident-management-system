@@ -1,13 +1,12 @@
-import { Loader } from '@components/ui/Loader';
 import style from './AnalyticsPage.module.css';
 import staticStyle from '@style/common.module.css';
 import formStyle from '@style/form.module.css';
 import { Select } from '@components/ui/Select';
-import { ChangeEvent, useMemo, useRef, useState } from 'react';
+import { ChangeEvent, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { useSelector } from '@services/store';
 import { selectIncidents } from '@services/incidentSlice';
-import { Incident } from '@custom-types/types';
+import { CratsOptions } from '@custom-types/types';
 import {
   Bar,
   BarChart,
@@ -20,82 +19,14 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { format } from 'date-fns';
 import { Modal } from '@components/ui/Modal';
 import { CreateReportForm } from '@components/forms/CreateReportForm';
-import { CustomSelect } from '@components/ui/CustomSelect';
-
-const CARTS_OPTIONS = ['По году', 'По типу', 'По подразделениям'] as const;
-export const COLORS = [
-  'var(--charts-100)',
-  'var(--charts-200)',
-  'var(--charts-300)',
-  'var(--charts-400)',
-  'var(--charts-500)',
-  'var(--charts-600)',
-  'var(--charts-700)',
-  'var(--charts-800)',
-  'var(--charts-900)',
-  'var(--charts-1000)',
-];
-
-type CratsOptions = (typeof CARTS_OPTIONS)[number];
-
-export type ChartDataPoint = Record<string, any>;
-
-export type IncidentDataTransformer<T extends ChartDataPoint = ChartDataPoint> = (
-  incidents: Incident[],
-  option?: any
-) => T[];
-
-export const transformByType: IncidentDataTransformer<{ name: string; value: number }> = (
-  incidents
-) => {
-  const result: Record<string, number> = {};
-
-  incidents.forEach(({ type }) => {
-    result[type] = (result[type] || 0) + 1;
-  });
-
-  return Object.entries(result).map(([name, value]) => ({ name, value }));
-};
-
-export const transformByMonth: IncidentDataTransformer<{ date: string; count: number }> = (
-  incidents,
-  year: string
-) => {
-  const result: Record<string, number> = {};
-
-  for (let month = 1; month <= 12; month++) {
-    const paddedMonth = String(month).padStart(2, '0');
-    result[`${year}-${paddedMonth}`] = 0;
-  }
-
-  incidents.forEach(({ date }) => {
-    const d = new Date(date);
-    const incidentYear = format(d, 'yyyy');
-    if (incidentYear === year) {
-      const monthKey = format(d, 'yyyy-MM');
-      result[monthKey] += 1;
-    }
-  });
-
-  return Object.entries(result)
-    .map(([date, count]) => ({ date, count }))
-    .sort((a, b) => a.date.localeCompare(b.date));
-};
-
-export const transByUnitChart: IncidentDataTransformer<{ unit: string; count: number }> = (
-  incidents
-) => {
-  const result: Record<string, number> = {};
-
-  incidents.forEach(({ unit }) => {
-    result[unit] = (result[unit] || 0) + 1;
-  });
-
-  return Object.entries(result).map(([unit, count]) => ({ unit, count }));
-};
+import {
+  transByUnitChart,
+  transformByMonth,
+  transformByType,
+} from '@constants/chartDataTransformer';
+import { COLORS } from '@constants/constants';
 
 export const AnalyticsPage = () => {
   const [currentChart, setCurrentChart] = useState<CratsOptions>('По году');

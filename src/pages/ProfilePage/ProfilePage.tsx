@@ -10,16 +10,8 @@ import {
 } from '@services/userSlice';
 import { ReactComponent as PenIcon } from '@assets/pen.svg';
 import clsx from 'clsx';
-import {
-  ChangeEvent,
-  FormEventHandler,
-  SyntheticEvent,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { ApiError, User, UserDTO } from '@custom-types/types';
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { ApiError, UserDTO } from '@custom-types/types';
 import { mapUserToDto, mapUserFromDto } from '@custom-types/mapperDTO';
 import {
   EMPTY_USER,

@@ -4,16 +4,11 @@ import staticStyle from '@style/common.module.css';
 import clsx from 'clsx';
 import { useFormValidation } from '@hooks/useFormValidation';
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { CreateUserDTO, Role, USER_ROLES, UserDTO } from '@custom-types/types';
+import { CreateUserDTO, Role, USER_ROLES } from '@custom-types/types';
 import { EMPTY_CREATE_USERDTO } from '@constants/constants';
-import { CREATE_USER_VALIDATOR, USER_VALIDATOR } from '@constants/validators';
+import { CREATE_USER_VALIDATOR } from '@constants/validators';
 import { useDispatch, useSelector } from '@services/store';
-import {
-  clearErrorsUsers,
-  createUser,
-  selectErrorsUsers,
-  selectStatusUsers,
-} from '@services/usersSlice';
+import { createUser, selectErrorsUsers, selectStatusUsers } from '@services/usersSlice';
 import { Input } from '@components/ui/Input';
 import { FieldErorr } from '../FormComponents/FieldErorr';
 import { FieldTitle } from '../FormComponents/FieldTitle';

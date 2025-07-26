@@ -8,7 +8,7 @@ import { IncidenMainCard } from '@components/IncidenMainCard';
 import { Loader } from '@ui/Loader';
 import staticStyle from '@style/common.module.css';
 import clsx from 'clsx';
-import { filterByDateRange } from '@constants/constants';
+import { filterByDateRange } from '@constants/filters';
 import { useMemo, useRef } from 'react';
 
 export const HomePage = () => {

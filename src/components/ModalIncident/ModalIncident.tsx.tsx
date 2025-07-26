@@ -3,7 +3,7 @@ import style from './ModalIncident.module.css';
 import clsx from 'clsx';
 import staticStyle from '@style/common.module.css';
 import fromStyle from '@style/form.module.css';
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from '@services/store';
 import {
   deleteIncident,

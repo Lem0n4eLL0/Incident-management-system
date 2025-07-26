@@ -1,20 +1,20 @@
 import { useDispatch, useSelector } from '@services/store';
-import { Profiler, useEffect, useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import {
   checkAuth,
   selectIsAuthChecked,
   selectIsAuthenticated,
   selectStatusAuth,
 } from '@services/authSlice';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { MainLayout } from '@layout/MainLayout';
 import { HomePage } from '@pages/HomePage';
 import { ErrorPage } from '@pages/ErrorPage';
 import { IncidentsPage } from '@pages/IncidentsPage';
-import { getIncidents, selectStatusIncidents } from '@services/incidentSlice';
+import { getIncidents } from '@services/incidentSlice';
 import style from './App.module.css';
 import { AuthPage } from '@pages/AuthPage';
-import { getUser, selectStatusUser, selectUser } from '@services/userSlice';
+import { getUser, selectUser } from '@services/userSlice';
 import staticStyle from '@style/common.module.css';
 import { Loader } from '@ui/Loader';
 import { ProfilePage } from '@pages/ProfilePage';
@@ -81,7 +81,10 @@ export const App = () => {
                 </Route>
               </Route>
             </Route>
-            <Route path="/error" element={<ErrorPage />} />
+            <Route
+              path="/error"
+              element={<ErrorPage error={{ code: 500, message: 'Неизвестная ошибка сервера' }} />}
+            />
             <Route path="/forbidden" element={<ErrorPage error={ERROR_FORBIDDEN} />} />
             <Route path="*" element={<ErrorPage />}></Route>
           </>

@@ -6,7 +6,7 @@ import staticStyle from '@style/common.module.css';
 import fromStyle from '@style/form.module.css';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { UpdateUserForm } from '@components/forms/UpdateUserForm';
-import { selectStatusUser, selectUser } from '@services/userSlice';
+import { selectUser } from '@services/userSlice';
 import { mapFullUserToDto } from '@custom-types/mapperDTO';
 import { AlertWindowForm } from '@components/forms/AlertWindowForm';
 import { deleteUser, logoutUser, selectErrorsUsers, selectStatusUsers } from '@services/usersSlice';

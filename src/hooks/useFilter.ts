@@ -1,5 +1,5 @@
 import { Filter, FilterFunc } from '@utils/Filter';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 export type FilterController<T> = {
   filteredData: Array<T>;

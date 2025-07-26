@@ -1,7 +1,7 @@
 import { Column, Table, TableProps } from '../Table';
-import { FilterController, useFilter } from '@hooks/useFilter';
+import { useFilter } from '@hooks/useFilter';
 import style from './FilteredTable.module.css';
-import { RefObject, useLayoutEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { FilterFunc } from '@utils/Filter';
 
 export type FilteredColumn<T extends { id: string }> = Column<T> &

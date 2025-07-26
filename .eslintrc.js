@@ -8,7 +8,7 @@ module.exports = {
     'prettier',
   ],
 
-  plugins: ['react', '@typescript-eslint', 'prettier'],
+  plugins: ['react', '@typescript-eslint', 'unused-imports', 'prettier'],
 
   rules: {
     'prettier/prettier': 'warn',
@@ -16,6 +16,18 @@ module.exports = {
     'postcss-modules/no-unused-class': 'warn',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
+    'no-unused-vars': 'off', 
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 
   settings: {

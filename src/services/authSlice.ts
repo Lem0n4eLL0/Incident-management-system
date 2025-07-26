@@ -1,10 +1,6 @@
-import { asyncThunkCreator, buildCreateSlice, PayloadAction } from '@reduxjs/toolkit';
+import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
 import { ApiError, ApiLoginRequest } from '@custom-types/types';
-import { checkAuthApi, loginUserApi } from '@api/userApi';
-import {
-  LOCAL_STORAGE_ACCESS_TOKEN_ALIAS,
-  LOCAL_STORAGE_REFRESH_TOKEN_ALIAS,
-} from '@constants/constants';
+import { checkAuthApi, loginUserApi } from '@api/api';
 
 const createSlice = buildCreateSlice({
   creators: { asyncThunk: asyncThunkCreator },

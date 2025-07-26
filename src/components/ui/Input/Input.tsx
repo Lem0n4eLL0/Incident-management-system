@@ -1,5 +1,4 @@
 import { ForwardedRef, InputHTMLAttributes } from 'react';
-import staticStyle from '@style/common.module.css';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   inputRef?: ForwardedRef<HTMLInputElement>;

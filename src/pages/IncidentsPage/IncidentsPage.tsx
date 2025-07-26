@@ -8,19 +8,16 @@ import {
   clearErrorsIncident,
 } from '@services/incidentSlice';
 import { Incident } from '@custom-types/types';
-import { Table } from '@ui/Table';
-import { descriptionFilter, TABLE_INCIDENT_COLUMNS, TABLE_PLACEHOLDER } from '@constants/constants';
-import { useCallback, useEffect, useLayoutEffect, useReducer, useState } from 'react';
+import { TABLE_INCIDENT_COLUMNS, TABLE_PLACEHOLDER } from '@constants/constants';
+import { useCallback, useEffect, useReducer, useState } from 'react';
 import { useFilter } from '@hooks/useFilter';
 import { FilteredTable } from '@ui/FilteredTable';
 import { Modal } from '@ui/Modal';
 import clsx from 'clsx';
-import { useParams } from 'react-router-dom';
 import { ModalIncident } from '@components/ModalIncident';
 import { AddIncidentForm } from '@components/forms/AddIncidentForm';
 import { Loader } from '@components/ui/Loader';
-import { FilterFunc } from '@utils/Filter';
-import { AddUserForm } from '@components/forms/AddUserForm';
+import { descriptionFilter } from '@constants/filters';
 
 export const IncidentsPage = () => {
   const dispatch = useDispatch();

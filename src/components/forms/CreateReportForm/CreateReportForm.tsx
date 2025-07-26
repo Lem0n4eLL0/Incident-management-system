@@ -4,43 +4,30 @@ import formStyle from '@style/form.module.css';
 import clsx from 'clsx';
 import { FieldTitle } from '../FormComponents/FieldTitle';
 import { Select } from '@components/ui/Select';
-import { FieldErorr } from '../FormComponents/FieldErorr';
-import { selectIncidents } from '@services/incidentSlice';
 import { useCallback, useMemo, useState } from 'react';
 import { useFormValidation } from '@hooks/useFormValidation';
 import {
   CreateReportData,
-  DateRange,
   INCIDENT_STATUSES,
   INCIDENT_TYPES,
   IncidentStatus,
   IncidentType,
 } from '@custom-types/types';
-import { useSelector } from '@services/store';
 import { startOfYear } from 'date-fns';
 import { Input } from '@components/ui/Input';
 import { DateRangePicker } from '@components/DateRangePicker/DateRangePicker';
-import { CREATE_REPOT_DATA_VALIDATORS } from '@constants/validators';
-import { replace, useNavigate } from 'react-router-dom';
+import {
+  CREATE_REPOT_DATA_VALIDATORS,
+  getValidatableReportDataFields,
+} from '@constants/validators';
+import { useNavigate } from 'react-router-dom';
+import { EMPTY_CREATE_REPOT_DATA } from '@constants/constants';
 
 type CreateReportFormProps = {
   onClose: () => void;
 };
 
-const EMPTY_CREATE_REPOT_DATA: CreateReportData = {
-  dateRange: {
-    from: startOfYear(new Date()),
-    to: new Date(),
-  },
-};
-
-const getValidatableReportDataFields = (data: CreateReportData) => {
-  const { dateRange } = data;
-  return { dateRange };
-};
-
 export const CreateReportForm = ({ onClose }: CreateReportFormProps) => {
-  const incidents = useSelector((state) => selectIncidents.unwrapped(state.incidentsReducer));
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<CreateReportData>(EMPTY_CREATE_REPOT_DATA);

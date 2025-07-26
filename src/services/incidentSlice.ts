@@ -1,9 +1,4 @@
-import {
-  addIncidentApi,
-  deleteIncidentApi,
-  getIncidentsApi,
-  updateIncidentApi,
-} from '@api/incidentsApi';
+import { addIncidentApi, deleteIncidentApi, getIncidentsApi, updateIncidentApi } from '@api/api';
 import { mapIncidentFromDto } from '@custom-types/mapperDTO';
 import { ApiError, Incident, IncidentDTO } from '@custom-types/types';
 import { asyncThunkCreator, buildCreateSlice } from '@reduxjs/toolkit';
@@ -14,7 +9,7 @@ const createSlice = buildCreateSlice({
 });
 
 type IncidentsState = {
-  incidents: Array<Incident>; // Нужно возможно добавить для статистики объект для главной страницы работяги
+  incidents: Array<Incident>;
   status: {
     isGetIncidentsPending: boolean;
     isAddIncidentPending: boolean;

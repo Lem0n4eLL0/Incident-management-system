@@ -1,4 +1,3 @@
-import { Link, useMatch, useParams } from 'react-router-dom';
 import style from './Header.module.css';
 import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';

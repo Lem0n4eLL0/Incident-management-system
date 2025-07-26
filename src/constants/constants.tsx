@@ -1,7 +1,7 @@
 import {
   ApiError,
+  CreateReportData,
   CreateUserDTO,
-  DateRange,
   Incident,
   INCIDENT_STATUSES,
   INCIDENT_TYPES,
@@ -14,48 +14,18 @@ import {
   UserDTO,
 } from '@custom-types/types';
 import { FilteredColumn } from '@ui/FilteredTable/FilteredTable';
-import { FilterFunc, FilterFuncAny } from '@utils/Filter';
 import { ModalFilter } from '@components/ModalFilter';
-import { Select } from '@ui/Select';
 import { CustomSelect } from '@ui/CustomSelect';
+import { roleFilter, statusFilter, typeFilter } from './filters';
+import { startOfYear } from 'date-fns';
 
 export const TABLE_PLACEHOLDER = '—';
 export const LOCAL_STORAGE_REFRESH_TOKEN_ALIAS = 'refreshToken';
 export const LOCAL_STORAGE_ACCESS_TOKEN_ALIAS = 'accessToken';
 
-export const filterByDateRange: FilterFuncAny<Incident> = (
-  incident,
-  range?: DateRange
-): boolean => {
-  if (!range) return true;
-  const itemTime = incident.date.getTime();
-  if (range.from && itemTime < range.from.getTime()) return false;
-  if (range.to && itemTime >= range.to.getTime()) return false;
-  return true;
-};
-
-export const unitfilter: FilterFunc<Incident, 'unit'> = (incident, value) => {
-  return value ? incident.unit === value.trim() : true;
-};
-
-export const typeFilter: FilterFunc<Incident, 'type'> = (incident, value) => {
-  return value ? incident.type === value : true;
-};
-
-export const statusFilter: FilterFunc<Incident, 'status'> = (incident, value) => {
-  return value ? incident.status === value : true;
-};
-
-export const descriptionFilter: FilterFunc<Incident, 'description'> = (incident, value) => {
-  return value ? incident.description.toLowerCase().includes(value.trim().toLowerCase()) : true;
-};
-
-export const roleFilter: FilterFunc<User, 'role'> = (incident, value) => {
-  return value ? incident.role === value : true;
-};
-
-export const fullNameFilter: FilterFunc<User, 'fullName'> = (incident, value) => {
-  return value ? incident.fullName.trim().toLowerCase().includes(value.trim().toLowerCase()) : true;
+export const ERROR_FORBIDDEN: ApiError = {
+  code: 403,
+  message: 'отказано в досупе',
 };
 
 export const EMPTY_USER: User = {
@@ -117,9 +87,11 @@ export const EMPTY_INCIDENTDTO: IncidentDTO = {
   responsible: '',
 };
 
-export const ERROR_FORBIDDEN: ApiError = {
-  code: 403,
-  message: 'отказано в досупе',
+export const EMPTY_CREATE_REPOT_DATA: CreateReportData = {
+  dateRange: {
+    from: startOfYear(new Date()),
+    to: new Date(),
+  },
 };
 
 export const TABLE_USER_COLUMNS: FilteredColumn<User>[] = [
@@ -233,4 +205,17 @@ export const TABLE_REPORT_INCIDENT_COLUMNS: FilteredColumn<Incident>[] = [
     key: 'responsible',
     title: 'Ответственный',
   },
+];
+
+export const COLORS = [
+  'var(--charts-100)',
+  'var(--charts-200)',
+  'var(--charts-300)',
+  'var(--charts-400)',
+  'var(--charts-500)',
+  'var(--charts-600)',
+  'var(--charts-700)',
+  'var(--charts-800)',
+  'var(--charts-900)',
+  'var(--charts-1000)',
 ];

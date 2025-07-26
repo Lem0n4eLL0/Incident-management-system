@@ -13,7 +13,7 @@ import { Select } from '@ui/Select';
 import clsx from 'clsx';
 import { selectUser } from '@services/userSlice';
 import { useDispatch, useSelector } from '@services/store';
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { EMPTY_INCIDENTDTO } from '@constants/constants';
 import { useFormValidation } from '@hooks/useFormValidation';
 import { Input } from '@components/ui/Input';

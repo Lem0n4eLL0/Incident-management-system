@@ -4,21 +4,15 @@ import style from './CreateReportPage.module.css';
 import staticStyle from '@style/common.module.css';
 import { FormEvent, useEffect, useState } from 'react';
 import { FilteredTable } from '@components/ui/FilteredTable';
-import { FilterFunc } from '@utils/Filter';
 import formStyle from '@style/form.module.css';
 import { selectIncidents } from '@services/incidentSlice';
 import { useSelector } from '@services/store';
 import { useFilter } from '@hooks/useFilter';
-import {
-  filterByDateRange,
-  statusFilter,
-  TABLE_REPORT_INCIDENT_COLUMNS,
-  typeFilter,
-  unitfilter,
-} from '@constants/constants';
+import { TABLE_REPORT_INCIDENT_COLUMNS } from '@constants/constants';
 import { format } from 'date-fns';
-import { createReportApi } from '@api/userApi';
+import { createReportApi } from '@api/api';
 import { mapCreateReportDataToDto } from '@custom-types/mapperDTO';
+import { filterByDateRange, statusFilter, typeFilter, unitfilter } from '@constants/filters';
 
 export const CreateReportPage = () => {
   const location = useLocation();

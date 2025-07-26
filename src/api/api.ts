@@ -4,17 +4,14 @@ import {
 } from '@constants/constants';
 
 import {
-  ApiError,
   ApiLoginRequest,
   CreateReportDataDTO,
   CreateUserDTO,
   FullUserDTO,
-  User,
+  IncidentDTO,
   UserDTO,
 } from '@custom-types/types';
 import { logoutMeAuth } from '@services/authSlice';
-import { store } from '@services/store';
-import { v4 as uuidv4 } from 'uuid';
 
 export const URL_API = process.env.REACT_APP_API_URL;
 
@@ -52,14 +49,14 @@ const checkResponseWithErrorHandler = async <T>(res: Response): Promise<T> => {
     return Promise.reject({ code: 'token_expired', message });
   }
 
-  // if (res.status >= 500) {
-  //   window.location.href = '/error';
-  //   return  Promise.reject();
-  // }
+  if (res.status >= 500) {
+    window.location.href = '/error';
+    return Promise.reject();
+  }
   return Promise.reject({ code, message: `${message} ${code}` });
 };
 
-/* Итоговые запросы на сервер */
+/* Токены API */
 export const refreshToken = (): Promise<TRefreshResponse> => {
   return fetch(`${URL_API}/api/auth/token/refresh/`, {
     method: HTTP_METHODS.POST,
@@ -109,6 +106,8 @@ export const fetchWithRefresh = <T>(url: RequestInfo, options: RequestInit): Pro
       return Promise.reject(err);
     });
 };
+
+/* Авотризация API*/
 
 export const checkAuthApi = async (): Promise<TServerResponse> => {
   const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS);
@@ -170,6 +169,7 @@ export const getAuthUserApi = (): Promise<UserDTO> => {
   });
 };
 
+/* Пользователи API */
 export const getUsersApi = (): Promise<Array<FullUserDTO>> => {
   return fetchWithRefresh<Array<FullUserDTO>>(`${URL_API}/api/users/`, {
     method: HTTP_METHODS.GET,
@@ -227,6 +227,7 @@ export const logoutAllUserApi = (): Promise<TServerResponse> => {
   });
 };
 
+/* Отчет API */
 export const createReportApi = async (body: CreateReportDataDTO): Promise<Blob> => {
   const accessToken = localStorage.getItem(LOCAL_STORAGE_ACCESS_TOKEN_ALIAS);
   const response = await fetch(`${URL_API}/api/incidents/analytics/report-xlsx/`, {
@@ -245,93 +246,45 @@ export const createReportApi = async (body: CreateReportDataDTO): Promise<Blob> 
       message: error?.message || 'Ошибка при формировании отчета',
     };
   }
-
   return await response.blob();
 };
 
-/* Тестовые запросы с локальным хранилищем на клиенте */
+/* Инциденты API */
 
-// export const loginUserApi = (loginData: ApiLoginRequest) => {
-//   return new Promise<TServerResponse>((res, rej) => {
-//     if (loginData.login === 'err') rej('Неверные данные');
-//     setTimeout(() => res({ success: true }), 300);
-//   });
-// };
+export const getIncidentsApi = (): Promise<Array<IncidentDTO>> => {
+  return fetchWithRefresh<Array<IncidentDTO>>(`${URL_API}/api/incidents/items/`, {
+    method: HTTP_METHODS.GET,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+  });
+};
 
-// export const getAuthUserApi = (): Promise<UserDTO> => {
-//   return new Promise((res) => {
-//     setTimeout(() => {
-//       res(TEST_USER_DTO);
-//     }, 2000);
-//   });
-// };
+export const addIncidentApi = (incident: IncidentDTO): Promise<IncidentDTO> => {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/`, {
+    method: HTTP_METHODS.POST,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(incident),
+  });
+};
 
-// export const updateUserApi = (user: Partial<FullUserDTO>): Promise<FullUserDTO> => {
-//   return new Promise((res, rej) => {
-//     setTimeout(() => {
-//       const index = TEST_FULL_USERS.findIndex((u) => u.id === user.id);
-//       if (index !== -1) {
-//         TEST_FULL_USERS[index] = {
-//           ...TEST_FULL_USERS[index],
-//           ...user,
-//         };
-//       }
-//       // rej(new Error('error message'));
-//       res(TEST_FULL_USERS[index]);
-//     }, 1000);
-//   });
-// };
+export const updateIncidentApi = (incident: Partial<IncidentDTO>): Promise<IncidentDTO> => {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/items/${incident.id}/`, {
+    method: HTTP_METHODS.PATCH,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify(incident),
+  });
+};
 
-// export const createUserApi = (user: Partial<CreateUserDTO>) => {
-//   return new Promise<FullUserDTO>((res, rej) => {
-//     setTimeout(() => {
-//       const newUser: FullUserDTO = {
-//         id: uuidv4(),
-//         full_name: user.full_name || '',
-//         role: user.role || 'сотрудник',
-//         unit: user.unit || '',
-//         position: user.position || '',
-//         telephone: user.telephone || '',
-//         email: user.email || '',
-//         login: user.login || '',
-//         password: user.password || '',
-//         token: {
-//           jti: '',
-//           is_blacklisted: 'false',
-//           created_at_formatted: '',
-//           expires_at_formatted: '',
-//           token_timer: '',
-//         },
-//         last_login: '2025-07-21T10:30:45.000Z',
-//         is_active: 'true',
-//         is_staff: 'false',
-//       };
-//       //rej(new Error('Ошибка сервера'));
-//       TEST_FULL_USERS.push(newUser);
-//       res(newUser);
-//     }, 1000);
-//   });
-// };
-
-// export const deleteUsersApi = (id: string) => {
-//   return new Promise<UserDTO>((res, rej) => {
-//     setTimeout(() => {
-//       // rej(new Error('error: User not found'));
-//       const index = TEST_FULL_USERS.findIndex((u) => u.id === id);
-//       if (index === -1) return rej(new Error('User not found'));
-
-//       const deleted = TEST_FULL_USERS.splice(index, 1)[0];
-//       res(deleted);
-//     }, 500);
-//   });
-// };
-
-// export const getUsersApi = () => {
-//   return new Promise<Array<FullUserDTO>>((res) => {
-//     setTimeout(() => res([...TEST_FULL_USERS]), 1000);
-//   });
-// };
-
-// export const logoutUserApi = (id: string) => {
-//   return new Promise((res) => res);
-// };
+export const deleteIncidentApi = (id: string): Promise<IncidentDTO> => {
+  return fetchWithRefresh<IncidentDTO>(`${URL_API}/api/incidents/soft_delete_incident/${id}/`, {
+    method: HTTP_METHODS.DELETE,
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+  });
+};

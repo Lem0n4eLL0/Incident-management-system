@@ -3,7 +3,7 @@ import style from './AlertWindowForm.module.css';
 import staticStyle from '@style/common.module.css';
 import fromStyle from '@style/form.module.css';
 import clsx from 'clsx';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent } from 'react';
 import { ApiError } from '@custom-types/types';
 
 type AlertWindowFormProps = {

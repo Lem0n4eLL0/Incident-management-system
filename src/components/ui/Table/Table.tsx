@@ -1,9 +1,6 @@
 import { SyntheticEvent, useCallback, useState } from 'react';
 import style from './Table.module.css';
 import clsx from 'clsx';
-import { Modal } from '../Modal';
-import { Incident } from '@custom-types/types';
-import staticStyle from '@style/common.module.css';
 
 export type Column<T extends { id: string }> = {
   key: keyof T | string;

@@ -1,7 +1,6 @@
 import { createPortal } from 'react-dom';
 import style from './Alert.module.css';
 import clsx from 'clsx';
-import { useEffect } from 'react';
 
 const root = document.getElementById('react-alert') as HTMLElement;
 

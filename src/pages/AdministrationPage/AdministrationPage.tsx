@@ -16,16 +16,14 @@ import { FormEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import clsx from 'clsx';
 import { FilteredTable } from '@components/ui/FilteredTable';
 import { User } from '@custom-types/types';
-import { fullNameFilter, TABLE_PLACEHOLDER, TABLE_USER_COLUMNS } from '@constants/constants';
-import { Table } from '@components/ui/Table';
+import { TABLE_PLACEHOLDER, TABLE_USER_COLUMNS } from '@constants/constants';
 import { useFilter } from '@hooks/useFilter';
 import { Modal } from '@components/ui/Modal';
-import { selectStatusUser } from '@services/userSlice';
-import { AddIncidentForm } from '@components/forms/AddIncidentForm';
 import { AddUserForm } from '@components/forms/AddUserForm';
 import { ModalUser } from '@components/ModalUser';
-import { Alert } from '@components/ui/Alert';
 import { AlertWindowForm } from '@components/forms/AlertWindowForm';
+import { fullNameFilter } from '@constants/filters';
+
 export const AdministrationPage = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => selectUsers.unwrapped(state.usersReducer));

@@ -102,32 +102,27 @@ export const preparingAuthUserDto = (dto: Partial<UserWithAuthDTO>): Partial<Use
   return user;
 };
 
-export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => {
-  console.log(dto);
-  const user = {
-    id: dto.id,
-    role: roleFromDTO(dto.role),
-    fullName: dto.full_name,
-    unit: dto.unit,
-    position: dto.position,
-    telephone: dto.telephone,
-    email: dto.email,
-    login: dto.login,
-    password: dto.password,
-    token: {
-      jti: dto.token.jti,
-      isBlacklisted: dto.token.is_blacklisted,
-      createdAtFormatted: new Date(dto.token.created_at_formatted),
-      expiresAtFormatted: new Date(dto.token.expires_at_formatted),
-      tokenTimer: dto.token.token_timer,
-    },
-    lastLogin: new Date(dto.last_login),
-    isActive: dto.is_active,
-    isStaff: dto.is_staff,
-  };
-  console.log(user);
-  return user;
-};
+export const mapFullUserFromDto = (dto: FullUserDTO): FullUser => ({
+  id: dto.id,
+  role: roleFromDTO(dto.role),
+  fullName: dto.full_name,
+  unit: dto.unit,
+  position: dto.position,
+  telephone: dto.telephone,
+  email: dto.email,
+  login: dto.login,
+  password: dto.password,
+  token: {
+    jti: dto.token.jti,
+    isBlacklisted: dto.token.is_blacklisted,
+    createdAtFormatted: new Date(dto.token.created_at_formatted),
+    expiresAtFormatted: new Date(dto.token.expires_at_formatted),
+    tokenTimer: dto.token.token_timer,
+  },
+  lastLogin: new Date(dto.last_login),
+  isActive: dto.is_active,
+  isStaff: dto.is_staff,
+});
 
 export const mapFullUserToDto = (user: FullUser): FullUserDTO => ({
   id: user.id,

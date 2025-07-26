@@ -133,3 +133,6 @@ export type ApiLoginRequest = {
   login: string;
   password: string;
 };
+
+export const CARTS_OPTIONS = ['По году', 'По типу', 'По подразделениям'] as const;
+export type CratsOptions = (typeof CARTS_OPTIONS)[number];

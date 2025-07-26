@@ -19,9 +19,20 @@ function emailValidator(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i.test(value);
 }
 
+function validDateRange(range?: { from: Date; to: Date }): boolean {
+  if (!range || !(range.from instanceof Date) || !(range.to instanceof Date)) return false;
+  if (isNaN(range.from.getTime()) || isNaN(range.to.getTime())) return false;
+  return range.from < range.to;
+}
+
 export const getValidatableIncidentFields = (data: IncidentDTO) => {
   const { incident_number, type, date, description } = data;
   return { incident_number, type, date, description };
+};
+
+export const getValidatableReportDataFields = (data: CreateReportData) => {
+  const { dateRange } = data;
+  return { dateRange };
 };
 
 export const USER_VALIDATOR: Partial<TFormValidators<UserDTO>> = {
@@ -101,14 +112,6 @@ export const LOGIN_REQUEST_VALIDATORS: TFormValidators<ApiLoginRequest> = {
     message: 'Обязательно для заполнения',
   },
 };
-
-const validDateRange = (range?: { from: Date; to: Date }): boolean => {
-  if (!range || !(range.from instanceof Date) || !(range.to instanceof Date)) return false;
-  if (isNaN(range.from.getTime()) || isNaN(range.to.getTime())) return false;
-  return range.from < range.to;
-};
-
-export type FilterCreateReportData = Pick<CreateReportData, 'dateRange'>;
 
 export const CREATE_REPOT_DATA_VALIDATORS: TFormValidators<CreateReportData> = {
   dateRange: {

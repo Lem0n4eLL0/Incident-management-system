@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import style from './CustomSelect.module.css';
 import clsx from 'clsx';
 type CustomSelectProps<T extends string> = {

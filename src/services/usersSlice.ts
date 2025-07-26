@@ -1,34 +1,14 @@
-import {
-  asyncThunkCreator,
-  buildCreateSlice,
-  PayloadAction,
-  SerializedError,
-} from '@reduxjs/toolkit';
-import {
-  ApiError,
-  ApiLoginRequest,
-  CreateUserDTO,
-  FullUser,
-  UpdateUser,
-  UpdateUserDTO,
-  User,
-  UserDTO,
-} from '@custom-types/types';
-import { EMPTY_USER } from '@constants/constants';
+import { asyncThunkCreator, buildCreateSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ApiError, CreateUserDTO, FullUser, UpdateUser, UpdateUserDTO } from '@custom-types/types';
 import {
   createUserApi,
   deleteUsersApi,
   logoutAllUserApi,
   logoutUserApi,
   updateUserApi,
-} from '@api/userApi';
-import {
-  mapFullUserFromDto,
-  mapUserFromDto,
-  mapUserToDto,
-  preparingAuthUserDto,
-} from '@custom-types/mapperDTO';
-import { getUsersApi } from '@api/userApi';
+} from '@api/api';
+import { mapFullUserFromDto, mapUserFromDto, preparingAuthUserDto } from '@custom-types/mapperDTO';
+import { getUsersApi } from '@api/api';
 import { logoutMeAuth } from './authSlice';
 
 const createSlice = buildCreateSlice({

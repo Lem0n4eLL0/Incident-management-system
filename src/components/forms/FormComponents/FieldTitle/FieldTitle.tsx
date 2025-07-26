@@ -1,5 +1,4 @@
 import formStyle from '@style/form.module.css';
-import staticStyle from '@style/common.module.css';
 import clsx from 'clsx';
 
 type FieldTitleProps = {
