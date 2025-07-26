@@ -105,19 +105,19 @@ class IncidentReportXLSXAPIView(APIView):
         def get_param(key):
             return params.get(key) or request.query_params.get(key)
 
-# Получаем весь диапазон
+
         date_range = params.get("dateRange") or {}
 
-# Теперь вытаскиваем from/to из вложенного словаря или напрямую
+
         date_from = params.get("date_from") or date_range.get("from") or request.query_params.get("date_from") or request.query_params.get("dateRange.from")
         date_to = params.get("date_to") or date_range.get("to") or request.query_params.get("date_to") or request.query_params.get("dateRange.to")
 
-        # Преобразование ISO-строк в объекты datetime.date
+        
         if date_from:
             try:
                 date_from = datetime.fromisoformat(date_from.replace("Z", "")).date()
             except ValueError:
-                date_from = None  # или верни ошибку
+                date_from = None  
 
         if date_to:
             try:
@@ -125,19 +125,18 @@ class IncidentReportXLSXAPIView(APIView):
             except ValueError:
                 date_to = None
 
-       # date_from = get_param('date_from') or get_param('dateRange.from')
-       # date_to = get_param('date_to') or get_param('dateRange.to')
+
         status = get_param('status')
         unit = get_param('unit')
         type_filter = get_param('type')
 
         queryset = Incident.objects.select_related('unit_snapshot')
 
-        #Ограничение по роли
+        
         if user.role == 'manager':
             queryset = queryset.filter(unit_snapshot=user.unit)
         elif user.role == 'admin':
-            pass  # Админ видит всё, не фильтруем
+            pass  
         else:
             return Response({"detail": "Forbidden"}, status=403)
 
@@ -191,7 +190,7 @@ class IncidentReportXLSXAPIView(APIView):
 
         ws.append([])  # пустая строка
 
-        # Заголовки
+        
         ws.append([
             'ID', 'Номер инцидента', 'Дата', 'Тип', 'Подразделение',
             'Статус', 'Описание', 'Предпринятые меры', 'Ответственный'
@@ -235,31 +234,31 @@ class IncidentSummaryAPIView(APIView):
         user = request.user
         today = date.today()
 
-        #  Определяем базовый queryset в зависимости от роли
+        
         if user.role == 'employee':
             base_qs = Incident.objects.filter(author=user)
         elif user.role == 'manager':
             base_qs = Incident.objects.filter(unit_snapshot=user.unit)
-        else:  # admin
+        else:  
             base_qs = Incident.objects.all()
 
-        #  Последние 5 происшествий
+       
         recent_incidents = base_qs.order_by('-date')[:5]
 
-        # Даты
+        
         current_year = today.year
         current_month = today.month
         last_year = current_year - 1
         last_month_date = today - relativedelta(months=1)
 
-        # Подсчёты
+        
         total_count = base_qs.count()
         this_year_count = base_qs.filter(date__year=current_year).count()
         last_year_count = base_qs.filter(date__year=last_year).count()
         this_month_count = base_qs.filter(date__year=current_year, date__month=current_month).count()
         last_month_count = base_qs.filter(date__year=last_month_date.year, date__month=last_month_date.month).count()
 
-        # Индексы
+        
         year_index = last_year_count - this_year_count
         month_index = last_month_count - this_month_count
 
@@ -284,14 +283,14 @@ def soft_delete_incident(request, incident_id):
 
     user = request.user
 
-    # Проверка прав
+    
     if user.role != User.Role.ADMIN and incident.author != user:
         return Response({'detail': 'Недостаточно прав для удаления этого инцидента.'}, status=403)
 
-    # Мягкое удаление
+    
     incident.is_deleted = True
     incident.save()
 
-    # Вернуть сериализованные данные
+    
     serializer = IncidentSerializer(incident)
     return Response(serializer.data, status=200)

@@ -24,9 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             queryset=Unit.objects.all(),
             slug_field='name'
         )
-#    unit = UnitSerializer(read_only=True) 
-#    unit = serializers.CharField(source='unit.name', read_only=True) #Для подгонки полей фронт-бэк
-#    unit_id = serializers.PrimaryKeyRelatedField(queryset=Unit.objects.all(), source='unit', write_only=True)
+
 
  #   full_name_display = serializers.SerializerMethodField()
 
@@ -46,7 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_login', 'is_active', 'is_staff', 'password'
         )
 
-# убрал 'unit_id', 'role_display', для подгонки    'full_name_display',
+
         read_only_fields = ('id', 'role', 'email')
 
 
@@ -81,9 +79,6 @@ class UserSerializer(serializers.ModelSerializer):
         return TokenInfoSerializer(token).data
 
 
-#Для подгонки полей фронт-бэк
-  #  def get_role_display(self, obj):
-   #     return obj.get_role_display()
 
     def get_full_name_display(self, obj):
         name = obj.full_name
@@ -94,7 +89,7 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         role = validated_data.get('role', instance.role)
 
-        # Синхронизация is_staff и is_superuser
+        
         if role == 'admin':
             instance.is_staff = True
             instance.is_superuser = True
@@ -115,9 +110,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateByAdminSerializer(serializers.ModelSerializer):
     unit = serializers.CharField()
-    password = serializers.CharField(write_only=True, required=False)  # при update пароль может не передаваться
+    password = serializers.CharField(write_only=True, required=False)  
     login = serializers.CharField(required=True)  
-    role = serializers.ChoiceField(choices=User.Role.choices) # <--- добавил (project30)
+    role = serializers.ChoiceField(choices=User.Role.choices) 
     is_active = serializers.BooleanField(required=False)
 
     class Meta:
@@ -129,13 +124,13 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
 
         unit_name = validated_data.pop('unit')
-        unit, _ = Unit.objects.get_or_create(name=unit_name)  # ← ключевой момент
+        unit, _ = Unit.objects.get_or_create(name=unit_name) 
 
         validated_data['unit'] = unit
 
         password = validated_data.pop('password')
 
-        # Назначаем админ-флаги, если роль — admin
+        
         role = validated_data.get('role')
         if role == 'admin':
             validated_data['is_staff'] = True
@@ -164,7 +159,7 @@ class UserCreateByAdminSerializer(serializers.ModelSerializer):
 
         role = validated_data.get('role', instance.role)
 
-        # Синхронизация is_staff и is_superuser
+        
         if role == 'admin':
             instance.is_staff = True
             instance.is_superuser = True
@@ -216,16 +211,13 @@ class TokenInfoSerializer(serializers.ModelSerializer):
             'created_at_formatted', 'expires_at_formatted', 'token_timer',
         )
 
-    #    fields = (
-    #        'jti', 'created_at', 'expires_at', 'is_blacklisted',
-    #        'created_at_formatted', 'expires_at_formatted', 'expires_in_pretty',
-    #    )
+
 
     def get_is_blacklisted(self, obj):
         return hasattr(obj, 'blacklistedtoken')
 
     def get_created_at_formatted(self, obj):
-        return django_date_format(obj.created_at, "F j, Y, P")  # July 20, 2025, 9:59 a.m.
+        return django_date_format(obj.created_at, "F j, Y, P")  
 
     def get_expires_at_formatted(self, obj):
         return django_date_format(obj.expires_at, "F j, Y, P")
@@ -274,7 +266,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class UserMeSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['login']  # исключаем login
+        exclude = ['login']  
 
 class UserRestrictedSerializer(serializers.ModelSerializer):
     unit = serializers.CharField(source='unit.name', read_only=True)

@@ -6,7 +6,6 @@
 /api/auth/token/: POST (получение токенов)
 /api/auth/token/refresh/: POST (обновление по refresh)
 
-Маршруты, которые есть, но хз пригодятся ли они тебе:
 /api/auth/token/verify/: POST (проверка действительности токена)
 /admin/: (вход в дефолтную среду админа Django)
 

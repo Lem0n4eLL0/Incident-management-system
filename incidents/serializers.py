@@ -5,7 +5,7 @@ from users.serializers import UserSerializer
 class IncidentSerializer(serializers.ModelSerializer):
     incident_number = serializers.CharField(required=False, allow_blank=True)
     author = UserSerializer(read_only=True)
-    unit = serializers.SerializerMethodField()  # ← добавляем поле unit (строковое имя)
+    unit = serializers.SerializerMethodField()  
 
     class Meta:
         model = Incident
@@ -29,10 +29,10 @@ class IncidentSerializer(serializers.ModelSerializer):
         if not value.strip():
             raise serializers.ValidationError("Номер инцидента не может быть пустым.")
 
-        # Ищем все объекты с таким же номером
+        
         qs = Incident.all_objects.filter(incident_number=value)
 
-        # Исключаем текущий объект при обновлении
+       
         if self.instance:
             qs = qs.exclude(pk=self.instance.pk)
 
@@ -41,14 +41,14 @@ class IncidentSerializer(serializers.ModelSerializer):
         return value
 
     def update(self, instance, validated_data):
-        # Защитная логика (вдруг в будущем кто-то поставит required=False)
+        
         if 'incident_number' in validated_data:
             incident_number = validated_data['incident_number']
             if not incident_number.strip():
                 raise serializers.ValidationError({"incident_number": "Номер не может быть пустым."})
             instance.incident_number = incident_number
 
-        # Обновление остальных полей
+        
         for attr, value in validated_data.items():
             if attr != 'incident_number':
                 setattr(instance, attr, value)
