@@ -1,5 +1,4 @@
 import { DateRange } from '@custom-types/types';
-import React from 'react';
 import { startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, subYears } from 'date-fns';
 import style from './DateRangePicker.module.css';
 import formStyle from '@style/form.module.css';

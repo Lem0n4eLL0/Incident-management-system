@@ -45,7 +45,6 @@
   flex-grow: 1;
 }
 
-
 @media (width <= 600px) {
   .content {
     padding: 30px 0;

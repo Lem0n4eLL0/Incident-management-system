@@ -27,7 +27,6 @@ export const CreateReportPage = () => {
 
     try {
       const blob = await createReportApi(mapCreateReportDataToDto(reportData));
-
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

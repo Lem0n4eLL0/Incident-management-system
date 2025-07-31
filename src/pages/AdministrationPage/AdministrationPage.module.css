@@ -36,7 +36,6 @@
   display: flex;
   gap: 10px;
   justify-self: end;
-
 }
 
 .add_user_button {
@@ -61,7 +60,7 @@
     padding: 30px 0;
   }
 
-  .users  {
+  .users {
     border-radius: 0;
   }
 

@@ -60,12 +60,15 @@ export const AddUserForm = ({ onClose }: AddUserFormProps) => {
     [validator.validateField, setServerError]
   );
 
-  const submitHandler = (e: FormEvent) => {
+  const submitHandler = async (e: FormEvent) => {
     e.preventDefault();
     if (!validator.validateAll(formData)) {
       return;
     }
-    dispatch(createUser(formData));
+    const result = await dispatch(createUser(formData));
+    if (createUser.fulfilled.match(result)) {
+      onClose();
+    }
   };
 
   return (

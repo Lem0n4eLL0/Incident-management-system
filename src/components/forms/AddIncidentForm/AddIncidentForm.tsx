@@ -78,7 +78,8 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
   useEffect(() => {
     if (isAddIncidentPending) {
       return;
-    } else if (addIncidentError?.message) {
+    }
+    if (addIncidentError?.message) {
       setServerError(addIncidentError.message);
     }
   }, [isAddIncidentPending]);
@@ -95,13 +96,15 @@ export const AddIncidentForm = ({ onClose }: AddIncidentFormProps) => {
   );
 
   const submitHandler = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
       if (!validator.validateAll(getValidatableIncidentFields(formData))) {
         return;
       }
-      console.log(formData);
-      dispatch(addIncident(formData));
+      const result = await dispatch(addIncident(formData));
+      if (addIncident.fulfilled.match(result)) {
+        onCloseHandler();
+      }
     },
     [formData, validator.validateAll, dispatch]
   );

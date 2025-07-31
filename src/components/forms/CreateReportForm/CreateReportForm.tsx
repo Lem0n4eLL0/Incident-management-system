@@ -14,8 +14,9 @@ import {
   IncidentType,
 } from '@custom-types/types';
 import { startOfYear } from 'date-fns';
-import { Input } from '@components/ui/Input';
 import { DateRangePicker } from '@components/DateRangePicker/DateRangePicker';
+import { Input } from '@components/ui/Input';
+
 import {
   CREATE_REPOT_DATA_VALIDATORS,
   getValidatableReportDataFields,

@@ -139,7 +139,6 @@ button.disable {
   cursor: default;
 }
 
-
 @media (width <= 600px) {
   .content {
     padding: 30px 0;

@@ -70,9 +70,12 @@ export const AdministrationPage = () => {
     }
   };
 
-  const logoutAllUserHandler = (e: FormEvent) => {
+  const logoutAllUserHandler = async (e: FormEvent) => {
     e.preventDefault();
-    dispatch(logoutAllUsers());
+    const result = await dispatch(logoutAllUsers());
+    if (logoutAllUsers.fulfilled.match(result)) {
+      setIsOpenLogoutAll(false);
+    }
   };
 
   if (isGetUsersPending) {
