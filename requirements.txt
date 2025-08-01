@@ -4,8 +4,3 @@ django-rest-framework
 djangorestframework-simplejwt
 django-filter
 python-dotenv
-djangorestframework
-django-cors-headers
-django-extensions
-python-dateutil
-openpyxl
