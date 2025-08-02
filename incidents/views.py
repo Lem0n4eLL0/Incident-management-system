@@ -193,7 +193,7 @@ class IncidentReportXLSXAPIView(APIView):
         
         ws.append([
             'ID', 'Номер инцидента', 'Дата', 'Тип', 'Подразделение',
-            'Статус', 'Описание', 'Предпринятые меры', 'Ответственный'
+            'Статус', 'Описание', 'Предпринятые меры', 'Ответственный', 'Автор'
         ])
         apply_header_style(ws.max_row)
 
@@ -208,6 +208,7 @@ class IncidentReportXLSXAPIView(APIView):
                 str(i.description),
                 str(i.measures_taken),
                 str(i.responsible),
+                str(i.author.full_name if i.author else '—'),
             ])
 
         # Автоширина
